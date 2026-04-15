@@ -1802,7 +1802,12 @@ async function supaGetUser(token){
 
 // ── Google OAuth redirect ──
 function doGoogleAuth(){
-  window.location.href=`${SUPA_AUTH}/authorize?provider=google&redirect_to=${encodeURIComponent(AUTH_REDIRECT)}`;
+  try{
+    const url=`${SUPA_AUTH}/authorize?provider=google&redirect_to=${encodeURIComponent(AUTH_REDIRECT)}`;
+    window.location.href=url;
+  }catch(e){
+    toast('Google login error: '+e.message);
+  }
 }
 
 // ── OTP: send ──
@@ -1963,13 +1968,21 @@ function promptCafeName(){
 // ── Google OAuth redirect callback on page load ──
 async function handleOAuthCallback(){
   const hash=window.location.hash;
-  if(!hash.includes('access_token'))return false;
+  if(!hash)return false;
   const params=new URLSearchParams(hash.replace('#',''));
+  // Handle error from provider (e.g. Google not enabled)
+  if(params.get('error')){
+    history.replaceState(null,'',window.location.pathname);
+    const desc=params.get('error_description')||params.get('error');
+    toast('Google login failed: '+decodeURIComponent(desc).replace(/\+/g,' '));
+    return true;
+  }
   const token=params.get('access_token');
   if(!token)return false;
   history.replaceState(null,'',window.location.pathname);
   const user=await supaGetUser(token);
   if(user)await handleAuthSuccess(token,user,false);
+  else toast('Could not get user info. Try again.');
   return true;
 }
 
