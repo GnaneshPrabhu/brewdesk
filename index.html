@@ -1885,8 +1885,7 @@ function resetNewCafe(){
 async function handleAuthSuccess(accessToken,user,isSignup){
   if(!accessToken||!user){toast('Auth failed — try again');return;}
   const authId=user.id||user.sub;
-  const email=user.email;
-  // Build clean headers with user's token
+  const email=user.email||'';
   const hdrs={
     'apikey':SUPA_KEY,
     'Authorization':'Bearer '+accessToken,
@@ -1898,28 +1897,32 @@ async function handleAuthSuccess(accessToken,user,isSignup){
   const existing=r.ok?await r.json():[];
 
   if(existing.length){
-    // Returning owner
+    // Returning owner — load and proceed
     CAFE_ID=existing[0].id;CAFE_NAME=existing[0].name;
   } else {
-    // New owner — use pending café name or derive from email
+    // New owner — need a café name
     const pending=(()=>{try{return localStorage.getItem('bd5_pending_cafe_name')||'';}catch{return '';}})();
-    const cafeName=pending||(email.split('@')[0].replace(/[._]/g,' ').replace(/\b\w/g,c=>c.toUpperCase()));
+    let cafeName=pending;
+    if(!cafeName){
+      // Ask inline — show a simple prompt over the login screen
+      cafeName=await promptCafeName();
+      if(!cafeName)return;// user cancelled
+    }
     const cr=await fetch(`${SUPA_URL}/rest/v1/cafes`,{method:'POST',
       headers:{...hdrs,'Prefer':'return=representation'},
-      body:JSON.stringify({name:cafeName,owner_email:email,auth_id:authId})});
+      body:JSON.stringify({name:cafeName,owner_email:email||null,auth_id:authId})});
     if(!cr.ok){
       const errBody=await cr.text();
       console.error('Café create failed:',cr.status,errBody);
-      toast('Failed to create café. Try again.');return;
+      toast('Failed to create café — '+cr.status);return;
     }
-    const newCafe=(await cr.json())[0];
-    CAFE_ID=newCafe.id;CAFE_NAME=newCafe.name;
+    const rows=await cr.json();
+    if(!rows||!rows.length){toast('Café create returned empty');return;}
+    CAFE_ID=rows[0].id;CAFE_NAME=rows[0].name;
     try{localStorage.removeItem('bd5_pending_cafe_name');}catch{}
   }
 
-  // Persist token + café for page reloads
   try{localStorage.setItem('bd5_saas_cafeonly',JSON.stringify({cafeId:CAFE_ID,cafeName:CAFE_NAME,accessToken}));}catch{}
-  // Load café data
   SB.headers['Authorization']='Bearer '+accessToken;
   const loadEl=document.createElement('div');
   loadEl.style.cssText='position:fixed;bottom:40px;left:50%;transform:translateX(-50%);font-size:12px;color:rgba(253,246,237,.4);font-family:var(--ff-b);z-index:60;';
@@ -1928,6 +1931,33 @@ async function handleAuthSuccess(accessToken,user,isSignup){
   reloadAllVars();
   S('adminPwChanged',true);
   showCafeChoice();
+}
+
+// ── Inline café name prompt (shown when new user arrives via Sign In / Google without going through New Café tab) ──
+function promptCafeName(){
+  return new Promise(resolve=>{
+    // Build overlay
+    const overlay=document.createElement('div');
+    overlay.style.cssText='position:fixed;inset:0;z-index:200;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.6);backdrop-filter:blur(8px);';
+    overlay.innerHTML=`
+      <div style="background:var(--glass-modal);border:1px solid var(--glass-border-strong);border-radius:var(--r-xl);padding:32px;width:340px;max-width:90vw;box-shadow:var(--shadow);">
+        <div style="font-family:var(--ff-d);font-size:20px;font-weight:300;color:var(--text-primary);margin-bottom:6px;">Name your café</div>
+        <div style="font-size:12px;color:var(--text-muted);margin-bottom:20px;">What should we call your café?</div>
+        <input id="_cafeNamePrompt" class="form-input" placeholder="e.g. Gsquared Cafe" style="margin-bottom:8px;"/>
+        <div id="_cafeNameErr" style="font-size:12px;color:var(--red);min-height:16px;margin-bottom:12px;"></div>
+        <div style="display:flex;gap:8px;justify-content:flex-end;">
+          <button class="btn btn-glass" onclick="this.closest('div[style*=fixed]').remove();window._cafeNameResolve('');">Cancel</button>
+          <button class="btn btn-primary" onclick="
+            const v=document.getElementById('_cafeNamePrompt').value.trim();
+            if(!v){document.getElementById('_cafeNameErr').textContent='Enter a name';return;}
+            this.closest('div[style*=fixed]').remove();window._cafeNameResolve(v);
+          ">Continue</button>
+        </div>
+      </div>`;
+    window._cafeNameResolve=resolve;
+    document.body.appendChild(overlay);
+    setTimeout(()=>document.getElementById('_cafeNamePrompt')?.focus(),100);
+  });
 }
 
 // ── Google OAuth redirect callback on page load ──
