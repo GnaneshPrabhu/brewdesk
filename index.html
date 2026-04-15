@@ -144,6 +144,17 @@ html,body{height:100%;overflow:hidden;font-family:var(--ff-b);font-size:14px;col
 .login-choice-btn.admin-btn:hover{background:linear-gradient(135deg,rgba(200,131,74,.3),rgba(200,131,74,.14));}
 /* SaaS submit buttons — short, centered */
 .saas-submit-btn{display:flex;align-items:center;justify-content:center;margin:4px auto 0;padding:11px 40px;width:auto !important;min-width:140px;text-align:center;letter-spacing:.4px;}
+/* Google auth button */
+.auth-google-btn{width:100%;padding:11px 16px;border-radius:var(--r);border:1px solid var(--glass-border-strong);background:var(--glass-card);backdrop-filter:var(--blur);color:var(--text-primary);font-family:var(--ff-b);font-size:13.5px;font-weight:500;cursor:pointer;transition:var(--t);display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:4px;}
+.auth-google-btn:hover{background:var(--glass-card-hover);border-color:rgba(200,131,74,.35);}
+/* OR divider */
+.auth-divider{display:flex;align-items:center;gap:10px;margin:14px 0;color:var(--text-muted);font-size:11px;letter-spacing:.5px;}
+.auth-divider::before,.auth-divider::after{content:'';flex:1;height:1px;background:var(--glass-border);}
+/* OTP 6-box */
+.otp-inputs{display:flex;gap:8px;justify-content:center;margin-bottom:4px;}
+.otp-box{width:40px;height:46px;border-radius:var(--r);border:1px solid var(--glass-border);background:var(--glass-input);color:var(--text-primary);font-size:20px;font-weight:600;text-align:center;font-family:var(--ff-b);transition:var(--t);outline:none;}
+.otp-box:focus{border-color:var(--accent);background:var(--glass-input-focus);}
+
 
 /* Login form panel */
 .login-panel{display:none;width:100%;max-width:380px;background:var(--glass-modal);backdrop-filter:var(--blur-heavy);-webkit-backdrop-filter:var(--blur-heavy);border:1px solid var(--glass-border-strong);border-radius:var(--r-xl);padding:32px;box-shadow:var(--shadow);animation:slideM .22s cubic-bezier(.3,0,.2,1);}
@@ -613,57 +624,100 @@ td.tdc{color:var(--text-primary);font-weight:500;}
 
 <!-- ══ LOGIN ══════════════════════════════════════════ -->
 <div id="loginScreen">
-  <!-- Logo: shows BrewDesk before login, café name after owner authenticates -->
   <div class="login-logo" id="loginLogo">Brew<span>Desk</span></div>
   <div class="login-tagline" id="loginTagline">Cafe Management</div>
 
-  <!-- ── PHASE 1: Owner sign-in / sign-up (shown when no café loaded) ── -->
-  <div id="loginChoice" style="width:100%;max-width:400px;">
-    <div class="login-panel" style="display:block;padding:28px 32px;">
+  <!-- ── PHASE 1: Owner sign-in / sign-up ── -->
+  <div id="loginChoice" style="width:100%;max-width:380px;">
+    <div class="login-panel" style="display:block;padding:30px 32px;">
       <div class="saas-tabs">
         <div class="saas-tab on" id="stab-login" onclick="saasTab('login')">Sign In</div>
         <div class="saas-tab" id="stab-signup" onclick="saasTab('signup')">New Café</div>
       </div>
 
-      <!-- SIGN IN tab -->
+      <!-- SIGN IN -->
       <div class="saas-panel on" id="spanel-login">
-        <div class="form-group">
-          <label class="form-label">Email</label>
-          <input class="form-input" type="email" id="saasEmail" placeholder="owner@cafe.com" onkeydown="if(event.key==='Enter')doSaasLogin()"/>
+        <!-- Google -->
+        <button class="auth-google-btn" onclick="doGoogleAuth()">
+          <svg width="18" height="18" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+          Continue with Google
+        </button>
+        <div class="auth-divider"><span>or</span></div>
+        <!-- Email OTP -->
+        <div id="otpStep1_si">
+          <div class="form-group" style="margin-bottom:8px;">
+            <input class="form-input" type="email" id="siOtpEmail" placeholder="your@email.com" onkeydown="if(event.key==='Enter')sendOtp('si')"/>
+          </div>
+          <div id="siOtpErr" style="font-size:12px;color:var(--red);margin-bottom:8px;min-height:16px;"></div>
+          <button class="btn btn-glass" style="width:100%;justify-content:center;" id="siSendBtn" onclick="sendOtp('si')">Send OTP to Gmail</button>
         </div>
-        <div class="form-group">
-          <label class="form-label">Password</label>
-          <input class="form-input" type="password" id="saasPass" placeholder="Your password" onkeydown="if(event.key==='Enter')doSaasLogin()"/>
+        <div id="otpStep2_si" style="display:none;">
+          <div style="font-size:12px;color:var(--text-muted);margin-bottom:12px;text-align:center;">
+            6-digit code sent to <span id="siOtpEmailShow" style="color:var(--accent);"></span>
+            <span style="margin-left:6px;cursor:pointer;text-decoration:underline;" onclick="resetOtp('si')">Change</span>
+          </div>
+          <div class="otp-inputs">
+            <input class="otp-box" type="text" maxlength="1" inputmode="numeric" onkeyup="otpNav(this,0,'si')" onpaste="otpPaste(event,'si')"/>
+            <input class="otp-box" type="text" maxlength="1" inputmode="numeric" onkeyup="otpNav(this,1,'si')"/>
+            <input class="otp-box" type="text" maxlength="1" inputmode="numeric" onkeyup="otpNav(this,2,'si')"/>
+            <input class="otp-box" type="text" maxlength="1" inputmode="numeric" onkeyup="otpNav(this,3,'si')"/>
+            <input class="otp-box" type="text" maxlength="1" inputmode="numeric" onkeyup="otpNav(this,4,'si')"/>
+            <input class="otp-box" type="text" maxlength="1" inputmode="numeric" onkeyup="otpNav(this,5,'si')"/>
+          </div>
+          <div id="siOtpVerifyErr" style="font-size:12px;color:var(--red);margin:10px 0 4px;min-height:16px;text-align:center;"></div>
+          <button class="btn btn-primary saas-submit-btn" id="siVerifyBtn" onclick="verifyOtp('si')">Verify &amp; Sign In</button>
         </div>
-        <div id="saasLoginErr" style="font-size:12px;color:var(--red);margin-bottom:12px;min-height:16px;"></div>
-        <button class="btn btn-primary saas-submit-btn" onclick="doSaasLogin()">Sign In</button>
       </div>
 
-      <!-- NEW CAFÉ tab -->
+      <!-- NEW CAFÉ: name first, then Google/OTP -->
       <div class="saas-panel" id="spanel-signup">
-        <div class="form-group">
-          <label class="form-label">Café Name</label>
-          <input class="form-input" id="signupCafeName" placeholder="e.g. Brew & Bean"/>
+        <div id="suStep1">
+          <div class="form-group">
+            <label class="form-label">Café Name</label>
+            <input class="form-input" id="suCafe" placeholder="e.g. Gsquared Cafe" onkeydown="if(event.key==='Enter')confirmNewCafeName()"/>
+          </div>
+          <div id="suCafeErr" style="font-size:12px;color:var(--red);margin-bottom:8px;min-height:16px;"></div>
+          <button class="btn btn-primary saas-submit-btn" onclick="confirmNewCafeName()">Continue</button>
         </div>
-        <div class="form-group">
-          <label class="form-label">Owner Email</label>
-          <input class="form-input" type="email" id="signupEmail" placeholder="owner@cafe.com"/>
+        <div id="suStep2" style="display:none;">
+          <div style="font-size:12px;color:var(--text-muted);margin-bottom:14px;text-align:center;">
+            Creating: <span id="suCafeNameShow" style="color:var(--accent);font-weight:600;"></span>
+            <span style="margin-left:6px;cursor:pointer;text-decoration:underline;" onclick="resetNewCafe()">Change</span>
+          </div>
+          <button class="auth-google-btn" onclick="doGoogleAuth()">
+            <svg width="18" height="18" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+            Sign up with Google
+          </button>
+          <div class="auth-divider"><span>or</span></div>
+          <div id="otpStep1_su">
+            <div class="form-group" style="margin-bottom:8px;">
+              <input class="form-input" type="email" id="suOtpEmail" placeholder="your@email.com" onkeydown="if(event.key==='Enter')sendOtp('su')"/>
+            </div>
+            <div id="suOtpErr" style="font-size:12px;color:var(--red);margin-bottom:8px;min-height:16px;"></div>
+            <button class="btn btn-glass" style="width:100%;justify-content:center;" id="suSendBtn" onclick="sendOtp('su')">Send OTP to Gmail</button>
+          </div>
+          <div id="otpStep2_su" style="display:none;">
+            <div style="font-size:12px;color:var(--text-muted);margin-bottom:12px;text-align:center;">
+              Code sent to <span id="suOtpEmailShow" style="color:var(--accent);"></span>
+              <span style="margin-left:6px;cursor:pointer;text-decoration:underline;" onclick="resetOtp('su')">Change</span>
+            </div>
+            <div class="otp-inputs">
+              <input class="otp-box" type="text" maxlength="1" inputmode="numeric" onkeyup="otpNav(this,0,'su')" onpaste="otpPaste(event,'su')"/>
+              <input class="otp-box" type="text" maxlength="1" inputmode="numeric" onkeyup="otpNav(this,1,'su')"/>
+              <input class="otp-box" type="text" maxlength="1" inputmode="numeric" onkeyup="otpNav(this,2,'su')"/>
+              <input class="otp-box" type="text" maxlength="1" inputmode="numeric" onkeyup="otpNav(this,3,'su')"/>
+              <input class="otp-box" type="text" maxlength="1" inputmode="numeric" onkeyup="otpNav(this,4,'su')"/>
+              <input class="otp-box" type="text" maxlength="1" inputmode="numeric" onkeyup="otpNav(this,5,'su')"/>
+            </div>
+            <div id="suOtpVerifyErr" style="font-size:12px;color:var(--red);margin:10px 0 4px;min-height:16px;text-align:center;"></div>
+            <button class="btn btn-primary saas-submit-btn" id="suVerifyBtn" onclick="verifyOtp('su')">Verify &amp; Create Café</button>
+          </div>
         </div>
-        <div class="form-group">
-          <label class="form-label">Password</label>
-          <input class="form-input" type="password" id="signupPass" placeholder="Min 6 characters"/>
-        </div>
-        <div class="form-group">
-          <label class="form-label">Confirm Password</label>
-          <input class="form-input" type="password" id="signupPassConf" placeholder="Repeat password" onkeydown="if(event.key==='Enter')doSaasSignup()"/>
-        </div>
-        <div id="saasSignupErr" style="font-size:12px;color:var(--red);margin-bottom:12px;min-height:16px;"></div>
-        <button class="btn btn-primary saas-submit-btn" onclick="doSaasSignup()">Create Café</button>
       </div>
     </div>
   </div>
 
-  <!-- ── PHASE 2: Post-owner-auth — Admin / User choice (like original V1) ── -->
+  <!-- ── PHASE 2: Post-owner-auth — Admin / User choice ── -->
   <div id="cafeChoice" style="display:none;width:100%;max-width:320px;">
     <div class="cafe-choice-row">
       <button class="login-choice-btn admin-btn" onclick="showAdminLogin()">
@@ -675,7 +729,7 @@ td.tdc{color:var(--text-primary);font-weight:500;}
         User
       </button>
     </div>
-    <div style="font-size:11px;color:var(--text-muted);margin-top:2px;text-align:center;">
+    <div style="font-size:11px;color:var(--text-muted);margin-top:6px;text-align:center;">
       New here? <span style="color:var(--accent);cursor:pointer;text-decoration:underline;" onclick="showNewUser()">Create your profile</span>
     </div>
   </div>
@@ -1717,146 +1771,212 @@ function simpleHash(s){let h=0;for(let i=0;i<s.length;i++){h=Math.imul(31,h)+s.c
 // ══════════════════════════════════════════════
 let currentUser=null;// {id,name,username,role}
 
-// ── SaaS tab switcher (Sign In / New Café) ──
+// ── SaaS tab switcher ──
 function saasTab(tab){
   document.querySelectorAll('.saas-tab').forEach(t=>t.classList.remove('on'));
   document.querySelectorAll('.saas-panel').forEach(p=>p.classList.remove('on'));
-  document.getElementById('stab-'+tab).classList.add('on');
-  document.getElementById('spanel-'+tab).classList.add('on');
+  document.getElementById('stab-'+tab)?.classList.add('on');
+  document.getElementById('spanel-'+tab)?.classList.add('on');
 }
 
-// ── Show phase 2: café name as logo + Admin/User choice ──
+// ── Supabase Auth ──
+const SUPA_AUTH=`${SUPA_URL}/auth/v1`;
+const AUTH_REDIRECT='https://getbrewdesk.netlify.app';
+const authH={'apikey':SUPA_KEY,'Content-Type':'application/json'};
+
+async function supaOtpSend(email){
+  const r=await fetch(`${SUPA_AUTH}/otp`,{method:'POST',headers:authH,
+    body:JSON.stringify({email,options:{shouldCreateUser:true}})});
+  return r.ok?{ok:true}:{ok:false,err:await r.json()};
+}
+async function supaOtpVerify(email,token){
+  const r=await fetch(`${SUPA_AUTH}/verify`,{method:'POST',headers:authH,
+    body:JSON.stringify({type:'email',email,token})});
+  const d=await r.json();
+  return r.ok?{session:d}:{error:d};
+}
+async function supaGetUser(token){
+  const r=await fetch(`${SUPA_AUTH}/user`,{headers:{...authH,'Authorization':'Bearer '+token}});
+  return r.ok?await r.json():null;
+}
+
+// ── Google OAuth redirect ──
+function doGoogleAuth(){
+  window.location.href=`${SUPA_AUTH}/authorize?provider=google&redirect_to=${encodeURIComponent(AUTH_REDIRECT)}`;
+}
+
+// ── OTP: send ──
+let _otpEmails={si:'',su:''};
+async function sendOtp(ctx){
+  const emailEl=document.getElementById(ctx==='si'?'siOtpEmail':'suOtpEmail');
+  const errEl=document.getElementById(ctx==='si'?'siOtpErr':'suOtpErr');
+  const btn=document.getElementById(ctx==='si'?'siSendBtn':'suSendBtn');
+  const email=emailEl.value.trim().toLowerCase();
+  errEl.textContent='';
+  if(!email||!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){errEl.textContent='Enter a valid email';return;}
+  btn.textContent='Sending…';btn.disabled=true;
+  const res=await supaOtpSend(email);
+  btn.textContent='Send OTP to Gmail';btn.disabled=false;
+  if(!res.ok){errEl.textContent='Could not send OTP. Try again.';return;}
+  _otpEmails[ctx]=email;
+  document.getElementById(`${ctx}OtpEmailShow`).textContent=email;
+  document.getElementById(`otpStep1_${ctx}`).style.display='none';
+  document.getElementById(`otpStep2_${ctx}`).style.display='block';
+  setTimeout(()=>document.querySelector(`#otpStep2_${ctx} .otp-box`)?.focus(),100);
+}
+
+// ── OTP: box navigation ──
+function otpNav(el,idx,ctx){
+  const boxes=[...document.querySelectorAll(`#otpStep2_${ctx} .otp-box`)];
+  if(el.value&&idx<5)boxes[idx+1].focus();
+  if(!el.value&&idx>0&&event.key==='Backspace')boxes[idx-1].focus();
+  if(boxes.every(b=>b.value))verifyOtp(ctx);
+}
+function otpPaste(e,ctx){
+  e.preventDefault();
+  const digits=(e.clipboardData||window.clipboardData).getData('text').replace(/\D/g,'').slice(0,6);
+  const boxes=[...document.querySelectorAll(`#otpStep2_${ctx} .otp-box`)];
+  boxes.forEach((b,i)=>b.value=digits[i]||'');
+  if(digits.length===6)verifyOtp(ctx);
+  else boxes[Math.min(digits.length,5)].focus();
+}
+function resetOtp(ctx){
+  _otpEmails[ctx]='';
+  document.getElementById(`otpStep2_${ctx}`).style.display='none';
+  document.getElementById(`otpStep1_${ctx}`).style.display='block';
+  document.getElementById(ctx==='si'?'siOtpEmail':'suOtpEmail').value='';
+  document.getElementById(ctx==='si'?'siOtpErr':'suOtpErr').textContent='';
+  document.querySelectorAll(`#otpStep2_${ctx} .otp-box`).forEach(b=>b.value='');
+}
+
+// ── OTP: verify ──
+async function verifyOtp(ctx){
+  const boxes=[...document.querySelectorAll(`#otpStep2_${ctx} .otp-box`)];
+  const token=boxes.map(b=>b.value).join('');
+  const errEl=document.getElementById(ctx==='si'?'siOtpVerifyErr':'suOtpVerifyErr');
+  const btn=document.getElementById(ctx==='si'?'siVerifyBtn':'suVerifyBtn');
+  errEl.textContent='';
+  if(token.length!==6){errEl.textContent='Enter all 6 digits';return;}
+  btn.textContent='Verifying…';btn.disabled=true;
+  const res=await supaOtpVerify(_otpEmails[ctx],token);
+  btn.textContent=ctx==='si'?'Verify & Sign In':'Verify & Create Café';btn.disabled=false;
+  if(res.error){errEl.textContent='Wrong or expired code. Try again.';boxes.forEach(b=>b.value='');boxes[0].focus();return;}
+  await handleAuthSuccess(res.session.access_token,res.session.user,ctx==='su');
+}
+
+// ── New café name step ──
+function confirmNewCafeName(){
+  const name=document.getElementById('suCafe').value.trim();
+  const err=document.getElementById('suCafeErr');
+  if(!name){err.textContent='Enter a café name';return;}
+  err.textContent='';
+  document.getElementById('suCafeNameShow').textContent=name;
+  try{localStorage.setItem('bd5_pending_cafe_name',name);}catch{}
+  document.getElementById('suStep1').style.display='none';
+  document.getElementById('suStep2').style.display='block';
+}
+function resetNewCafe(){
+  document.getElementById('suStep2').style.display='none';
+  document.getElementById('suStep1').style.display='block';
+  resetOtp('su');
+}
+
+// ── Handle auth success (OTP + Google callback) ──
+async function handleAuthSuccess(accessToken,user,isSignup){
+  if(!accessToken||!user){toast('Auth failed — try again');return;}
+  const authId=user.id||user.sub;
+  const email=user.email;
+  // Use the user's access token for API calls
+  const hdrs={...SB.headers,'Authorization':'Bearer '+accessToken};
+
+  // Check for existing café
+  const r=await fetch(`${SUPA_URL}/rest/v1/cafes?auth_id=eq.${authId}&select=id,name`,{headers:hdrs});
+  const existing=r.ok?await r.json():[];
+
+  if(existing.length){
+    // Returning owner
+    CAFE_ID=existing[0].id;CAFE_NAME=existing[0].name;
+  } else {
+    // New owner — use pending café name or derive from email
+    const pending=(()=>{try{return localStorage.getItem('bd5_pending_cafe_name')||'';}catch{return '';}})();
+    const cafeName=pending||(email.split('@')[0].replace(/[._]/g,' ').replace(/\b\w/g,c=>c.toUpperCase()));
+    const cr=await fetch(`${SUPA_URL}/rest/v1/cafes`,{method:'POST',
+      headers:{...hdrs,'Prefer':'return=representation'},
+      body:JSON.stringify({name:cafeName,owner_email:email,auth_id:authId})});
+    if(!cr.ok){toast('Failed to create café. Try again.');return;}
+    const newCafe=(await cr.json())[0];
+    CAFE_ID=newCafe.id;CAFE_NAME=newCafe.name;
+    try{localStorage.removeItem('bd5_pending_cafe_name');}catch{}
+  }
+
+  // Persist token + café for page reloads
+  try{localStorage.setItem('bd5_saas_cafeonly',JSON.stringify({cafeId:CAFE_ID,cafeName:CAFE_NAME,accessToken}));}catch{}
+  // Load café data
+  SB.headers['Authorization']='Bearer '+accessToken;
+  const loadEl=document.createElement('div');
+  loadEl.style.cssText='position:fixed;bottom:40px;left:50%;transform:translateX(-50%);font-size:12px;color:rgba(253,246,237,.4);font-family:var(--ff-b);z-index:60;';
+  loadEl.textContent='Loading café…';document.getElementById('loginScreen').appendChild(loadEl);
+  await loadFromSupabase();loadEl.remove();
+  reloadAllVars();
+  S('adminPwChanged',true);
+  showCafeChoice();
+}
+
+// ── Google OAuth redirect callback on page load ──
+async function handleOAuthCallback(){
+  const hash=window.location.hash;
+  if(!hash.includes('access_token'))return false;
+  const params=new URLSearchParams(hash.replace('#',''));
+  const token=params.get('access_token');
+  if(!token)return false;
+  history.replaceState(null,'',window.location.pathname);
+  const user=await supaGetUser(token);
+  if(user)await handleAuthSuccess(token,user,false);
+  return true;
+}
+
+// ── Phase 2: show café name + Admin/User buttons ──
 function showCafeChoice(){
-  // Swap logo to café name
   const logo=document.getElementById('loginLogo');
   const tag=document.getElementById('loginTagline');
-  if(logo&&CAFE_NAME){logo.innerHTML=`<span style="color:var(--text-primary);">${esc(CAFE_NAME)}</span>`;}
+  if(logo&&CAFE_NAME)logo.innerHTML=`<span style="color:var(--text-primary);">${esc(CAFE_NAME)}</span>`;
   if(tag)tag.style.display='none';
-  // Hide phase 1, show phase 2
   document.getElementById('loginChoice').style.display='none';
   hideAllPanels();
   document.getElementById('cafeChoice').style.display='flex';
 }
 
-// ── Café Signup ──
-async function doSaasSignup(){
-  const name=document.getElementById('signupCafeName').value.trim();
-  const email=document.getElementById('signupEmail').value.trim().toLowerCase();
-  const pass=document.getElementById('signupPass').value;
-  const conf=document.getElementById('signupPassConf').value;
-  const err=s=>{document.getElementById('saasSignupErr').textContent=s;};
-  if(!name||!email||!pass){err('All fields are required');return;}
-  if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){err('Enter a valid email');return;}
-  if(pass.length<6){err('Password must be at least 6 characters');return;}
-  if(pass!==conf){err('Passwords do not match');return;}
-  const btn=document.querySelector('#spanel-signup .btn-primary');
-  btn.textContent='Creating…';btn.disabled=true;
-  const hash=simpleHash(pass);
-  const {data,error}=await SB.createCafe(name,email,hash);
-  btn.textContent='Create Café';btn.disabled=false;
-  if(error){
-    const msg=error?.message||JSON.stringify(error);
-    err(msg.includes('duplicate')||msg.includes('unique')?'This email is already registered':'Failed to create café. Try again.');
-    return;
-  }
-  CAFE_ID=data.id;
-  CAFE_NAME=data.name;
-  await loadFromSupabase();
-  reloadAllVars();
-  if(!adminCreds){adminCreds={passwordHash:hash};S('adminCreds',adminCreds);}
-  S('adminPwChanged',true);
-  // Save café session so phase 2 persists on reload
-  try{localStorage.setItem('bd5_saas_cafeonly',JSON.stringify({cafeId:CAFE_ID,cafeName:CAFE_NAME}));}catch{}
-  showCafeChoice();
-  toast(`Café "${name}" created! Now log in below.`);
-}
-
-// ── Café Owner Sign In → shows phase 2 ──
-async function doSaasLogin(){
-  const email=document.getElementById('saasEmail').value.trim().toLowerCase();
-  const pass=document.getElementById('saasPass').value;
-  const err=s=>{document.getElementById('saasLoginErr').textContent=s;};
-  if(!email||!pass){err('Enter email and password');return;}
-  const btn=document.querySelector('#spanel-login .btn-primary');
-  btn.textContent='Signing in…';btn.disabled=true;
-  const cafe=await SB.getCafeByEmail(email);
-  btn.textContent='Sign In';btn.disabled=false;
-  if(!cafe){err('No café found for this email');return;}
-  if(simpleHash(pass)!==cafe.owner_password_hash){err('Incorrect password');document.getElementById('saasPass').value='';return;}
-  CAFE_ID=cafe.id;
-  CAFE_NAME=cafe.name;
-  const loadEl=document.createElement('div');
-  loadEl.style.cssText='position:fixed;bottom:40px;left:50%;transform:translateX(-50%);font-size:12px;color:rgba(253,246,237,.4);font-family:var(--ff-b);letter-spacing:.5px;z-index:60;';
-  loadEl.textContent='Loading café data…';
-  document.getElementById('loginScreen').appendChild(loadEl);
-  const loaded=await loadFromSupabase();
-  loadEl.remove();
-  reloadAllVars();
-  if(!adminCreds){adminCreds={passwordHash:simpleHash(pass)};S('adminCreds',adminCreds);}
-  S('adminPwChanged',true);
-  // Save café context so subsequent page loads skip phase 1
-  try{localStorage.setItem('bd5_saas_cafeonly',JSON.stringify({cafeId:CAFE_ID,cafeName:CAFE_NAME}));}catch{}
-  showCafeChoice();
-}
-
-// ── Admin login (phase 2) ──
+// ── Admin + staff panels ──
 function showAdminLogin(){
-  hideAllPanels();
-  document.getElementById('cafeChoice').style.display='none';
+  hideAllPanels();document.getElementById('cafeChoice').style.display='none';
   document.getElementById('adminPanel').style.display='block';
-  document.getElementById('adminPass').value='';
-  document.getElementById('adminErr').textContent='';
+  document.getElementById('adminPass').value='';document.getElementById('adminErr').textContent='';
   setTimeout(()=>document.getElementById('adminPass').focus(),100);
 }
 function doAdminLogin(){
   const pass=document.getElementById('adminPass').value;
   if(!pass){document.getElementById('adminErr').textContent='Enter password';return;}
-  if(simpleHash(pass)!==adminCreds.passwordHash){
+  if(!adminCreds||simpleHash(pass)!==adminCreds.passwordHash){
     document.getElementById('adminErr').textContent='Incorrect password';
-    document.getElementById('adminPass').value='';
-    return;
+    document.getElementById('adminPass').value='';return;
   }
   loginAs({id:'admin',name:'Admin',username:'admin',role:'admin'});
 }
-
-// ── Staff login (phase 2) ──
 function showUserLogin(){
-  hideAllPanels();
-  document.getElementById('cafeChoice').style.display='none';
+  hideAllPanels();document.getElementById('cafeChoice').style.display='none';
   document.getElementById('userPanel').style.display='block';
   renderUserNameCards();
 }
 function showNewUser(){
-  hideAllPanels();
-  document.getElementById('cafeChoice').style.display='none';
+  hideAllPanels();document.getElementById('cafeChoice').style.display='none';
   document.getElementById('newUserPanel').style.display='block';
-  document.getElementById('regName').value='';document.getElementById('regUsername').value='';
-  document.getElementById('regPass').value='';document.getElementById('regPassConfirm').value='';
+  ['regName','regUsername','regPass','regPassConfirm'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
   document.getElementById('regErr').textContent='';
 }
-function backToChoice(){
-  hideAllPanels();
-  document.getElementById('cafeChoice').style.display='flex';
-}
-function backToStaffChoice(){
-  hideAllPanels();
-  document.getElementById('userPanel').style.display='block';
-  renderUserNameCards();
-}
+function backToChoice(){hideAllPanels();document.getElementById('cafeChoice').style.display='flex';}
+function backToStaffChoice(){hideAllPanels();document.getElementById('userPanel').style.display='block';renderUserNameCards();}
 function hideAllPanels(){
-  ['adminPanel','userPanel','newUserPanel'].forEach(id=>{
-    const el=document.getElementById(id);if(el)el.style.display='none';
-  });
-}
-function reloadAllVars(){
-  menuItems=L('menu',menuItems);inv=L('inv',inv);staffList=L('staff',[]);
-  attendance=L('att',[]);attAudit=L('attAudit',[]);ptsBatches=L('pts',[]);
-  orders=L('orders',[]);expenses=L('exp',[]);customers=L('cust',[]);
-  appUsers=L('appUsers',[]);notifications=L('notifs',[]);settingsAudit=L('settingsAudit',[]);
-  sharedCats=L('sharedCats',sharedCats);menuCats=L('menuCats',menuCats);
-  menuAudit=L('menuAudit',[]);invAudit=L('invAudit',[]);customTables=L('customTables',customTables);loyAudit=L('loyAudit',[]);
-  adminCreds=L('adminCreds',null);
-  onid=L('onid',1);snid=L('snid',1);inid=L('inid',5);
+  ['adminPanel','userPanel','newUserPanel'].forEach(id=>{const el=document.getElementById(id);if(el)el.style.display='none';});
 }
 
 function renderUserNameCards(){
@@ -2215,6 +2335,7 @@ function confirmLogout(){openModal('mLogout');}
 function doLogout(){closeModal('mLogout');logout();}
 function logout(){
   currentUser=null;CAFE_ID=null;CAFE_NAME=null;
+  SB.headers['Authorization']='Bearer '+SUPA_KEY;
   clearIdleTimer();stopPolling();
   try{localStorage.removeItem('bd5_saas_session');localStorage.removeItem('bd5_saas_cafeonly');}catch{}
   showMobileChrome(false);
@@ -2225,10 +2346,16 @@ function logout(){
   const tag=document.getElementById('loginTagline');
   if(logo)logo.innerHTML='Brew<span>Desk</span>';
   if(tag)tag.style.display='';
-  // Reset form fields
-  ['saasEmail','saasPass'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
-  ['saasLoginErr'].forEach(id=>{const el=document.getElementById(id);if(el)el.textContent='';});
-  ['signupCafeName','signupEmail','signupPass','signupPassConf','saasSignupErr'].forEach(id=>{const el=document.getElementById(id);if(el&&el.value!==undefined)el.value='';else if(el)el.textContent='';});
+  // Reset sign-in/sign-up forms
+  ['siOtpEmail','suOtpEmail','suCafe'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+  ['siOtpErr','suOtpErr','suCafeErr','siOtpVerifyErr','suOtpVerifyErr'].forEach(id=>{const el=document.getElementById(id);if(el)el.textContent='';});
+  document.querySelectorAll('.otp-box').forEach(b=>b.value='');
+  ['otpStep1_si','otpStep1_su'].forEach(id=>{const el=document.getElementById(id);if(el)el.style.display='block';});
+  ['otpStep2_si','otpStep2_su'].forEach(id=>{const el=document.getElementById(id);if(el)el.style.display='none';});
+  const suS1=document.getElementById('suStep1');if(suS1)suS1.style.display='block';
+  const suS2=document.getElementById('suStep2');if(suS2)suS2.style.display='none';
+  try{localStorage.removeItem('bd5_pending_cafe_name');}catch{}
+  SB.headers['Authorization']='Bearer '+SUPA_KEY;
   // Go back to phase 1
   hideAllPanels();
   document.getElementById('cafeChoice').style.display='none';
@@ -3706,20 +3833,26 @@ function showSyncPulse(){
 }
 
 // ══════════════════════════════════════════════
-// INIT — restore café session, load data, then restore user session
+// INIT
 // ══════════════════════════════════════════════
 (async function(){
   showMobileChrome(false);
 
-  // Step 1: Restore CAFE_ID from either full session or cafeonly cookie
+  // Step 1: Handle Google OAuth redirect (URL has #access_token)
+  const wasOAuth=await handleOAuthCallback();
+  if(wasOAuth)return;
+
+  // Step 2: Restore café from saved session
   try{
-    const full=localStorage.getItem('bd5_saas_session');
-    const cafeOnly=localStorage.getItem('bd5_saas_cafeonly');
-    const src=full||cafeOnly;
-    if(src){const {cafeId,cafeName}=JSON.parse(src);if(cafeId){CAFE_ID=cafeId;CAFE_NAME=cafeName||'Café';}}
+    const src=localStorage.getItem('bd5_saas_session')||localStorage.getItem('bd5_saas_cafeonly');
+    if(src){
+      const p=JSON.parse(src);
+      if(p.cafeId){CAFE_ID=p.cafeId;CAFE_NAME=p.cafeName||'Café';}
+      if(p.accessToken)SB.headers['Authorization']='Bearer '+p.accessToken;
+    }
   }catch{}
 
-  // Step 2: If we have a café, load its data
+  // Step 3: Load café data
   if(CAFE_ID){
     const loadMsg=document.createElement('div');
     loadMsg.style.cssText='position:fixed;bottom:40px;left:50%;transform:translateX(-50%);font-size:12px;color:rgba(253,246,237,.4);font-family:var(--ff-b);letter-spacing:.5px;z-index:60;';
@@ -3732,7 +3865,7 @@ function showSyncPulse(){
     loadMsg.remove();
   }
 
-  // Step 3: Try to restore full user session
+  // Step 4: Restore user session or show correct phase
   const saved=restoreSession();
   if(saved){
     currentUser=saved;
@@ -3743,10 +3876,8 @@ function showSyncPulse(){
     requestAnimationFrame(()=>requestAnimationFrame(()=>{navigateTo(getDefaultPage());updateNotifBadge();}));
     startIdleTimer();startPolling();
   } else if(CAFE_ID){
-    // Café known but no user session — jump straight to phase 2
     showCafeChoice();
   }
-  // else: phase 1 (owner sign-in/sign-up) shown by default
 })();
 
 </script>
