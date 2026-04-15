@@ -1886,8 +1886,12 @@ async function handleAuthSuccess(accessToken,user,isSignup){
   if(!accessToken||!user){toast('Auth failed — try again');return;}
   const authId=user.id||user.sub;
   const email=user.email;
-  // Use the user's access token for API calls
-  const hdrs={...SB.headers,'Authorization':'Bearer '+accessToken};
+  // Build clean headers with user's token
+  const hdrs={
+    'apikey':SUPA_KEY,
+    'Authorization':'Bearer '+accessToken,
+    'Content-Type':'application/json'
+  };
 
   // Check for existing café
   const r=await fetch(`${SUPA_URL}/rest/v1/cafes?auth_id=eq.${authId}&select=id,name`,{headers:hdrs});
@@ -1903,7 +1907,11 @@ async function handleAuthSuccess(accessToken,user,isSignup){
     const cr=await fetch(`${SUPA_URL}/rest/v1/cafes`,{method:'POST',
       headers:{...hdrs,'Prefer':'return=representation'},
       body:JSON.stringify({name:cafeName,owner_email:email,auth_id:authId})});
-    if(!cr.ok){toast('Failed to create café. Try again.');return;}
+    if(!cr.ok){
+      const errBody=await cr.text();
+      console.error('Café create failed:',cr.status,errBody);
+      toast('Failed to create café. Try again.');return;
+    }
     const newCafe=(await cr.json())[0];
     CAFE_ID=newCafe.id;CAFE_NAME=newCafe.name;
     try{localStorage.removeItem('bd5_pending_cafe_name');}catch{}
