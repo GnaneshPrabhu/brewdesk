@@ -412,20 +412,19 @@ td.tdc{color:var(--text-primary);font-weight:500;}
 .splash-logo{
   font-family:var(--ff-d);font-size:52px;font-weight:300;
   color:var(--text-primary);letter-spacing:-.5px;
+  display:flex;align-items:baseline;
 }
 .splash-logo span{color:var(--accent);}
 .splash-tagline{
   font-size:10px;letter-spacing:3px;text-transform:uppercase;
   color:var(--text-muted);margin-top:10px;
-  opacity:0;animation:fadeInTag .6s ease .8s forwards;
+  opacity:0;animation:fadeInTag .5s ease 1.0s forwards;
 }
 @keyframes fadeInTag{to{opacity:1;}}
 
-/* slide-in-blurred-left — from animista.net */
-.slide-in-blurred-left{
-  -webkit-animation:slide-in-blurred-left 1.5s cubic-bezier(0.230,1.000,0.320,1.000) both;
-  animation:slide-in-blurred-left 1.5s cubic-bezier(0.230,1.000,0.320,1.000) both;
-}
+/* Per-letter slide-in — each letter uses slide-in-blurred-left with staggered delay */
+.spl{display:inline-block;opacity:0;-webkit-animation:slide-in-blurred-left .5s cubic-bezier(0.230,1.000,0.320,1.000) both;animation:slide-in-blurred-left .5s cubic-bezier(0.230,1.000,0.320,1.000) both;}
+.spl-accent{color:#C8834A !important;}
 @-webkit-keyframes slide-in-blurred-left{
   0%{-webkit-transform:translateX(-1000px) scaleX(2.5) scaleY(0.2);transform:translateX(-1000px) scaleX(2.5) scaleY(0.2);-webkit-transform-origin:100% 50%;transform-origin:100% 50%;-webkit-filter:blur(40px);filter:blur(40px);opacity:0;}
   100%{-webkit-transform:translateX(0) scaleY(1) scaleX(1);transform:translateX(0) scaleY(1) scaleX(1);-webkit-transform-origin:50% 50%;transform-origin:50% 50%;-webkit-filter:blur(0);filter:blur(0);opacity:1;}
@@ -434,6 +433,7 @@ td.tdc{color:var(--text-primary);font-weight:500;}
   0%{-webkit-transform:translateX(-1000px) scaleX(2.5) scaleY(0.2);transform:translateX(-1000px) scaleX(2.5) scaleY(0.2);-webkit-transform-origin:100% 50%;transform-origin:100% 50%;-webkit-filter:blur(40px);filter:blur(40px);opacity:0;}
   100%{-webkit-transform:translateX(0) scaleY(1) scaleX(1);transform:translateX(0) scaleY(1) scaleX(1);-webkit-transform-origin:50% 50%;transform-origin:50% 50%;-webkit-filter:blur(0);filter:blur(0);opacity:1;}
 }
+
 .profile-modal-av{width:64px;height:64px;border-radius:50%;background:linear-gradient(135deg,rgba(200,131,74,.4),rgba(200,131,74,.15));border:2px solid rgba(200,131,74,.4);display:flex;align-items:center;justify-content:center;font-family:var(--ff-d);font-size:22px;color:var(--accent);margin:0 auto 18px;}
 
 /* ══════════════════════════════════════════════
@@ -651,7 +651,9 @@ td.tdc{color:var(--text-primary);font-weight:500;}
 <!-- ══ LOGIN ══════════════════════════════════════════ -->
 <!-- ══ SPLASH ═══════════════════════════════════════════ -->
 <div id="splashScreen">
-  <div class="splash-logo slide-in-blurred-left">Brew<span>Desk</span></div>
+  <div class="splash-logo">
+    <span class="spl" style="animation-delay:0.42s;color:#FFF8F0;">B</span><span class="spl" style="animation-delay:0.36s;color:#FFF8F0;">r</span><span class="spl" style="animation-delay:0.30s;color:#FFF8F0;">e</span><span class="spl" style="animation-delay:0.24s;color:#FFF8F0;">w</span><span class="spl spl-accent" style="animation-delay:0.18s;">D</span><span class="spl spl-accent" style="animation-delay:0.12s;">e</span><span class="spl spl-accent" style="animation-delay:0.06s;">s</span><span class="spl spl-accent" style="animation-delay:0.00s;">k</span>
+  </div>
   <div class="splash-tagline">Cafe Management System</div>
 </div>
 
@@ -3868,7 +3870,7 @@ function showSyncPulse(){
       splash.classList.add('fade-out');
       setTimeout(()=>{splash.style.display='none';},650);
     }
-  },2500);
+  },2200);
 
   // Try to restore session from previous visit
   showMobileChrome(false);// hide until logged in
