@@ -418,12 +418,12 @@ td.tdc{color:var(--text-primary);font-weight:500;}
 .splash-tagline{
   font-size:10px;letter-spacing:3px;text-transform:uppercase;
   color:var(--text-muted);margin-top:10px;
-  opacity:0;animation:fadeInTag .5s ease 1.0s forwards;
+  opacity:0;animation:fadeInTag .5s ease 1.8s forwards;
 }
 @keyframes fadeInTag{to{opacity:1;}}
 
 /* Per-letter slide-in — each letter uses slide-in-blurred-left with staggered delay */
-.spl{display:inline-block;opacity:0;-webkit-animation:slide-in-blurred-left .5s cubic-bezier(0.230,1.000,0.320,1.000) both;animation:slide-in-blurred-left .5s cubic-bezier(0.230,1.000,0.320,1.000) both;}
+.spl{display:inline-block;opacity:0;-webkit-animation:slide-in-blurred-left .8s cubic-bezier(0.230,1.000,0.320,1.000) both;animation:slide-in-blurred-left .8s cubic-bezier(0.230,1.000,0.320,1.000) both;}
 .spl-accent{color:#C8834A !important;}
 @-webkit-keyframes slide-in-blurred-left{
   0%{-webkit-transform:translateX(-1000px) scaleX(2.5) scaleY(0.2);transform:translateX(-1000px) scaleX(2.5) scaleY(0.2);-webkit-transform-origin:100% 50%;transform-origin:100% 50%;-webkit-filter:blur(40px);filter:blur(40px);opacity:0;}
@@ -652,7 +652,7 @@ td.tdc{color:var(--text-primary);font-weight:500;}
 <!-- ══ SPLASH ═══════════════════════════════════════════ -->
 <div id="splashScreen">
   <div class="splash-logo">
-    <span class="spl" style="animation-delay:0.42s;color:#FFF8F0;">B</span><span class="spl" style="animation-delay:0.36s;color:#FFF8F0;">r</span><span class="spl" style="animation-delay:0.30s;color:#FFF8F0;">e</span><span class="spl" style="animation-delay:0.24s;color:#FFF8F0;">w</span><span class="spl spl-accent" style="animation-delay:0.18s;">D</span><span class="spl spl-accent" style="animation-delay:0.12s;">e</span><span class="spl spl-accent" style="animation-delay:0.06s;">s</span><span class="spl spl-accent" style="animation-delay:0.00s;">k</span>
+    <span class="spl" style="animation-delay:0.92s;color:#FFF8F0;">B</span><span class="spl" style="animation-delay:0.86s;color:#FFF8F0;">r</span><span class="spl" style="animation-delay:0.80s;color:#FFF8F0;">e</span><span class="spl" style="animation-delay:0.74s;color:#FFF8F0;">w</span><span class="spl spl-accent" style="animation-delay:0.68s;">D</span><span class="spl spl-accent" style="animation-delay:0.62s;">e</span><span class="spl spl-accent" style="animation-delay:0.56s;">s</span><span class="spl spl-accent" style="animation-delay:0.50s;">k</span>
   </div>
   <div class="splash-tagline">Cafe Management System</div>
 </div>
@@ -3870,7 +3870,7 @@ function showSyncPulse(){
       splash.classList.add('fade-out');
       setTimeout(()=>{splash.style.display='none';},650);
     }
-  },2200);
+  },3200);
 
   // Try to restore session from previous visit
   showMobileChrome(false);// hide until logged in
