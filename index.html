@@ -625,11 +625,11 @@ td.tdc{color:var(--text-primary);font-weight:500;}
   <div id="loginChoice">
     <button class="login-choice-btn admin-btn" onclick="showAdminLogin()">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" style="margin-right:8px;vertical-align:middle;"><path d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
-      Admin Login
+      Owner Login
     </button>
     <button class="login-choice-btn" onclick="showUserLogin()">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" style="margin-right:8px;vertical-align:middle;"><path d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
-      User Login
+      Staff Login
     </button>
     <div style="font-size:11px;color:var(--text-muted);margin-top:4px;">
       First time? <span style="color:var(--accent);cursor:pointer;text-decoration:underline;" onclick="showNewUser()">Create your profile</span>
@@ -642,14 +642,10 @@ td.tdc{color:var(--text-primary);font-weight:500;}
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
       Back
     </button>
-    <div class="lp-title">Admin Login</div>
-    <div class="form-group">
-      <label class="form-label">Username</label>
-      <input class="form-input" id="adminUser" value="admin" readonly style="opacity:.7;"/>
-    </div>
+    <div class="lp-title">Owner Login</div>
     <div class="form-group">
       <label class="form-label">Password</label>
-      <input class="form-input" type="password" id="adminPass" placeholder="Enter password" onkeydown="if(event.key==='Enter')doAdminLogin()"/>
+      <input class="form-input" type="password" id="adminPass" placeholder="Enter admin or owner password" onkeydown="if(event.key==='Enter')doAdminLogin()"/>
     </div>
     <div id="adminErr" style="font-size:12px;color:var(--red);margin-bottom:12px;height:16px;"></div>
     <div style="display:flex;justify-content:flex-end;">
@@ -657,13 +653,13 @@ td.tdc{color:var(--text-primary);font-weight:500;}
     </div>
   </div>
 
-  <!-- User Login Panel -->
+  <!-- Staff Login Panel -->
   <div class="login-panel" id="userPanel">
     <button class="lp-back" onclick="backToChoice()">
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
       Back
     </button>
-    <div class="lp-title">User Login</div>
+    <div class="lp-title">Staff Login</div>
     <div id="userNameCards">
       <!-- Populated by renderUserNameCards() -->
     </div>
@@ -706,6 +702,10 @@ td.tdc{color:var(--text-primary);font-weight:500;}
       <input class="form-input" type="password" id="regPass" placeholder="Choose a password"/>
     </div>
     <div class="form-group">
+      <label class="form-label">Mobile Number</label>
+      <input class="form-input" type="tel" id="regMobile" placeholder="10-digit mobile number" maxlength="10"/>
+    </div>
+    <div class="form-group">
       <label class="form-label">Confirm Password</label>
       <input class="form-input" type="password" id="regPassConfirm" placeholder="Repeat password" onkeydown="if(event.key==='Enter')doRegister()"/>
     </div>
@@ -714,6 +714,27 @@ td.tdc{color:var(--text-primary);font-weight:500;}
       <button class="btn btn-primary" onclick="doRegister()">Create &amp; Login</button>
     </div>
   </div>
+
+  <!-- Set New Password Panel (first-time staff login) -->
+  <div class="login-panel" id="setPassPanel">
+    <div class="lp-title">Set Your Password</div>
+    <div style="font-size:13px;color:var(--text-muted);margin-bottom:20px;line-height:1.6;">
+      Welcome, <strong id="setPassName" style="color:var(--text-primary);"></strong>! Your account was created by admin. Please set a personal password to continue.
+    </div>
+    <div class="form-group">
+      <label class="form-label">New Password</label>
+      <input class="form-input" type="password" id="setPassNew" placeholder="Minimum 6 characters"/>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Confirm Password</label>
+      <input class="form-input" type="password" id="setPassConf" placeholder="Repeat password" onkeydown="if(event.key==='Enter')doSetFirstPassword()"/>
+    </div>
+    <div id="setPassErr" style="font-size:12px;color:var(--red);margin-bottom:12px;height:16px;"></div>
+    <div style="display:flex;justify-content:flex-end;">
+      <button class="btn btn-primary" onclick="doSetFirstPassword()">Set Password &amp; Login</button>
+    </div>
+  </div>
+
 </div>
 
 <!-- ══ APP ════════════════════════════════════════════ -->
@@ -1008,6 +1029,13 @@ td.tdc{color:var(--text-primary);font-weight:500;}
               <tr><td class="tdc">Settings</td><td><span class="badge b-green">Full</span></td><td><span class="badge b-ghost">Hidden</span></td><td><span class="badge b-ghost">Hidden</span></td><td style="font-size:11.5px;color:var(--text-muted);"></td></tr>
             </tbody>
           </table></div>
+        </div>
+        <div class="card" style="margin-bottom:16px;" id="ownerCard">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+            <div class="card-title" style="margin:0;">Owner Account</div>
+            <button class="btn btn-primary btn-sm" id="createOwnerBtn" onclick="openCreateOwner()">+ Create Owner</button>
+          </div>
+          <div id="ownerInfo"></div>
         </div>
         <div class="card">
           <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;">
@@ -1306,6 +1334,24 @@ td.tdc{color:var(--text-primary);font-weight:500;}
   </div>
 </div>
 
+<!-- Create Owner Modal -->
+<div class="overlay" id="mCreateOwner">
+  <div class="modal" style="width:420px;">
+    <div class="modal-header"><div class="modal-title">Create Owner Account</div><button class="modal-close" onclick="closeModal('mCreateOwner')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 6L6 18M6 6l12 12"/></svg></button></div>
+    <div style="font-size:12px;color:var(--text-muted);margin-bottom:16px;padding:10px 14px;background:rgba(200,131,74,.06);border-radius:var(--r);border:1px solid rgba(200,131,74,.2);">
+      Owner has full admin access and can log in via Owner Login. Only one owner is allowed.
+    </div>
+    <div class="form-group"><label class="form-label">Full Name</label><input class="form-input" id="ownerName" placeholder="e.g. Ravi Kumar"/></div>
+    <div class="form-group"><label class="form-label">Username</label><input class="form-input" id="ownerUsername" placeholder="e.g. ravi.kumar"/></div>
+    <div class="form-group"><label class="form-label">Default Password</label><input class="form-input" type="password" id="ownerPass" placeholder="Minimum 6 characters"/></div>
+    <div id="ownerErr" style="font-size:12px;color:var(--red);margin-bottom:12px;height:16px;"></div>
+    <div class="modal-footer">
+      <button class="btn btn-glass" onclick="closeModal('mCreateOwner')">Cancel</button>
+      <button class="btn btn-primary" onclick="saveCreateOwner()">Create Owner</button>
+    </div>
+  </div>
+</div>
+
 <!-- Edit User (Settings) -->
 <div class="overlay" id="mEditUser">
   <div class="modal" style="width:420px;">
@@ -1314,8 +1360,12 @@ td.tdc{color:var(--text-primary);font-weight:500;}
     <div class="form-group"><label class="form-label">Role</label>
       <select class="form-input" id="euRole">
         <option value="pending">Pending (no access)</option>
-        <option value="cashier">Cashier</option>
-        <option value="staff">Staff</option>
+        <option value="Cashier">Cashier</option>
+        <option value="Barista">Barista</option>
+        <option value="Waiter">Waiter</option>
+        <option value="Chef">Chef</option>
+        <option value="Manager">Manager</option>
+        <option value="Helper">Helper</option>
       </select>
     </div>
     <div style="font-size:12px;color:var(--text-muted);margin-bottom:16px;padding:10px 14px;background:rgba(255,248,240,.05);border-radius:var(--r);border:1px solid var(--glass-border);">
@@ -1334,7 +1384,9 @@ td.tdc{color:var(--text-primary);font-weight:500;}
     <div style="text-align:center;margin-bottom:6px;">
       <div class="av-ring" id="profileAv" onclick="document.getElementById('avatarInput').click()" title="Click to change photo"></div>
       <input type="file" id="avatarInput" accept="image/*" style="display:none;" onchange="handleAvatarUpload(event)"/>
-      <div style="font-size:10.5px;color:var(--text-muted);margin-bottom:12px;">Tap to change photo</div>
+      <div style="font-size:10.5px;color:var(--text-muted);margin-bottom:6px;">Tap to change photo</div>
+      <button id="removePhotoBtn" onclick="removeAvatar()" style="display:none;background:none;border:none;cursor:pointer;font-size:11px;color:var(--red);font-family:var(--ff-b);padding:2px 8px;border-radius:6px;transition:var(--t);" onmouseover="this.style.background='var(--red-bg)'" onmouseout="this.style.background='none'">✕ Remove photo</button>
+      <div style="margin-bottom:12px;"></div>
       <div style="font-family:var(--ff-d);font-size:20px;color:var(--text-primary);" id="profileName"></div>
       <div style="font-size:11px;color:var(--text-muted);letter-spacing:1px;text-transform:uppercase;margin-top:4px;" id="profileRole"></div>
     </div>
@@ -1668,7 +1720,7 @@ function showNewUser(){
   document.getElementById('loginChoice').style.display='none';
   document.getElementById('newUserPanel').style.display='block';
   document.getElementById('regName').value='';document.getElementById('regUsername').value='';
-  document.getElementById('regPass').value='';document.getElementById('regPassConfirm').value='';
+  document.getElementById('regPass').value='';document.getElementById('regPassConfirm').value='';document.getElementById('regMobile').value='';
   document.getElementById('regErr').textContent='';
 }
 function backToChoice(){
@@ -1676,7 +1728,7 @@ function backToChoice(){
   document.getElementById('loginChoice').style.display='flex';
 }
 function hideAllPanels(){
-  ['adminPanel','userPanel','newUserPanel'].forEach(id=>{document.getElementById(id).style.display='none';});
+  ['adminPanel','userPanel','newUserPanel','setPassPanel'].forEach(id=>{document.getElementById(id).style.display='none';});
 }
 
 function renderUserNameCards(){
@@ -1721,7 +1773,7 @@ function renderUserNameCards(){
 
 function buildUnameList(q){
   const list=document.getElementById('unameList');if(!list)return;
-  const filtered=appUsers.filter(u=>u.name.toLowerCase().includes(q.toLowerCase()));
+  const filtered=appUsers.filter(u=>u.role!=='owner'&&u.name.toLowerCase().includes(q.toLowerCase()));
   if(!filtered.length){
     list.innerHTML=`<div class="uname-empty">No match found</div>`;return;
   }
@@ -1768,12 +1820,17 @@ function selectUserName(id){
 function doAdminLogin(){
   const pass=document.getElementById('adminPass').value;
   if(!pass){document.getElementById('adminErr').textContent='Enter password';return;}
-  if(simpleHash(pass)!==adminCreds.passwordHash){
-    document.getElementById('adminErr').textContent='Incorrect password';
-    document.getElementById('adminPass').value='';
-    return;
+  // Check built-in admin credentials first
+  if(simpleHash(pass)===adminCreds.passwordHash){
+    loginAs({id:'admin',name:'Admin',username:'admin',role:'admin'});return;
   }
-  loginAs({id:'admin',name:'Admin',username:'admin',role:'admin'});
+  // Check owner user account
+  const owner=appUsers.find(u=>u.role==='owner');
+  if(owner&&simpleHash(pass)===owner.passwordHash){
+    loginAs({id:owner.id,name:owner.name,username:owner.username,role:'owner'});return;
+  }
+  document.getElementById('adminErr').textContent='Incorrect password';
+  document.getElementById('adminPass').value='';
 }
 
 function doUserLogin(){
@@ -1786,7 +1843,36 @@ function doUserLogin(){
     document.getElementById('userPass').value='';
     return;
   }
+  // Check if still on default password (staff created from Staff & Attendance module)
+  if(simpleHash('staff123')===u.passwordHash){
+    // Force them to set a new password before logging in
+    hideAllPanels();
+    document.getElementById('setPassName').textContent=u.name;
+    document.getElementById('setPassNew').value='';
+    document.getElementById('setPassConf').value='';
+    document.getElementById('setPassErr').textContent='';
+    document.getElementById('setPassPanel').style.display='block';
+    setTimeout(()=>document.getElementById('setPassNew').focus(),100);
+    return;
+  }
   loginAs({id:u.id,name:u.name,username:u.username,role:u.role||'pending'});
+}
+
+function doSetFirstPassword(){
+  const u=appUsers.find(x=>x.id==selectedUserId);
+  if(!u)return;
+  const nw=document.getElementById('setPassNew').value;
+  const conf=document.getElementById('setPassConf').value;
+  const err=s=>{document.getElementById('setPassErr').textContent=s;};
+  if(!nw){err('Enter a new password');return;}
+  if(nw.length<6){err('Password must be at least 6 characters');return;}
+  if(nw===('staff123')){err('Please choose a different password');return;}
+  if(nw!==conf){err('Passwords do not match');return;}
+  // Save new password
+  u.passwordHash=simpleHash(nw);
+  S('appUsers',appUsers);
+  loginAs({id:u.id,name:u.name,username:u.username,role:u.role||'pending'});
+  toast(`Welcome, ${u.name}! Password set successfully.`);
 }
 
 function autoFillUsername(){
@@ -1799,14 +1885,16 @@ function doRegister(){
   const username=document.getElementById('regUsername').value.trim();
   const pass=document.getElementById('regPass').value;
   const conf=document.getElementById('regPassConfirm').value;
+  const mobile=document.getElementById('regMobile').value.trim();
   if(!name||!username){document.getElementById('regErr').textContent='Name is required';return;}
-  if(pass.length<4){document.getElementById('regErr').textContent='Password must be at least 4 characters';return;}
+  if(mobile.length!==10){document.getElementById('regErr').textContent='Enter a valid 10-digit mobile number';return;}
+  if(pass.length<6){document.getElementById('regErr').textContent='Password must be at least 6 characters';return;}
   if(pass!==conf){document.getElementById('regErr').textContent='Passwords do not match';return;}
   if(appUsers.find(u=>u.username===username)){document.getElementById('regErr').textContent='Username already taken';return;}
-  const newUser={id:uid(),name,username,passwordHash:simpleHash(pass),role:'pending',createdAt:Date.now()};
+  const newUser={id:uid(),name,username,passwordHash:simpleHash(pass),role:'pending',mobile,createdAt:Date.now()};
   appUsers.push(newUser);S('appUsers',appUsers);
-  // Auto-add to staff roster
-  staffList.push({id:uid(),name,role:'New Member',mobile:'',userId:newUser.id});S('staff',staffList);
+  // Auto-add to staff roster with mobile
+  staffList.push({id:uid(),name,role:'New Member',mobile,userId:newUser.id});S('staff',staffList);
   // Notify admin
   pushNotif(`New user registered: ${name} (awaiting role assignment)`,'system','admin');
   loginAs({id:newUser.id,name:newUser.name,username:newUser.username,role:'pending'});
@@ -1821,7 +1909,7 @@ function loginAs(user){
   appEl.classList.add("visible");
   buildSidebar();
   applyRoleUI();
-  if(user.role!=="admin"&&user.role!=="pending"){
+  if(user.role!=="admin"&&user.role!=="owner"&&user.role!=="pending"){
     const match=staffList.find(s=>s.userId===user.id||s.name===user.name);
     if(match&&!attendance.find(a=>a.sid===match.id&&a.date===TODAY)){
       attendance.push({id:uid(),sid:match.id,date:TODAY,cin:Date.now(),cout:null,autoIn:true});
@@ -1849,11 +1937,7 @@ function loginAs(user){
 }
 
 function getDefaultPage(){
-  const role=currentUser.role;
-  if(role==='admin')return 'orders';
-  if(role==='cashier')return 'orders';
-  if(role==='staff')return 'orders';
-  return 'orders';// pending users see orders too
+  return 'orders';// all roles land on orders
 }
 
 // ── RELATED LIST TAB SWITCHER ──
@@ -2095,7 +2179,85 @@ function closeMoreDrawer(){
   document.getElementById('moreOverlay')?.classList.remove('open');
 }
 
-// ── LOGOUT CONFIRM ──
+// ── OWNER MANAGEMENT ──
+function openCreateOwner(){
+  const existing=appUsers.find(u=>u.role==='owner');
+  if(existing){toast('An owner account already exists');return;}
+  document.getElementById('ownerName').value='';
+  document.getElementById('ownerUsername').value='';
+  document.getElementById('ownerPass').value='';
+  document.getElementById('ownerErr').textContent='';
+  openModal('mCreateOwner');
+}
+function renderOwnerSection(){
+  const btn=document.getElementById('createOwnerBtn');
+  const info=document.getElementById('ownerInfo');
+  const owner=appUsers.find(u=>u.role==='owner');
+  if(owner){
+    if(btn)btn.style.display='none';
+    if(info)info.innerHTML=`
+      <div class="settings-uc">
+        <div style="display:flex;align-items:center;gap:12px;">
+          <div class="su-av" style="background:linear-gradient(135deg,rgba(200,131,74,.5),rgba(200,131,74,.2));border-color:rgba(200,131,74,.5);">${initials(owner.name)}</div>
+          <div>
+            <div style="font-size:13.5px;font-weight:500;color:var(--text-primary);">${esc(owner.name)}</div>
+            <div style="font-size:11.5px;color:var(--text-muted);margin-top:2px;">
+              <span class="badge b-accent" style="font-size:9.5px;">Owner</span>
+              &nbsp;·&nbsp; @${owner.username}
+            </div>
+          </div>
+        </div>
+        ${currentUser?.role==='admin'?`<button class="btn btn-danger btn-xs" onclick="removeOwner('${owner.id}')">Remove Owner</button>`:''}
+      </div>`;
+  } else {
+    if(btn)btn.style.display='';
+    if(info)info.innerHTML=`<div style="font-size:13px;color:var(--text-muted);padding:8px 0;">No owner account yet.</div>`;
+  }
+}
+function saveCreateOwner(){
+  const name=document.getElementById('ownerName').value.trim();
+  const username=document.getElementById('ownerUsername').value.trim().toLowerCase().replace(/\s+/g,'.');
+  const pass=document.getElementById('ownerPass').value;
+  const err=s=>{document.getElementById('ownerErr').textContent=s;};
+  if(!name){err('Enter a name');return;}
+  if(!username){err('Enter a username');return;}
+  if(pass.length<6){err('Password must be at least 6 characters');return;}
+  if(appUsers.find(u=>u.username===username)){err('Username already taken');return;}
+  if(appUsers.find(u=>u.role==='owner')){err('An owner already exists');return;}
+  const owner={id:uid(),name,username,passwordHash:simpleHash(pass),role:'owner',createdAt:Date.now()};
+  appUsers.push(owner);
+  S('appUsers',appUsers);
+  settingsAudit.push({id:uid(),ts:Date.now(),by:currentUser?.name||'Admin',action:'Owner Created',detail:`${name} (@${username})`});
+  S('settingsAudit',settingsAudit);
+  closeModal('mCreateOwner');
+  renderOwnerSection();
+  renderSettings();
+  renderSettingsAuditRL();
+  toast(`Owner account created for ${name} ✓`);
+}
+function removeOwner(id){
+  if(!confirm('Remove the owner account? This cannot be undone.'))return;
+  const o=appUsers.find(x=>x.id==id);
+  appUsers=appUsers.filter(x=>x.id!=id);
+  S('appUsers',appUsers);
+  settingsAudit.push({id:uid(),ts:Date.now(),by:currentUser?.name||'Admin',action:'Owner Removed',detail:`${o?.name||'Owner'} (@${o?.username||''}) removed`});
+  S('settingsAudit',settingsAudit);
+  renderOwnerSection();
+  renderSettings();
+  renderSettingsAuditRL();
+  toast('Owner account removed');
+}
+
+// ── REMOVE CUSTOMER ──
+function removeCustomer(id){
+  const c=customers.find(x=>x.id==id);if(!c)return;
+  if(!confirm(`Remove ${c.name} and all their loyalty data?`))return;
+  pushLoyAudit('Removed',c.name,'Customer deleted');
+  customers=customers.filter(x=>x.id!=id);
+  S('cust',customers);
+  renderLoyalty();renderLoyAudit();
+  toast(`${c.name} removed`);
+}
 function confirmLogout(){openModal('mLogout');}
 function doLogout(){closeModal('mLogout');logout();}
 function logout(){
@@ -2141,9 +2303,24 @@ function renderAvatar(){
   const key=currentUser?.role==='admin'?'bd5_av_admin':`bd5_av_${currentUser?.id}`;
   const data=localStorage.getItem(key);
   const el=document.getElementById('profileAv');
+  const removeBtn=document.getElementById('removePhotoBtn');
   if(!el)return;
-  if(data){el.innerHTML=`<img src="${data}" style="width:100%;height:100%;object-fit:cover;border-radius:50%;"/>`;el.style.fontSize='0';}
-  else{el.textContent=initials(currentUser?.name||'');el.style.fontSize='';}
+  if(data){
+    el.innerHTML=`<img src="${data}" style="width:100%;height:100%;object-fit:cover;border-radius:50%;"/>`;
+    el.style.fontSize='0';
+    if(removeBtn)removeBtn.style.display='inline-block';
+  } else {
+    el.textContent=initials(currentUser?.name||'');
+    el.style.fontSize='';
+    if(removeBtn)removeBtn.style.display='none';
+  }
+}
+function removeAvatar(){
+  const key=currentUser?.role==='admin'?'bd5_av_admin':`bd5_av_${currentUser?.id}`;
+  localStorage.removeItem(key);
+  renderAvatar();
+  loadSbAvatar();
+  toast('Photo removed');
 }
 function loadSbAvatar(){
   const key=currentUser?.role==='admin'?'bd5_av_admin':`bd5_av_${currentUser?.id}`;
@@ -2431,11 +2608,20 @@ function renderComparison(from,to,currentOrders,currentExp){
 // ══════════════════════════════════════════════
 // ROLE PERMISSIONS
 // ══════════════════════════════════════════════
-// canDo(action) — central permission check
+// Job title → access level mapping
+function accessLevel(role){
+  if(!role||role==='pending')return 'pending';
+  if(role==='admin')return 'admin';
+  if(role==='owner')return 'owner';
+  if(role==='cashier'||role==='Cashier')return 'cashier';
+  // All other job titles (Barista, Waiter, Chef, Manager, Helper, staff) → staff access
+  return 'staff';
+}
 function canDo(action){
-  const r=currentUser?.role||'pending';
+  const r=accessLevel(currentUser?.role||'pending');
   const P={
-    admin:{newOrder:1,billing:1,editMenu:1,removeMenu:1,editInv:1,removeInv:1,addStaff:1,fullStaff:1,editExp:1,removeExp:1,expDependent:1,seeDash:1,seeSettings:1,editLoyalty:1,removeStaff:1,clearAtt:1},
+    admin:{newOrder:1,billing:1,editMenu:1,removeMenu:1,editInv:1,removeInv:1,addStaff:1,fullStaff:1,editExp:1,removeExp:1,expDependent:1,seeDash:1,seeSettings:1,editLoyalty:1,removeStaff:1,clearAtt:1,removeCust:1},
+    owner:{newOrder:1,billing:1,editMenu:1,removeMenu:1,editInv:1,removeInv:1,addStaff:1,fullStaff:1,editExp:1,removeExp:1,expDependent:1,seeDash:1,seeSettings:1,editLoyalty:1,removeStaff:1,clearAtt:1,removeCust:1},
     cashier:{newOrder:1,billing:1,editMenu:1,removeMenu:0,editInv:1,removeInv:0,addStaff:0,fullStaff:0,editExp:1,removeExp:0,expDependent:0,seeDash:0,seeSettings:0,editLoyalty:1,removeStaff:0,clearAtt:0},
     staff:{newOrder:1,billing:1,editMenu:1,removeMenu:0,editInv:1,removeInv:0,addStaff:0,fullStaff:0,editExp:0,removeExp:0,expDependent:0,seeDash:0,seeSettings:0,editLoyalty:1,removeStaff:0,clearAtt:0},
     pending:{newOrder:1,billing:0,editMenu:0,removeMenu:0,editInv:0,removeInv:0,addStaff:0,fullStaff:0,editExp:0,removeExp:0,expDependent:0,seeDash:0,seeSettings:0,editLoyalty:0,removeStaff:0,clearAtt:0},
@@ -2447,20 +2633,21 @@ function canDo(action){
 // SIDEBAR & NAV
 // ══════════════════════════════════════════════
 const NAV_DEF=[
-  {page:'orders',label:'Orders & KOT',group:'Service',icon:'<svg class="ni" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>',roles:['admin','cashier','staff','pending']},
-  {page:'menu',label:'Menu Builder',group:'Service',icon:'<svg class="ni" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>',roles:['admin','cashier','staff']},
-  {page:'inventory',label:'Inventory',group:'Service',icon:'<svg class="ni" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg>',roles:['admin','cashier','staff']},
-  {page:'staff',label:'Staff & Attendance',group:'Operations',icon:'<svg class="ni" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>',roles:['admin','cashier','staff']},
-  {page:'expenses',label:'Expenses',group:'Operations',icon:'<svg class="ni" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 14l6-6m-5.5.5h.01m4.99 5h.01M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16l3.5-2 3.5 2 3.5-2 3.5 2z"/></svg>',roles:['admin','cashier','staff']},
-  {page:'loyalty',label:'Loyalty',group:'Operations',icon:'<svg class="ni" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"/></svg>',roles:['admin','cashier','staff']},
-  {page:'dashboard',label:'Dashboard',group:'Analytics',icon:'<svg class="ni" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>',roles:['admin']},
-  {page:'settings',label:'Settings',group:'System',icon:'<svg class="ni" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><circle cx="12" cy="12" r="3"/></svg>',roles:['admin']},
-  {page:'notifications',label:'Notifications',group:'System',icon:'<svg class="ni" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg>',roles:['admin','cashier','staff']},
+  {page:'orders',label:'Orders & KOT',group:'Service',icon:'<svg class="ni" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>',roles:['admin','owner','cashier','staff','pending']},
+  {page:'menu',label:'Menu Builder',group:'Service',icon:'<svg class="ni" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>',roles:['admin','owner','cashier','staff']},
+  {page:'inventory',label:'Inventory',group:'Service',icon:'<svg class="ni" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg>',roles:['admin','owner','cashier','staff']},
+  {page:'staff',label:'Staff & Attendance',group:'Operations',icon:'<svg class="ni" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>',roles:['admin','owner','cashier','staff']},
+  {page:'expenses',label:'Expenses',group:'Operations',icon:'<svg class="ni" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 14l6-6m-5.5.5h.01m4.99 5h.01M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16l3.5-2 3.5 2 3.5-2 3.5 2z"/></svg>',roles:['admin','owner','cashier','staff']},
+  {page:'loyalty',label:'Loyalty',group:'Operations',icon:'<svg class="ni" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"/></svg>',roles:['admin','owner','cashier','staff']},
+  {page:'dashboard',label:'Dashboard',group:'Analytics',icon:'<svg class="ni" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>',roles:['admin','owner']},
+  {page:'settings',label:'Settings',group:'System',icon:'<svg class="ni" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><circle cx="12" cy="12" r="3"/></svg>',roles:['admin','owner']},
+  {page:'notifications',label:'Notifications',group:'System',icon:'<svg class="ni" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg>',roles:['admin','owner','cashier','staff']},
 ];
 
 function buildSidebar(){
   const role=currentUser.role;
-  const allowed=NAV_DEF.filter(n=>n.roles.includes(role));
+  const level=accessLevel(role);// normalize: 'Cashier'→'cashier', 'Barista'→'staff', etc.
+  const allowed=NAV_DEF.filter(n=>n.roles.includes(level)||n.roles.includes(role));
   const groups={};
   allowed.forEach(n=>{if(!groups[n.group])groups[n.group]=[];groups[n.group].push(n);});
   let html='';
@@ -3074,7 +3261,14 @@ function openAddStaff(){document.getElementById('sName').value='';document.getEl
 function saveStaff(){
   const name=document.getElementById('sName').value.trim();const role=document.getElementById('sRole').value;const mobile=document.getElementById('sMob').value.trim();
   if(!name){toast('Enter a name');return;}
-  staffList.push({id:snid++,name,role,mobile});S('snid',snid);S('staff',staffList);closeModal('mStaff');renderStaff();
+  const newStaffId=snid++;
+  staffList.push({id:newStaffId,name,role,mobile});S('snid',snid);S('staff',staffList);
+  // Also create appUsers entry with the actual role (not pending — role is already set in Staff module)
+  if(!appUsers.find(u=>u.name===name||u.username===name.toLowerCase().replace(/\s+/g,'.'))){
+    const su={id:uid(),name,username:name.toLowerCase().replace(/\s+/g,'.'),passwordHash:simpleHash('staff123'),role,mobile,createdAt:Date.now(),staffId:newStaffId};
+    appUsers.push(su);S('appUsers',appUsers);
+  }
+  closeModal('mStaff');renderStaff();
   pushNotif(`Staff member added: ${name} (${role}) by ${currentUser?.name}`,currentUser?.name,'admin');
   toast(`${name} added`);
 }
@@ -3205,6 +3399,7 @@ function renderLoyalty(){
             <div style="font-size:11px;color:var(--text-muted);">${c.visits||0} visits${c.lastVisit?' · '+fmtD(c.lastVisit):''}</div>
           </div>
           <button class="btn btn-glass btn-xs" onclick="event.stopPropagation();openEditCustomer('${c.id}')">Edit</button>
+          ${canDo('removeCust')?`<button class="btn btn-danger btn-xs" onclick="event.stopPropagation();removeCustomer('${c.id}')">Remove</button>`:''}
           <span class="cust-expand-icon" id="cico-${c.id}">▼</span>
         </div>
       </div>
@@ -3277,19 +3472,22 @@ function renderDash(){
 // SETTINGS
 // ══════════════════════════════════════════════
 function renderSettings(){
-  if(!appUsers.length){
+  renderOwnerSection();
+  const teamUsers=appUsers.filter(u=>u.role!=='owner');
+  if(!teamUsers.length){
     document.getElementById('userList').innerHTML=`<div class="empty"><svg class="empty-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg><div class="empty-txt">No users yet. New users will appear here after registering.</div></div>`;
   } else {
-    document.getElementById('userList').innerHTML=appUsers.map(u=>{
-      const avCls=u.role==='cashier'?'cashier':u.role==='staff'?'staff-av':u.role==='pending'?'pending-av':'';
+    document.getElementById('userList').innerHTML=teamUsers.map(u=>{
+      const avCls=accessLevel(u.role)==='cashier'?'cashier':accessLevel(u.role)==='staff'?'staff-av':u.role==='pending'?'pending-av':'';
       return`<div class="settings-uc">
         <div style="display:flex;align-items:center;gap:12px;">
           <div class="su-av ${avCls}">${initials(u.name)}</div>
           <div>
             <div style="font-size:13.5px;font-weight:500;color:var(--text-primary);">${esc(u.name)}</div>
             <div style="font-size:11.5px;color:var(--text-muted);margin-top:2px;">
-              <span class="badge ${u.role==='pending'?'b-red':u.role==='cashier'?'b-blue':'b-green'}" style="font-size:9.5px;">${u.role}</span>
+              <span class="badge ${u.role==='pending'?'b-red':accessLevel(u.role)==='cashier'?'b-blue':'b-green'}" style="font-size:9.5px;">${u.role}</span>
               &nbsp;·&nbsp; @${u.username}
+              ${u.mobile?`&nbsp;·&nbsp; ${esc(u.mobile)}`:''}
               &nbsp;·&nbsp; Joined ${fmtD(new Date(u.createdAt).toISOString().split('T')[0])}
             </div>
           </div>
@@ -3313,40 +3511,56 @@ function openEditUser(id){
   const u=appUsers.find(x=>x.id==id);if(!u)return;
   document.getElementById('euId').value=u.id;
   document.getElementById('euName').value=u.name;
-  document.getElementById('euRole').value=u.role||'pending';
+  // Map old lowercase role values to new capitalised job titles for the dropdown
+  const roleMap={'cashier':'Cashier','staff':'Barista','pending':'pending'};
+  const currentRole=u.role||'pending';
+  // If it's already a job title (capitalised), use as-is; otherwise map it
+  const dropdownVal=document.querySelector(`#euRole option[value="${currentRole}"]`)?currentRole:(roleMap[currentRole]||'pending');
+  document.getElementById('euRole').value=dropdownVal;
   openModal('mEditUser');
 }
 function saveEditUser(){
-  const id=document.getElementById('euId').value;const name=document.getElementById('euName').value.trim();const role=document.getElementById('euRole').value;
+  const id=document.getElementById('euId').value;
+  const name=document.getElementById('euName').value.trim();
+  const role=document.getElementById('euRole').value;// e.g. "Cashier", "Barista", "pending"
   if(!name){toast('Enter a name');return;}
   const u=appUsers.find(x=>x.id==id);if(!u)return;
   const oldRole=u.role;
   u.name=name;u.role=role;S('appUsers',appUsers);
-  // Sync name AND role in staff roster
+  // Sync name AND job title in staff roster
   const sr=staffList.find(s=>s.userId==id);
   if(sr){
     sr.name=name;
-    const roleLabel=role==='cashier'?'Cashier':role==='staff'?'Staff Member':role==='admin'?'Admin':'New Member';
-    sr.role=roleLabel;S('staff',staffList);
+    sr.role=role==='pending'?'New Member':role;// use job title directly
+    S('staff',staffList);
   }
   closeModal('mEditUser');renderSettings();
-  // Targeted notification — only the affected user sees this
-  pushNotif(`Your role has been updated from "${oldRole}" to "${role}" by Admin`,'admin',id);
-  // Settings audit log
+  pushNotif(`Your role has been updated to "${role}" by Admin`,'admin',id);
   settingsAudit.push({id:uid(),ts:Date.now(),by:'Admin',action:'Role Updated',detail:`${name}: ${oldRole} → ${role}`});
   S('settingsAudit',settingsAudit);
   renderSettingsAudit();
   toast('User updated');
 }
 function delUser(id){
-  if(!confirm('Remove this user?'))return;
+  if(!confirm('Remove this user? Their staff and attendance records will also be removed.'))return;
   const u=appUsers.find(x=>x.id==id);
+  if(!u)return;
+  // Remove from appUsers
   appUsers=appUsers.filter(x=>x.id!=id);S('appUsers',appUsers);
-  staffList=staffList.filter(s=>s.userId!=id);S('staff',staffList);
+  // Remove from staffList — match by userId OR by name (covers both creation paths)
+  const staffEntry=staffList.find(s=>s.userId==id||s.name===u.name);
+  if(staffEntry){
+    // Remove attendance records for this staff member
+    attendance=attendance.filter(a=>a.sid!==staffEntry.id);S('att',attendance);
+    // Remove staff entry
+    staffList=staffList.filter(s=>s.id!==staffEntry.id);S('staff',staffList);
+  }
   // Settings audit log
-  settingsAudit.push({id:uid(),ts:Date.now(),by:'Admin',action:'User Removed',detail:`${u?.name} (@${u?.username}) — role was "${u?.role}"`});
+  settingsAudit.push({id:uid(),ts:Date.now(),by:currentUser?.name||'Admin',action:'User Removed',detail:`${u.name} (@${u.username}) — role was "${u.role}"`});
   S('settingsAudit',settingsAudit);
-  renderSettings();toast(`${u?.name} removed`);
+  renderSettings();
+  renderSettingsAuditRL();
+  toast(`${u.name} removed`);
 }
 
 // ══════════════════════════════════════════════
