@@ -3235,16 +3235,20 @@ function openClearData(){
 function doClearData(){
   const confirm=document.getElementById('clearDataConfirm').value.trim();
   if(confirm!=='DELETE'){toast('Type DELETE exactly to confirm');return;}
-  // Clear everything except menu and inventory
+  // Clear all operational data
   orders=[];S('orders',orders);
   expenses=[];S('exp',expenses);
   attendance=[];S('att',attendance);
-  attAudit=[];S('attAudit',attAudit);
   customers=[];S('cust',customers);
   ptsBatches=[];S('pts',ptsBatches);
   notifications=[];S('notifs',notifications);
   staffList=[];S('staff',staffList);
   appUsers=[];S('appUsers',appUsers);
+  // Clear ALL audit/history logs
+  attAudit=[];S('attAudit',attAudit);
+  menuAudit=[];S('menuAudit',menuAudit);
+  invAudit=[];S('invAudit',invAudit);
+  loyAudit=[];S('loyAudit',loyAudit);
   settingsAudit=[];S('settingsAudit',settingsAudit);
   // Reset admin password back to default
   adminCreds={passwordHash:simpleHash('admin123')};S('adminCreds',adminCreds);
@@ -3252,8 +3256,8 @@ function doClearData(){
   // Reset all counters
   onid=1;S('onid',onid);
   snid=1;S('snid',snid);
+  inid=1;S('inid',inid);
   closeModal('mClearData');
-  // Log out — since user accounts are cleared, session is invalid
   toast('All data cleared. Logging out...');
   setTimeout(()=>logout(),1500);
 }
