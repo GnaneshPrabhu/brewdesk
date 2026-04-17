@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
-<title>BrewDesk SaaS</title>
+<title>BrewDesk</title>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500&family=Figtree:wght@300;400;500;600&display=swap" rel="stylesheet"/>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
@@ -61,6 +61,11 @@ body.light .notif-panel{background:var(--glass-modal);}
 .table-chip.tc-add:hover{background:var(--accent-soft);border-color:var(--accent);}
 .table-chip.tc-add .tc-plus{font-size:20px;line-height:1;color:var(--text-muted);transition:var(--t);}
 .table-chip.tc-add:hover .tc-plus{color:var(--accent);}
+/* New Order chip — used inside the grid on mobile */
+.table-chip.tc-new-order{cursor:pointer;background:linear-gradient(135deg,#d4894e,#b86e35);border-color:transparent;display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:50px;gap:3px;}
+.table-chip.tc-new-order:hover{background:linear-gradient(135deg,#e09458,#c47840);}
+.table-chip.tc-new-order .tc-name{color:#fff;font-size:10.5px;font-weight:600;}
+.table-chip.tc-new-order svg{fill:#fff;}
 /* RELATED LIST PAGINATION */
 .rl-pagination{display:flex;align-items:center;justify-content:center;gap:4px;padding-top:12px;border-top:1px solid var(--glass-border);margin-top:8px;}
 .rl-page-btn{min-width:28px;height:28px;padding:0 6px;border-radius:6px;border:1px solid var(--glass-border);background:transparent;color:var(--text-muted);font-size:12px;cursor:pointer;font-family:var(--ff-b);transition:var(--t);display:flex;align-items:center;justify-content:center;}
@@ -134,27 +139,12 @@ html,body{height:100%;overflow:hidden;font-family:var(--ff-b);font-size:14px;col
 .login-logo span{color:var(--accent);}
 .login-tagline{font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--text-muted);text-align:center;margin-bottom:44px;}
 
-/* Login choice — side by side compact buttons */
+/* Login choice */
 #loginChoice{display:flex;flex-direction:column;align-items:center;gap:16px;width:100%;max-width:360px;}
-#cafeChoice{display:flex;flex-direction:column;align-items:center;gap:12px;width:100%;max-width:320px;}
-.cafe-choice-row{display:flex;gap:10px;width:100%;}
-.login-choice-btn{flex:1;padding:13px 10px;border-radius:var(--r-lg);border:1px solid var(--glass-border);background:var(--glass-card);backdrop-filter:var(--blur);-webkit-backdrop-filter:var(--blur);color:var(--text-primary);font-family:var(--ff-b);font-size:13.5px;font-weight:500;cursor:pointer;transition:var(--t);letter-spacing:.2px;display:flex;align-items:center;justify-content:center;gap:7px;}
+.login-choice-btn{width:100%;padding:16px;border-radius:var(--r-lg);border:1px solid var(--glass-border);background:var(--glass-card);backdrop-filter:var(--blur);-webkit-backdrop-filter:var(--blur);color:var(--text-primary);font-family:var(--ff-b);font-size:15px;font-weight:500;cursor:pointer;transition:var(--t);letter-spacing:.3px;}
 .login-choice-btn:hover{background:var(--glass-card-hover);border-color:var(--glass-border-strong);}
 .login-choice-btn.admin-btn{background:linear-gradient(135deg,rgba(200,131,74,.2),rgba(200,131,74,.08));border-color:rgba(200,131,74,.3);}
 .login-choice-btn.admin-btn:hover{background:linear-gradient(135deg,rgba(200,131,74,.3),rgba(200,131,74,.14));}
-/* SaaS submit buttons — short, centered */
-.saas-submit-btn{display:flex;align-items:center;justify-content:center;margin:4px auto 0;padding:11px 40px;width:auto !important;min-width:140px;text-align:center;letter-spacing:.4px;}
-/* Google auth button */
-.auth-google-btn{width:100%;padding:11px 16px;border-radius:var(--r);border:1px solid var(--glass-border-strong);background:var(--glass-card);backdrop-filter:var(--blur);color:var(--text-primary);font-family:var(--ff-b);font-size:13.5px;font-weight:500;cursor:pointer;transition:var(--t);display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:4px;}
-.auth-google-btn:hover{background:var(--glass-card-hover);border-color:rgba(200,131,74,.35);}
-/* OR divider */
-.auth-divider{display:flex;align-items:center;gap:10px;margin:14px 0;color:var(--text-muted);font-size:11px;letter-spacing:.5px;}
-.auth-divider::before,.auth-divider::after{content:'';flex:1;height:1px;background:var(--glass-border);}
-/* OTP 6-box */
-.otp-inputs{display:flex;gap:8px;justify-content:center;margin-bottom:4px;}
-.otp-box{width:40px;height:46px;border-radius:var(--r);border:1px solid var(--glass-border);background:var(--glass-input);color:var(--text-primary);font-size:20px;font-weight:600;text-align:center;font-family:var(--ff-b);transition:var(--t);outline:none;}
-.otp-box:focus{border-color:var(--accent);background:var(--glass-input-focus);}
-
 
 /* Login form panel */
 .login-panel{display:none;width:100%;max-width:380px;background:var(--glass-modal);backdrop-filter:var(--blur-heavy);-webkit-backdrop-filter:var(--blur-heavy);border:1px solid var(--glass-border-strong);border-radius:var(--r-xl);padding:32px;box-shadow:var(--shadow);animation:slideM .22s cubic-bezier(.3,0,.2,1);}
@@ -163,19 +153,23 @@ html,body{height:100%;overflow:hidden;font-family:var(--ff-b);font-size:14px;col
 .lp-back{background:none;border:none;cursor:pointer;color:var(--text-muted);font-size:12px;font-family:var(--ff-b);display:flex;align-items:center;gap:6px;margin-bottom:18px;transition:var(--t);}
 .lp-back:hover{color:var(--text-primary);}
 
-/* SaaS onboarding tabs */
-.saas-tabs{display:flex;gap:0;border-bottom:1px solid var(--glass-border);margin-bottom:24px;width:100%;}
-.saas-tab{flex:1;padding:10px;text-align:center;font-size:13px;font-weight:500;color:var(--text-muted);cursor:pointer;border-bottom:2px solid transparent;transition:var(--t);font-family:var(--ff-b);}
-.saas-tab:hover{color:var(--text-secondary);}
-.saas-tab.on{color:var(--accent);border-bottom-color:var(--accent);}
-.saas-panel{display:none;}
-.saas-panel.on{display:flex;flex-direction:column;}
-.saas-divider{text-align:center;font-size:11px;color:var(--text-muted);margin:14px 0;letter-spacing:.5px;}
-/* User name cards */
-#userNameCards{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:16px;}
-.uname-card{padding:10px 16px;border-radius:var(--r);border:1px solid var(--glass-border);background:rgba(255,248,240,.06);cursor:pointer;transition:var(--t);font-size:13.5px;font-weight:500;color:var(--text-secondary);}
-.uname-card:hover,.uname-card.selected{background:var(--accent-soft);border-color:rgba(200,131,74,.4);color:var(--accent);}
-.uname-empty{font-size:13px;color:var(--text-muted);line-height:1.7;padding:14px 0;}
+/* User login searchable dropdown */
+.uname-dropdown{position:relative;margin-bottom:14px;}
+.uname-input-wrap{position:relative;display:flex;align-items:center;}
+.uname-input-wrap svg{position:absolute;left:12px;color:var(--text-muted);pointer-events:none;flex-shrink:0;}
+.uname-search{display:block;width:100%;background:var(--glass-input);border:1px solid var(--glass-border);border-radius:var(--r);color:var(--text-primary);font-family:var(--ff-b);font-size:13.5px;padding:10px 14px 10px 38px;outline:none;transition:var(--t);cursor:pointer;}
+.uname-search:focus{border-color:rgba(200,131,74,.5);background:var(--glass-input-focus);box-shadow:0 0 0 3px rgba(200,131,74,.12);}
+.uname-search::placeholder{color:var(--text-muted);}
+.uname-caret{position:absolute;right:12px;color:var(--text-muted);pointer-events:none;transition:transform .2s;}
+.uname-caret.open{transform:rotate(180deg);}
+.uname-list{position:absolute;top:calc(100% + 6px);left:0;right:0;background:var(--glass-modal);backdrop-filter:var(--blur-heavy);-webkit-backdrop-filter:var(--blur-heavy);border:1px solid var(--glass-border-strong);border-radius:var(--r-lg);box-shadow:var(--shadow);z-index:60;max-height:220px;overflow-y:auto;display:none;}
+.uname-list.open{display:block;}
+.uname-opt{padding:11px 16px;font-size:13.5px;color:var(--text-secondary);cursor:pointer;transition:var(--t);display:flex;align-items:center;gap:10px;border-bottom:1px solid rgba(255,248,240,.04);}
+.uname-opt:last-child{border-bottom:none;}
+.uname-opt:hover,.uname-opt.active{background:var(--accent-soft);color:var(--accent);}
+.uname-opt-av{width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,rgba(200,131,74,.3),rgba(200,131,74,.1));border:1px solid rgba(200,131,74,.25);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;color:var(--accent);font-family:var(--ff-d);flex-shrink:0;}
+.uname-opt-role{font-size:10px;color:var(--text-muted);margin-left:auto;letter-spacing:.3px;text-transform:uppercase;}
+.uname-empty{padding:20px 16px;text-align:center;font-size:13px;color:var(--text-muted);}
 
 /* APP */
 #app{display:none;height:100%;flex-direction:column;}
@@ -624,113 +618,21 @@ td.tdc{color:var(--text-primary);font-weight:500;}
 
 <!-- ══ LOGIN ══════════════════════════════════════════ -->
 <div id="loginScreen">
-  <div class="login-logo" id="loginLogo">Brew<span>Desk</span></div>
-  <div class="login-tagline" id="loginTagline">Cafe Management</div>
+  <div class="login-logo">Brew<span>Desk</span></div>
+  <div class="login-tagline">Cafe Management System</div>
 
-  <!-- ── PHASE 1: Owner sign-in / sign-up ── -->
-  <div id="loginChoice" style="width:100%;max-width:380px;">
-    <div class="login-panel" style="display:block;padding:30px 32px;">
-      <div class="saas-tabs">
-        <div class="saas-tab on" id="stab-login" onclick="saasTab('login')">Sign In</div>
-        <div class="saas-tab" id="stab-signup" onclick="saasTab('signup')">New Café</div>
-      </div>
-
-      <!-- SIGN IN -->
-      <div class="saas-panel on" id="spanel-login">
-        <!-- Google -->
-        <button class="auth-google-btn" onclick="doGoogleAuth()">
-          <svg width="18" height="18" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
-          Continue with Google
-        </button>
-        <div class="auth-divider"><span>or</span></div>
-        <!-- Email OTP -->
-        <div id="otpStep1_si">
-          <div class="form-group" style="margin-bottom:8px;">
-            <input class="form-input" type="email" id="siOtpEmail" placeholder="your@email.com" onkeydown="if(event.key==='Enter')sendOtp('si')"/>
-          </div>
-          <div id="siOtpErr" style="font-size:12px;color:var(--red);margin-bottom:8px;min-height:16px;"></div>
-          <button class="btn btn-glass" style="width:100%;justify-content:center;" id="siSendBtn" onclick="sendOtp('si')">Send OTP to Gmail</button>
-        </div>
-        <div id="otpStep2_si" style="display:none;">
-          <div style="font-size:12px;color:var(--text-muted);margin-bottom:12px;text-align:center;">
-            6-digit code sent to <span id="siOtpEmailShow" style="color:var(--accent);"></span>
-            <span style="margin-left:6px;cursor:pointer;text-decoration:underline;" onclick="resetOtp('si')">Change</span>
-          </div>
-          <div class="otp-inputs">
-            <input class="otp-box" type="text" maxlength="1" inputmode="numeric" onkeyup="otpNav(this,0,'si')" onpaste="otpPaste(event,'si')"/>
-            <input class="otp-box" type="text" maxlength="1" inputmode="numeric" onkeyup="otpNav(this,1,'si')"/>
-            <input class="otp-box" type="text" maxlength="1" inputmode="numeric" onkeyup="otpNav(this,2,'si')"/>
-            <input class="otp-box" type="text" maxlength="1" inputmode="numeric" onkeyup="otpNav(this,3,'si')"/>
-            <input class="otp-box" type="text" maxlength="1" inputmode="numeric" onkeyup="otpNav(this,4,'si')"/>
-            <input class="otp-box" type="text" maxlength="1" inputmode="numeric" onkeyup="otpNav(this,5,'si')"/>
-          </div>
-          <div id="siOtpVerifyErr" style="font-size:12px;color:var(--red);margin:10px 0 4px;min-height:16px;text-align:center;"></div>
-          <button class="btn btn-primary saas-submit-btn" id="siVerifyBtn" onclick="verifyOtp('si')">Verify &amp; Sign In</button>
-        </div>
-      </div>
-
-      <!-- NEW CAFÉ: name first, then Google/OTP -->
-      <div class="saas-panel" id="spanel-signup">
-        <div id="suStep1">
-          <div class="form-group">
-            <label class="form-label">Café Name</label>
-            <input class="form-input" id="suCafe" placeholder="e.g. Gsquared Cafe" onkeydown="if(event.key==='Enter')confirmNewCafeName()"/>
-          </div>
-          <div id="suCafeErr" style="font-size:12px;color:var(--red);margin-bottom:8px;min-height:16px;"></div>
-          <button class="btn btn-primary saas-submit-btn" onclick="confirmNewCafeName()">Continue</button>
-        </div>
-        <div id="suStep2" style="display:none;">
-          <div style="font-size:12px;color:var(--text-muted);margin-bottom:14px;text-align:center;">
-            Creating: <span id="suCafeNameShow" style="color:var(--accent);font-weight:600;"></span>
-            <span style="margin-left:6px;cursor:pointer;text-decoration:underline;" onclick="resetNewCafe()">Change</span>
-          </div>
-          <button class="auth-google-btn" onclick="doGoogleAuth()">
-            <svg width="18" height="18" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
-            Sign up with Google
-          </button>
-          <div class="auth-divider"><span>or</span></div>
-          <div id="otpStep1_su">
-            <div class="form-group" style="margin-bottom:8px;">
-              <input class="form-input" type="email" id="suOtpEmail" placeholder="your@email.com" onkeydown="if(event.key==='Enter')sendOtp('su')"/>
-            </div>
-            <div id="suOtpErr" style="font-size:12px;color:var(--red);margin-bottom:8px;min-height:16px;"></div>
-            <button class="btn btn-glass" style="width:100%;justify-content:center;" id="suSendBtn" onclick="sendOtp('su')">Send OTP to Gmail</button>
-          </div>
-          <div id="otpStep2_su" style="display:none;">
-            <div style="font-size:12px;color:var(--text-muted);margin-bottom:12px;text-align:center;">
-              Code sent to <span id="suOtpEmailShow" style="color:var(--accent);"></span>
-              <span style="margin-left:6px;cursor:pointer;text-decoration:underline;" onclick="resetOtp('su')">Change</span>
-            </div>
-            <div class="otp-inputs">
-              <input class="otp-box" type="text" maxlength="1" inputmode="numeric" onkeyup="otpNav(this,0,'su')" onpaste="otpPaste(event,'su')"/>
-              <input class="otp-box" type="text" maxlength="1" inputmode="numeric" onkeyup="otpNav(this,1,'su')"/>
-              <input class="otp-box" type="text" maxlength="1" inputmode="numeric" onkeyup="otpNav(this,2,'su')"/>
-              <input class="otp-box" type="text" maxlength="1" inputmode="numeric" onkeyup="otpNav(this,3,'su')"/>
-              <input class="otp-box" type="text" maxlength="1" inputmode="numeric" onkeyup="otpNav(this,4,'su')"/>
-              <input class="otp-box" type="text" maxlength="1" inputmode="numeric" onkeyup="otpNav(this,5,'su')"/>
-            </div>
-            <div id="suOtpVerifyErr" style="font-size:12px;color:var(--red);margin:10px 0 4px;min-height:16px;text-align:center;"></div>
-            <button class="btn btn-primary saas-submit-btn" id="suVerifyBtn" onclick="verifyOtp('su')">Verify &amp; Create Café</button>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- ── PHASE 2: Post-owner-auth — Admin / User choice ── -->
-  <div id="cafeChoice" style="display:none;width:100%;max-width:320px;">
-    <div class="cafe-choice-row">
-      <button class="login-choice-btn admin-btn" onclick="showAdminLogin()">
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
-        Admin
-      </button>
-      <button class="login-choice-btn" onclick="showUserLogin()">
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
-        User
-      </button>
-    </div>
-    <div style="font-size:11px;color:var(--text-muted);margin-top:6px;text-align:center;">
-      New here? <span style="color:var(--accent);cursor:pointer;text-decoration:underline;" onclick="showNewUser()">Create your profile</span>
+  <!-- Step 1: Choice -->
+  <div id="loginChoice">
+    <button class="login-choice-btn admin-btn" onclick="showAdminLogin()">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" style="margin-right:8px;vertical-align:middle;"><path d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+      Admin Login
+    </button>
+    <button class="login-choice-btn" onclick="showUserLogin()">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" style="margin-right:8px;vertical-align:middle;"><path d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+      User Login
+    </button>
+    <div style="font-size:11px;color:var(--text-muted);margin-top:4px;">
+      First time? <span style="color:var(--accent);cursor:pointer;text-decoration:underline;" onclick="showNewUser()">Create your profile</span>
     </div>
   </div>
 
@@ -762,7 +664,9 @@ td.tdc{color:var(--text-primary);font-weight:500;}
       Back
     </button>
     <div class="lp-title">User Login</div>
-    <div id="userNameCards"></div>
+    <div id="userNameCards">
+      <!-- Populated by renderUserNameCards() -->
+    </div>
     <div id="userLoginForm" style="display:none;">
       <div class="form-group">
         <label class="form-label">Username</label>
@@ -782,9 +686,9 @@ td.tdc{color:var(--text-primary);font-weight:500;}
     </div>
   </div>
 
-  <!-- New Staff Registration Panel -->
+  <!-- New User Registration Panel -->
   <div class="login-panel" id="newUserPanel">
-    <button class="lp-back" onclick="backToStaffChoice()">
+    <button class="lp-back" onclick="backToChoice()">
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
       Back
     </button>
@@ -816,7 +720,7 @@ td.tdc{color:var(--text-primary);font-weight:500;}
 <div id="app">
   <!-- MOBILE TOP BAR -->
   <div id="mobileTopBar">
-    <div class="mtb-logo" id="mtbCafeName">Brew<span>Desk</span></div>
+    <div class="mtb-logo">Brew<span>Desk</span></div>
     <div class="mtb-right">
       <div class="mtb-av" id="mtbAv" onclick="openProfile()"></div>
       <button style="background:none;border:none;cursor:pointer;color:var(--text-muted);padding:4px;" onclick="toggleTheme()" title="Toggle theme">
@@ -830,7 +734,8 @@ td.tdc{color:var(--text-primary);font-weight:500;}
     <!-- SIDEBAR -->
     <nav id="sb">
       <div class="sb-top">
-        <div class="sb-logo" id="sbCafeName" style="font-size:18px;letter-spacing:.2px;">Brew<span>Desk</span></div>
+        <div class="sb-logo">Brew<span>Desk</span></div>
+        <div class="sb-tagline">Cafe Management</div>
         <div class="sb-date" id="sbDate"></div>
       </div>
       <div class="sb-nav" id="sbNav"></div>
@@ -868,24 +773,26 @@ td.tdc{color:var(--text-primary);font-weight:500;}
             </button>
           </div>
         </div>
-        <!-- Table status — on desktop the New Order button sits here at the right edge -->
+        <!-- Table status — New Order button placement differs by screen size -->
         <div id="tableOverview" style="margin-bottom:20px;display:none;">
           <div class="card-title" style="margin-bottom:10px;">Table Status</div>
-          <div style="display:flex;align-items:stretch;gap:10px;">
+          <div style="display:flex;align-items:center;gap:10px;width:100%;">
             <div class="table-grid" id="tableGrid" style="flex:1;"></div>
-            <!-- On desktop: New Order button at right edge of table row -->
-            <button class="btn btn-primary ord-new-desktop" id="newOrdBtn" onclick="openNewOrder()" style="align-self:stretch;white-space:nowrap;padding:0 18px;display:none;">
+            <!-- Desktop: tall button at right edge -->
+            <button class="btn btn-primary ord-new-desktop" id="newOrdBtn" onclick="openNewOrder()" style="align-self:center;white-space:nowrap;padding:10px 20px;margin-left:auto;display:none;">
               <svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd"/></svg>
               New Order
             </button>
           </div>
         </div>
-        <!-- Fallback for non-billing roles -->
+        <!-- Fallback for non-billing roles (staff/cashier) — chip matching table grid style -->
         <div id="newOrdFallback" style="margin-bottom:16px;display:none;">
-          <button class="btn btn-primary" onclick="openNewOrder()" style="width:100%;">
-            <svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd"/></svg>
-            New Order
-          </button>
+          <div class="table-grid">
+            <div class="table-chip tc-new-order" onclick="openNewOrder()">
+              <svg width="14" height="14" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd"/></svg>
+              <div class="tc-name">New Order</div>
+            </div>
+          </div>
         </div>
         <!-- Search -->
         <div class="search-bar" id="ordSearchBar" style="display:none;">
@@ -1521,7 +1428,7 @@ td.tdc{color:var(--text-primary);font-weight:500;}
 <div class="overlay" id="mLogout">
   <div class="modal" style="width:380px;">
     <div class="modal-header"><div class="modal-title">Log Out?</div><button class="modal-close" onclick="closeModal('mLogout')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 6L6 18M6 6l12 12"/></svg></button></div>
-    <div style="font-size:13.5px;color:var(--text-secondary);margin-bottom:6px;">You are about to log out of <span id="logoutCafeName">BrewDesk</span>.</div>
+    <div style="font-size:13.5px;color:var(--text-secondary);margin-bottom:6px;">You are about to log out of BrewDesk.</div>
     <div style="font-size:12.5px;color:var(--text-muted);">Active orders will remain saved and continue when you log back in.</div>
     <div class="modal-footer"><button class="btn btn-glass" onclick="closeModal('mLogout')">Stay</button><button class="btn btn-danger" onclick="doLogout()">Log Out</button></div>
   </div>
@@ -1616,68 +1523,37 @@ const TODAY=_d.getFullYear()+'-'+String(_d.getMonth()+1).padStart(2,'0')+'-'+Str
 const SUPA_URL='https://pzidyorbidmlrtqfgaqf.supabase.co';
 const SUPA_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB6aWR5b3JiaWRtbHJ0cWZnYXFmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQzMTk3MTksImV4cCI6MjA4OTg5NTcxOX0.1etfPytsCw4tbMVk_iiaqxPTwP95Idt2YVCDIOwsrr4';
 
-// Active café session — set after owner login or staff login
-let CAFE_ID=null;// uuid from cafes table
-let CAFE_NAME=null;// display name
-
-// Supabase REST helper — all operations scoped to CAFE_ID
+// Supabase REST helper — all operations go through this
 const SB={
   headers:{'apikey':SUPA_KEY,'Authorization':'Bearer '+SUPA_KEY,'Content-Type':'application/json','Prefer':'return=minimal'},
-
-  // ── Café table ops ──
-  async createCafe(name,email,passwordHash){
-    try{
-      const r=await fetch(`${SUPA_URL}/rest/v1/cafes`,{
-        method:'POST',
-        headers:{...this.headers,'Prefer':'return=representation'},
-        body:JSON.stringify({name,owner_email:email,owner_password_hash:passwordHash})
-      });
-      if(!r.ok){const e=await r.json();return{error:e};}
-      const rows=await r.json();
-      return{data:rows[0]};
-    }catch(e){return{error:e};}
-  },
-  async getCafeByEmail(email){
-    try{
-      const r=await fetch(`${SUPA_URL}/rest/v1/cafes?owner_email=eq.${encodeURIComponent(email)}&select=id,name,owner_password_hash`,{headers:this.headers});
-      if(!r.ok)return null;
-      const rows=await r.json();
-      return rows.length?rows[0]:null;
-    }catch{return null;}
-  },
-
-  // ── bd_store ops (all scoped to cafe_id) ──
   async get(keyName){
-    if(!CAFE_ID)return null;
     try{
-      const r=await fetch(`${SUPA_URL}/rest/v1/bd_store?cafe_id=eq.${CAFE_ID}&key=eq.${encodeURIComponent(keyName)}&select=value`,{headers:this.headers});
+      const r=await fetch(`${SUPA_URL}/rest/v1/bd_store?key=eq.${encodeURIComponent(keyName)}&select=value`,{headers:this.headers});
       if(!r.ok)return null;
       const rows=await r.json();
       return rows.length?JSON.parse(rows[0].value):null;
     }catch{return null;}
   },
   async upsert(keyName,dataValue){
-    if(!CAFE_ID)return false;
     try{
-      await fetch(`${SUPA_URL}/rest/v1/bd_store?cafe_id=eq.${CAFE_ID}&key=eq.${encodeURIComponent(keyName)}`,{method:'DELETE',headers:this.headers});
+      // Delete existing key then insert fresh
+      await fetch(`${SUPA_URL}/rest/v1/bd_store?key=eq.${encodeURIComponent(keyName)}`,{method:'DELETE',headers:this.headers});
       const r=await fetch(`${SUPA_URL}/rest/v1/bd_store`,{
         method:'POST',
         headers:{...this.headers,'Prefer':'return=minimal'},
-        body:JSON.stringify({cafe_id:CAFE_ID,key:keyName,value:JSON.stringify(dataValue)})
+        body:JSON.stringify({key:keyName,value:JSON.stringify(dataValue)})
       });
       return r.ok;
-    }catch{return false;}
+    }catch{return false;} // silent fail — localStorage already has the data
   }
 };
 
 // ══════════════════════════════════════════════
 // HYBRID STORAGE — Supabase primary, localStorage fallback
-// Keys are prefixed with cafe_id to isolate per-café data in localStorage
 // ══════════════════════════════════════════════
-const lsKey=(k)=>`bd5_${CAFE_ID||'nostore'}_${k}`;
-const L=(k,d)=>{try{const v=localStorage.getItem(lsKey(k));return v?JSON.parse(v):d;}catch{return d;}};
+const L=(k,d)=>{try{const v=localStorage.getItem('bd5_'+k);return v?JSON.parse(v):d;}catch{return d;}};
 const S=(k,v)=>{
-  try{localStorage.setItem(lsKey(k),JSON.stringify(v));}catch{}
+  try{localStorage.setItem('bd5_'+k,JSON.stringify(v));}catch{}
   sbSync(k,v);
 };
 
@@ -1699,16 +1575,16 @@ async function flushSyncQueue(){
   }
 }
 
-// Load all data from Supabase on startup (scoped to CAFE_ID)
+// Load all data from Supabase on startup
 async function loadFromSupabase(){
-  if(!navigator.onLine||!CAFE_ID)return false;
+  if(!navigator.onLine)return false;
   try{
-    const r=await fetch(`${SUPA_URL}/rest/v1/bd_store?cafe_id=eq.${CAFE_ID}&select=key,value`,{headers:SB.headers});
+    const r=await fetch(`${SUPA_URL}/rest/v1/bd_store?select=key,value`,{headers:SB.headers});
     if(!r.ok)return false;
     const rows=await r.json();
     if(!rows||!rows.length)return false;
     rows.forEach(row=>{
-      try{localStorage.setItem(lsKey(row.key),row.value);}catch{}
+      try{localStorage.setItem('bd5_'+row.key,row.value);}catch{}
     });
     return true;
   }catch{return false;}
@@ -1761,273 +1637,46 @@ let sharedCats=L('sharedCats',['Raw Materials','Dairy','Packaging','Cleaning','S
 let menuCats=L('menuCats',['Hot Beverages','Cold Beverages','Snacks','Meals','Desserts','Other']);
 let mnid=L('mnid',7),inid=L('inid',5),snid=L('snid',3),onid=L('onid',1);
 
-// First-time setup: adminCreds initialized after CAFE_ID is set (see reloadAllVars / doSaasSignup)
-let adminCreds=null;
+// Admin credentials stored separately (only admin account)
+let adminCreds=L('adminCreds',null);// {passwordHash}
+// First-time setup: admin default password is "admin123"
+if(!adminCreds){adminCreds={passwordHash:simpleHash('admin123')};S('adminCreds',adminCreds);}
 
 function simpleHash(s){let h=0;for(let i=0;i<s.length;i++){h=Math.imul(31,h)+s.charCodeAt(i)|0;}return h.toString(36);}
 
 // ══════════════════════════════════════════════
 // AUTH
 // ══════════════════════════════════════════════
-let currentUser=null;// {id,name,username,role}
+let currentUser=null;// {id,name,username,role} or {id:'admin',name:'Admin',username:'admin',role:'admin'}
 
-// ── SaaS tab switcher ──
-function saasTab(tab){
-  document.querySelectorAll('.saas-tab').forEach(t=>t.classList.remove('on'));
-  document.querySelectorAll('.saas-panel').forEach(p=>p.classList.remove('on'));
-  document.getElementById('stab-'+tab)?.classList.add('on');
-  document.getElementById('spanel-'+tab)?.classList.add('on');
-}
-
-// ── Supabase Auth ──
-const SUPA_AUTH=`${SUPA_URL}/auth/v1`;
-const AUTH_REDIRECT='https://getbrewdesk.netlify.app';
-const authH={'apikey':SUPA_KEY,'Content-Type':'application/json'};
-
-async function supaOtpSend(email){
-  const r=await fetch(`${SUPA_AUTH}/otp`,{method:'POST',headers:authH,
-    body:JSON.stringify({email,options:{shouldCreateUser:true}})});
-  return r.ok?{ok:true}:{ok:false,err:await r.json()};
-}
-async function supaOtpVerify(email,token){
-  const r=await fetch(`${SUPA_AUTH}/verify`,{method:'POST',headers:authH,
-    body:JSON.stringify({type:'email',email,token})});
-  const d=await r.json();
-  return r.ok?{session:d}:{error:d};
-}
-async function supaGetUser(token){
-  const r=await fetch(`${SUPA_AUTH}/user`,{headers:{...authH,'Authorization':'Bearer '+token}});
-  return r.ok?await r.json():null;
-}
-
-// ── Google OAuth redirect ──
-function doGoogleAuth(){
-  try{
-    const url=`${SUPA_AUTH}/authorize?provider=google&redirect_to=${encodeURIComponent(AUTH_REDIRECT)}`;
-    window.location.href=url;
-  }catch(e){
-    toast('Google login error: '+e.message);
-  }
-}
-
-// ── OTP: send ──
-let _otpEmails={si:'',su:''};
-async function sendOtp(ctx){
-  const emailEl=document.getElementById(ctx==='si'?'siOtpEmail':'suOtpEmail');
-  const errEl=document.getElementById(ctx==='si'?'siOtpErr':'suOtpErr');
-  const btn=document.getElementById(ctx==='si'?'siSendBtn':'suSendBtn');
-  const email=emailEl.value.trim().toLowerCase();
-  errEl.textContent='';
-  if(!email||!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){errEl.textContent='Enter a valid email';return;}
-  btn.textContent='Sending…';btn.disabled=true;
-  const res=await supaOtpSend(email);
-  btn.textContent='Send OTP to Gmail';btn.disabled=false;
-  if(!res.ok){errEl.textContent='Could not send OTP. Try again.';return;}
-  _otpEmails[ctx]=email;
-  document.getElementById(`${ctx}OtpEmailShow`).textContent=email;
-  document.getElementById(`otpStep1_${ctx}`).style.display='none';
-  document.getElementById(`otpStep2_${ctx}`).style.display='block';
-  setTimeout(()=>document.querySelector(`#otpStep2_${ctx} .otp-box`)?.focus(),100);
-}
-
-// ── OTP: box navigation ──
-function otpNav(el,idx,ctx){
-  const boxes=[...document.querySelectorAll(`#otpStep2_${ctx} .otp-box`)];
-  if(el.value&&idx<5)boxes[idx+1].focus();
-  if(!el.value&&idx>0&&event.key==='Backspace')boxes[idx-1].focus();
-  if(boxes.every(b=>b.value))verifyOtp(ctx);
-}
-function otpPaste(e,ctx){
-  e.preventDefault();
-  const digits=(e.clipboardData||window.clipboardData).getData('text').replace(/\D/g,'').slice(0,6);
-  const boxes=[...document.querySelectorAll(`#otpStep2_${ctx} .otp-box`)];
-  boxes.forEach((b,i)=>b.value=digits[i]||'');
-  if(digits.length===6)verifyOtp(ctx);
-  else boxes[Math.min(digits.length,5)].focus();
-}
-function resetOtp(ctx){
-  _otpEmails[ctx]='';
-  document.getElementById(`otpStep2_${ctx}`).style.display='none';
-  document.getElementById(`otpStep1_${ctx}`).style.display='block';
-  document.getElementById(ctx==='si'?'siOtpEmail':'suOtpEmail').value='';
-  document.getElementById(ctx==='si'?'siOtpErr':'suOtpErr').textContent='';
-  document.querySelectorAll(`#otpStep2_${ctx} .otp-box`).forEach(b=>b.value='');
-}
-
-// ── OTP: verify ──
-async function verifyOtp(ctx){
-  const boxes=[...document.querySelectorAll(`#otpStep2_${ctx} .otp-box`)];
-  const token=boxes.map(b=>b.value).join('');
-  const errEl=document.getElementById(ctx==='si'?'siOtpVerifyErr':'suOtpVerifyErr');
-  const btn=document.getElementById(ctx==='si'?'siVerifyBtn':'suVerifyBtn');
-  errEl.textContent='';
-  if(token.length!==6){errEl.textContent='Enter all 6 digits';return;}
-  btn.textContent='Verifying…';btn.disabled=true;
-  const res=await supaOtpVerify(_otpEmails[ctx],token);
-  btn.textContent=ctx==='si'?'Verify & Sign In':'Verify & Create Café';btn.disabled=false;
-  if(res.error){errEl.textContent='Wrong or expired code. Try again.';boxes.forEach(b=>b.value='');boxes[0].focus();return;}
-  await handleAuthSuccess(res.session.access_token,res.session.user,ctx==='su');
-}
-
-// ── New café name step ──
-function confirmNewCafeName(){
-  const name=document.getElementById('suCafe').value.trim();
-  const err=document.getElementById('suCafeErr');
-  if(!name){err.textContent='Enter a café name';return;}
-  err.textContent='';
-  document.getElementById('suCafeNameShow').textContent=name;
-  try{localStorage.setItem('bd5_pending_cafe_name',name);}catch{}
-  document.getElementById('suStep1').style.display='none';
-  document.getElementById('suStep2').style.display='block';
-}
-function resetNewCafe(){
-  document.getElementById('suStep2').style.display='none';
-  document.getElementById('suStep1').style.display='block';
-  resetOtp('su');
-}
-
-// ── Handle auth success (OTP + Google callback) ──
-async function handleAuthSuccess(accessToken,user,isSignup){
-  if(!accessToken||!user){toast('Auth failed — try again');return;}
-  const authId=user.id||user.sub;
-  const email=user.email||'';
-  const hdrs={
-    'apikey':SUPA_KEY,
-    'Authorization':'Bearer '+accessToken,
-    'Content-Type':'application/json'
-  };
-
-  // Check for existing café
-  const r=await fetch(`${SUPA_URL}/rest/v1/cafes?auth_id=eq.${authId}&select=id,name`,{headers:hdrs});
-  const existing=r.ok?await r.json():[];
-
-  if(existing.length){
-    // Returning owner — load and proceed
-    CAFE_ID=existing[0].id;CAFE_NAME=existing[0].name;
-  } else {
-    // New owner — need a café name
-    const pending=(()=>{try{return localStorage.getItem('bd5_pending_cafe_name')||'';}catch{return '';}})();
-    let cafeName=pending;
-    if(!cafeName){
-      // Ask inline — show a simple prompt over the login screen
-      cafeName=await promptCafeName();
-      if(!cafeName)return;// user cancelled
-    }
-    const cr=await fetch(`${SUPA_URL}/rest/v1/cafes`,{method:'POST',
-      headers:{...hdrs,'Prefer':'return=representation'},
-      body:JSON.stringify({name:cafeName,owner_email:email||null,auth_id:authId})});
-    if(!cr.ok){
-      const errBody=await cr.text();
-      console.error('Café create failed:',cr.status,errBody);
-      toast('Failed to create café — '+cr.status);return;
-    }
-    const rows=await cr.json();
-    if(!rows||!rows.length){toast('Café create returned empty');return;}
-    CAFE_ID=rows[0].id;CAFE_NAME=rows[0].name;
-    try{localStorage.removeItem('bd5_pending_cafe_name');}catch{}
-  }
-
-  try{localStorage.setItem('bd5_saas_cafeonly',JSON.stringify({cafeId:CAFE_ID,cafeName:CAFE_NAME,accessToken}));}catch{}
-  SB.headers['Authorization']='Bearer '+accessToken;
-  const loadEl=document.createElement('div');
-  loadEl.style.cssText='position:fixed;bottom:40px;left:50%;transform:translateX(-50%);font-size:12px;color:rgba(253,246,237,.4);font-family:var(--ff-b);z-index:60;';
-  loadEl.textContent='Loading café…';document.getElementById('loginScreen').appendChild(loadEl);
-  await loadFromSupabase();loadEl.remove();
-  reloadAllVars();
-  S('adminPwChanged',true);
-  showCafeChoice();
-}
-
-// ── Inline café name prompt (shown when new user arrives via Sign In / Google without going through New Café tab) ──
-function promptCafeName(){
-  return new Promise(resolve=>{
-    // Build overlay
-    const overlay=document.createElement('div');
-    overlay.style.cssText='position:fixed;inset:0;z-index:200;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.6);backdrop-filter:blur(8px);';
-    overlay.innerHTML=`
-      <div style="background:var(--glass-modal);border:1px solid var(--glass-border-strong);border-radius:var(--r-xl);padding:32px;width:340px;max-width:90vw;box-shadow:var(--shadow);">
-        <div style="font-family:var(--ff-d);font-size:20px;font-weight:300;color:var(--text-primary);margin-bottom:6px;">Name your café</div>
-        <div style="font-size:12px;color:var(--text-muted);margin-bottom:20px;">What should we call your café?</div>
-        <input id="_cafeNamePrompt" class="form-input" placeholder="e.g. Gsquared Cafe" style="margin-bottom:8px;"/>
-        <div id="_cafeNameErr" style="font-size:12px;color:var(--red);min-height:16px;margin-bottom:12px;"></div>
-        <div style="display:flex;gap:8px;justify-content:flex-end;">
-          <button class="btn btn-glass" onclick="this.closest('div[style*=fixed]').remove();window._cafeNameResolve('');">Cancel</button>
-          <button class="btn btn-primary" onclick="
-            const v=document.getElementById('_cafeNamePrompt').value.trim();
-            if(!v){document.getElementById('_cafeNameErr').textContent='Enter a name';return;}
-            this.closest('div[style*=fixed]').remove();window._cafeNameResolve(v);
-          ">Continue</button>
-        </div>
-      </div>`;
-    window._cafeNameResolve=resolve;
-    document.body.appendChild(overlay);
-    setTimeout(()=>document.getElementById('_cafeNamePrompt')?.focus(),100);
-  });
-}
-
-// ── Google OAuth redirect callback on page load ──
-async function handleOAuthCallback(){
-  const hash=window.location.hash;
-  if(!hash)return false;
-  const params=new URLSearchParams(hash.replace('#',''));
-  // Handle error from provider (e.g. Google not enabled)
-  if(params.get('error')){
-    history.replaceState(null,'',window.location.pathname);
-    const desc=params.get('error_description')||params.get('error');
-    toast('Google login failed: '+decodeURIComponent(desc).replace(/\+/g,' '));
-    return true;
-  }
-  const token=params.get('access_token');
-  if(!token)return false;
-  history.replaceState(null,'',window.location.pathname);
-  const user=await supaGetUser(token);
-  if(user)await handleAuthSuccess(token,user,false);
-  else toast('Could not get user info. Try again.');
-  return true;
-}
-
-// ── Phase 2: show café name + Admin/User buttons ──
-function showCafeChoice(){
-  const logo=document.getElementById('loginLogo');
-  const tag=document.getElementById('loginTagline');
-  if(logo&&CAFE_NAME)logo.innerHTML=`<span style="color:var(--text-primary);">${esc(CAFE_NAME)}</span>`;
-  if(tag)tag.style.display='none';
-  document.getElementById('loginChoice').style.display='none';
-  hideAllPanels();
-  document.getElementById('cafeChoice').style.display='flex';
-}
-
-// ── Admin + staff panels ──
 function showAdminLogin(){
-  hideAllPanels();document.getElementById('cafeChoice').style.display='none';
+  hideAllPanels();
+  document.getElementById('loginChoice').style.display='none';
   document.getElementById('adminPanel').style.display='block';
-  document.getElementById('adminPass').value='';document.getElementById('adminErr').textContent='';
+  document.getElementById('adminPass').value='';
+  document.getElementById('adminErr').textContent='';
   setTimeout(()=>document.getElementById('adminPass').focus(),100);
 }
-function doAdminLogin(){
-  const pass=document.getElementById('adminPass').value;
-  if(!pass){document.getElementById('adminErr').textContent='Enter password';return;}
-  if(!adminCreds||simpleHash(pass)!==adminCreds.passwordHash){
-    document.getElementById('adminErr').textContent='Incorrect password';
-    document.getElementById('adminPass').value='';return;
-  }
-  loginAs({id:'admin',name:'Admin',username:'admin',role:'admin'});
-}
 function showUserLogin(){
-  hideAllPanels();document.getElementById('cafeChoice').style.display='none';
+  hideAllPanels();
+  document.getElementById('loginChoice').style.display='none';
   document.getElementById('userPanel').style.display='block';
   renderUserNameCards();
 }
 function showNewUser(){
-  hideAllPanels();document.getElementById('cafeChoice').style.display='none';
+  hideAllPanels();
+  document.getElementById('loginChoice').style.display='none';
   document.getElementById('newUserPanel').style.display='block';
-  ['regName','regUsername','regPass','regPassConfirm'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+  document.getElementById('regName').value='';document.getElementById('regUsername').value='';
+  document.getElementById('regPass').value='';document.getElementById('regPassConfirm').value='';
   document.getElementById('regErr').textContent='';
 }
-function backToChoice(){hideAllPanels();document.getElementById('cafeChoice').style.display='flex';}
-function backToStaffChoice(){hideAllPanels();document.getElementById('userPanel').style.display='block';renderUserNameCards();}
+function backToChoice(){
+  hideAllPanels();
+  document.getElementById('loginChoice').style.display='flex';
+}
 function hideAllPanels(){
-  ['adminPanel','userPanel','newUserPanel'].forEach(id=>{const el=document.getElementById(id);if(el)el.style.display='none';});
+  ['adminPanel','userPanel','newUserPanel'].forEach(id=>{document.getElementById(id).style.display='none';});
 }
 
 function renderUserNameCards(){
@@ -2036,29 +1685,95 @@ function renderUserNameCards(){
   const footer=document.getElementById('userLoginFooter');
   lf.style.display='none';
   document.getElementById('userErr').textContent='';
+  selectedUserId=null;
+
   if(!appUsers.length){
     el.innerHTML=`<div class="uname-empty">No team members yet.<br>Be the first to <span style="color:var(--accent);cursor:pointer;text-decoration:underline;" onclick="showNewUser()">create your profile</span> and get started.</div>`;
     if(footer)footer.style.display='none';
     return;
   }
   if(footer)footer.style.display='block';
-  let h=`<div style="font-size:12px;color:var(--text-muted);margin-bottom:10px;">Select your name to continue</div><div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px;">`;
-  appUsers.forEach(u=>{h+=`<div class="uname-card" onclick="selectUserName('${u.id}')">${esc(u.name)}</div>`;});
-  h+=`</div>`;
-  el.innerHTML=h;
+
+  el.innerHTML=`
+    <div style="font-size:12px;color:var(--text-muted);margin-bottom:10px;">Select your name to continue</div>
+    <div class="uname-dropdown" id="unameDropdown">
+      <div class="uname-input-wrap">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+        <input class="uname-search" id="unameSearch" placeholder="Search name…" autocomplete="off"
+          onfocus="openUnameList()" oninput="filterUnameList(this.value)"/>
+        <svg class="uname-caret" id="unameCaret" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+      </div>
+      <div class="uname-list" id="unameList"></div>
+    </div>`;
+
+  // Close dropdown when clicking outside
+  setTimeout(()=>{
+    document.addEventListener('click', function closeDD(e){
+      if(!document.getElementById('unameDropdown')?.contains(e.target)){
+        closeUnameList();
+        document.removeEventListener('click',closeDD);
+      }
+    });
+  },0);
+
+  buildUnameList('');
+}
+
+function buildUnameList(q){
+  const list=document.getElementById('unameList');if(!list)return;
+  const filtered=appUsers.filter(u=>u.name.toLowerCase().includes(q.toLowerCase()));
+  if(!filtered.length){
+    list.innerHTML=`<div class="uname-empty">No match found</div>`;return;
+  }
+  list.innerHTML=filtered.map(u=>`
+    <div class="uname-opt" onclick="selectUserName('${u.id}')">
+      <div class="uname-opt-av">${esc(u.name.charAt(0).toUpperCase())}</div>
+      <span>${esc(u.name)}</span>
+      <span class="uname-opt-role">${esc(u.role||'')}</span>
+    </div>`).join('');
+}
+
+function openUnameList(){
+  document.getElementById('unameList')?.classList.add('open');
+  document.getElementById('unameCaret')?.classList.add('open');
+  buildUnameList(document.getElementById('unameSearch')?.value||'');
+}
+
+function closeUnameList(){
+  document.getElementById('unameList')?.classList.remove('open');
+  document.getElementById('unameCaret')?.classList.remove('open');
+}
+
+function filterUnameList(q){
+  document.getElementById('unameList')?.classList.add('open');
+  document.getElementById('unameCaret')?.classList.add('open');
+  buildUnameList(q);
 }
 
 let selectedUserId=null;
 function selectUserName(id){
   selectedUserId=id;
   const u=appUsers.find(x=>x.id==id);if(!u)return;
-  document.querySelectorAll('.uname-card').forEach(c=>c.classList.remove('selected'));
-  document.querySelector(`.uname-card[onclick="selectUserName('${id}')"]`)?.classList.add('selected');
+  // Set search input to selected name
+  const inp=document.getElementById('unameSearch');
+  if(inp)inp.value=u.name;
+  closeUnameList();
   document.getElementById('userUsername').value=u.username;
   document.getElementById('userPass').value='';
   document.getElementById('userErr').textContent='';
   document.getElementById('userLoginForm').style.display='block';
   setTimeout(()=>document.getElementById('userPass').focus(),100);
+}
+
+function doAdminLogin(){
+  const pass=document.getElementById('adminPass').value;
+  if(!pass){document.getElementById('adminErr').textContent='Enter password';return;}
+  if(simpleHash(pass)!==adminCreds.passwordHash){
+    document.getElementById('adminErr').textContent='Incorrect password';
+    document.getElementById('adminPass').value='';
+    return;
+  }
+  loginAs({id:'admin',name:'Admin',username:'admin',role:'admin'});
 }
 
 function doUserLogin(){
@@ -2099,8 +1814,7 @@ function doRegister(){
 
 function loginAs(user){
   currentUser=user;
-  // Persist session with cafe_id so it can be restored on page reload
-  try{localStorage.setItem('bd5_saas_session',JSON.stringify({user,cafeId:CAFE_ID,cafeName:CAFE_NAME,ts:Date.now()}));}catch{}
+  try{localStorage.setItem('bd5_session',JSON.stringify({user,ts:Date.now()}));}catch{}
   document.getElementById("loginScreen").style.display="none";
   showMobileChrome(true);
   const appEl=document.getElementById("app");
@@ -2385,33 +2099,12 @@ function closeMoreDrawer(){
 function confirmLogout(){openModal('mLogout');}
 function doLogout(){closeModal('mLogout');logout();}
 function logout(){
-  currentUser=null;CAFE_ID=null;CAFE_NAME=null;
-  SB.headers['Authorization']='Bearer '+SUPA_KEY;
-  clearIdleTimer();stopPolling();
-  try{localStorage.removeItem('bd5_saas_session');localStorage.removeItem('bd5_saas_cafeonly');}catch{}
+  currentUser=null;clearIdleTimer();stopPolling();
+  try{localStorage.removeItem('bd5_session');}catch{}
   showMobileChrome(false);
   document.getElementById('app').classList.remove('visible');
   document.getElementById('loginScreen').style.display='flex';
-  // Reset logo back to BrewDesk
-  const logo=document.getElementById('loginLogo');
-  const tag=document.getElementById('loginTagline');
-  if(logo)logo.innerHTML='Brew<span>Desk</span>';
-  if(tag)tag.style.display='';
-  // Reset sign-in/sign-up forms
-  ['siOtpEmail','suOtpEmail','suCafe'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
-  ['siOtpErr','suOtpErr','suCafeErr','siOtpVerifyErr','suOtpVerifyErr'].forEach(id=>{const el=document.getElementById(id);if(el)el.textContent='';});
-  document.querySelectorAll('.otp-box').forEach(b=>b.value='');
-  ['otpStep1_si','otpStep1_su'].forEach(id=>{const el=document.getElementById(id);if(el)el.style.display='block';});
-  ['otpStep2_si','otpStep2_su'].forEach(id=>{const el=document.getElementById(id);if(el)el.style.display='none';});
-  const suS1=document.getElementById('suStep1');if(suS1)suS1.style.display='block';
-  const suS2=document.getElementById('suStep2');if(suS2)suS2.style.display='none';
-  try{localStorage.removeItem('bd5_pending_cafe_name');}catch{}
-  SB.headers['Authorization']='Bearer '+SUPA_KEY;
-  // Go back to phase 1
-  hideAllPanels();
-  document.getElementById('cafeChoice').style.display='none';
-  document.getElementById('loginChoice').style.display='block';
-  saasTab('login');
+  backToChoice();
   document.getElementById('idleBanner').style.display='none';
   closeNotifPanel();
 }
@@ -2492,7 +2185,7 @@ function printDiv(id){
   document.body.appendChild(iframe);
   const doc=iframe.contentDocument||iframe.contentWindow.document;
   doc.open();
-  doc.write(`<!DOCTYPE html><html><head><meta charset="UTF-8"/><title>${CAFE_NAME||'BrewDesk'}</title><style>${css}</style></head><body>${content}</body></html>`);
+  doc.write(`<!DOCTYPE html><html><head><meta charset="UTF-8"/><title>BrewDesk</title><style>${css}</style></head><body>${content}</body></html>`);
   doc.close();
   setTimeout(()=>{
     iframe.contentWindow.focus();
@@ -2561,14 +2254,14 @@ function renderTableStatus(){
 
   const canBill=canDo('billing');
   const canOrder=canDo('newOrder');
+  const isMobile=window.innerWidth<=768;
 
   if(canBill){
     ov.style.display='block';
     if(fallback)fallback.style.display='none';
-    // Table-row New Order button — shown on ALL screen sizes (mobile + desktop)
+    // Desktop: external tall button visible; Mobile: hidden (chip goes inside grid)
     const desktopBtn=document.getElementById('newOrdBtn');
-    if(desktopBtn)desktopBtn.style.display=canOrder?'':'none';
-    // Date-row mobile button — never needed anymore
+    if(desktopBtn)desktopBtn.style.display=(canOrder&&!isMobile)?'':'none';
     const mobileBtn=document.getElementById('newOrdBtnMobile');
     if(mobileBtn)mobileBtn.style.display='none';
 
@@ -2581,10 +2274,15 @@ function renderTableStatus(){
     }).join('');
 
     const addChip=`<div class="table-chip tc-add" onclick="openManageTables()" title="Manage tables"><div class="tc-plus">+</div></div>`;
-    grid.innerHTML=chips+addChip;
+    // Mobile: New Order chip inside grid as last item
+    const newOrderChip=canOrder&&isMobile?`<div class="table-chip tc-new-order" onclick="openNewOrder()">
+      <svg width="14" height="14" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd"/></svg>
+      <div class="tc-name">New Order</div>
+    </div>`:'';
+    grid.innerHTML=chips+addChip+newOrderChip;
 
   } else {
-    // Staff — no table grid, just show New Order button
+    // Staff/Cashier — no table grid, show fallback with chip
     ov.style.display='none';
     const mainBtnEl=document.getElementById('newOrdBtn');
     if(mainBtnEl)mainBtnEl.style.display='none';
@@ -2739,7 +2437,7 @@ function canDo(action){
   const P={
     admin:{newOrder:1,billing:1,editMenu:1,removeMenu:1,editInv:1,removeInv:1,addStaff:1,fullStaff:1,editExp:1,removeExp:1,expDependent:1,seeDash:1,seeSettings:1,editLoyalty:1,removeStaff:1,clearAtt:1},
     cashier:{newOrder:1,billing:1,editMenu:1,removeMenu:0,editInv:1,removeInv:0,addStaff:0,fullStaff:0,editExp:1,removeExp:0,expDependent:0,seeDash:0,seeSettings:0,editLoyalty:1,removeStaff:0,clearAtt:0},
-    staff:{newOrder:1,billing:0,editMenu:1,removeMenu:0,editInv:1,removeInv:0,addStaff:0,fullStaff:0,editExp:0,removeExp:0,expDependent:0,seeDash:0,seeSettings:0,editLoyalty:1,removeStaff:0,clearAtt:0},
+    staff:{newOrder:1,billing:1,editMenu:1,removeMenu:0,editInv:1,removeInv:0,addStaff:0,fullStaff:0,editExp:0,removeExp:0,expDependent:0,seeDash:0,seeSettings:0,editLoyalty:1,removeStaff:0,clearAtt:0},
     pending:{newOrder:1,billing:0,editMenu:0,removeMenu:0,editInv:0,removeInv:0,addStaff:0,fullStaff:0,editExp:0,removeExp:0,expDependent:0,seeDash:0,seeSettings:0,editLoyalty:0,removeStaff:0,clearAtt:0},
   };
   return !!(P[r]||{})[action];
@@ -2779,21 +2477,6 @@ function buildSidebar(){
   // User widget
   document.getElementById('sbName').textContent=currentUser.name;
   document.getElementById('sbRole').textContent=currentUser.role==='admin'?'Administrator':currentUser.role;
-  // Café name replaces BrewDesk logo in sidebar
-  const sbCafe=document.getElementById('sbCafeName');
-  if(sbCafe){
-    if(CAFE_NAME){sbCafe.innerHTML=`<span style="color:var(--text-primary);">${esc(CAFE_NAME)}</span>`;}
-    else{sbCafe.innerHTML='Brew<span>Desk</span>';}
-  }
-  // Mobile top bar logo
-  const mtbCafe=document.getElementById('mtbCafeName');
-  if(mtbCafe){
-    if(CAFE_NAME){mtbCafe.innerHTML=`<span style="color:var(--text-primary);font-size:17px;">${esc(CAFE_NAME)}</span>`;}
-    else{mtbCafe.innerHTML='Brew<span>Desk</span>';}
-  }
-  // Logout modal
-  const lcn=document.getElementById('logoutCafeName');
-  if(lcn)lcn.textContent=CAFE_NAME||'BrewDesk';
   // Date
   const now=new Date();
   document.getElementById('sbDate').innerHTML=now.toLocaleDateString('en-IN',{weekday:'long'})+'<br>'+now.toLocaleDateString('en-IN',{day:'2-digit',month:'long',year:'numeric'});
@@ -2847,12 +2530,18 @@ function navigateTo(page){
   const mdi=document.querySelector(`#moreDrawer .md-item[data-page="${page}"]`);
   if(mdi)mdi.classList.add('active');
   // Force date pickers to today — setTimeout ensures this runs AFTER browser restores cached input values
-  if(page==='orders'){setTimeout(()=>{const f=document.getElementById('ordFrom');const t=document.getElementById('ordTo');if(f&&!f.value)f.value=TODAY;if(t&&!t.value)t.value=TODAY;renderOrders();},0);}
-  else if(page==='staff'){setTimeout(()=>{const el=document.getElementById('staffDate');if(el){el.value=TODAY;renderStaff();}},0);}
+  if(page==='orders'){setTimeout(()=>{const f=document.getElementById('ordFrom');const t=document.getElementById('ordTo');if(f&&!f.value)f.value=TODAY;if(t&&!t.value)t.value=TODAY;renderOrders();renderOrderAudit();},0);}
+  else if(page==='staff'){setTimeout(()=>{const el=document.getElementById('staffDate');if(el){el.value=TODAY;renderStaff();}renderAttAudit();},0);}
   else if(page==='dashboard'){setTimeout(()=>{const f=document.getElementById('dashFrom');const t=document.getElementById('dashTo');if(f)f.value=TODAY;if(t)t.value=TODAY;renderDash();},0);}
   else if(page==='expenses'){expFilter='today';renderExp();}
   else{
-    const renders={menu:renderMenu,inventory:renderInv,loyalty:()=>{renderLoyalty();renderLoyAudit();},settings:renderSettings,notifications:renderNotifPage};
+    const renders={
+      menu:()=>{renderMenu();renderMenuAudit();},
+      inventory:()=>{renderInv();renderInvAudit();},
+      loyalty:()=>{renderLoyalty();renderLoyAudit();},
+      settings:()=>{renderSettings();renderSettingsAuditRL();},
+      notifications:renderNotifPage
+    };
     renders[page]?.();
   }
   // Scroll to top on mobile
@@ -2952,7 +2641,7 @@ function resetIdle(){
   idleSecs=0;
   document.getElementById('idleBanner').style.display='none';
   // Refresh session timestamp so it doesn't expire while actively using
-  if(currentUser){try{const s=JSON.parse(localStorage.getItem('bd5_saas_session')||'{}');s.ts=Date.now();localStorage.setItem('bd5_saas_session',JSON.stringify(s));}catch{}}
+  if(currentUser){try{const s=JSON.parse(localStorage.getItem('bd5_session')||'{}');s.ts=Date.now();localStorage.setItem('bd5_session',JSON.stringify(s));}catch{}}
 }
 function clearIdleTimer(){['mousemove','keydown','click','touchstart'].forEach(e=>document.removeEventListener(e,resetIdle));}
 setInterval(()=>{if(!currentUser)return;idleSecs++;if(idleSecs>=1800){logout();toast('Session expired due to inactivity');}else if(idleSecs>=1740){document.getElementById('idleBanner').style.display='block';document.getElementById('idleCD').textContent=1800-idleSecs;}},1000);
@@ -3156,7 +2845,7 @@ function placeOrder(){
 }
 function showKOT(o){
   const rows=o.items.map(i=>`<div class="kot-row"><span>${i.qty}× ${esc(i.name)}</span><span>${fmt(i.price*i.qty)}</span></div>`).join('');
-  document.getElementById('kotContent').innerHTML=`<div class="kot"><div class="kot-brand">${esc(CAFE_NAME||'BrewDesk')}</div><div class="kot-type">Kitchen Order Ticket</div><hr class="kot-divider"><div class="kot-row"><span>Order #${o.id}</span><span>${fmtT(o.time)}</span></div><div class="kot-row" style="font-size:12px;color:var(--text-muted);"><span>${esc(o.table)}</span><span>${o.payment}</span></div><hr class="kot-divider">${rows}<hr class="kot-divider">${o.discount>0?`<div class="kot-row" style="color:var(--green);"><span>Loyalty discount</span><span>−${fmt(o.discount)}</span></div><hr class="kot-divider">`:''}
+  document.getElementById('kotContent').innerHTML=`<div class="kot"><div class="kot-brand">BrewDesk</div><div class="kot-type">Kitchen Order Ticket</div><hr class="kot-divider"><div class="kot-row"><span>Order #${o.id}</span><span>${fmtT(o.time)}</span></div><div class="kot-row" style="font-size:12px;color:var(--text-muted);"><span>${esc(o.table)}</span><span>${o.payment}</span></div><hr class="kot-divider">${rows}<hr class="kot-divider">${o.discount>0?`<div class="kot-row" style="color:var(--green);"><span>Loyalty discount</span><span>−${fmt(o.discount)}</span></div><hr class="kot-divider">`:''}
   <div class="kot-row total-row"><span>Total</span><span>${fmt(o.total)}</span></div>${o.notes?`<div class="kot-foot" style="color:#555;font-style:italic;">Note: ${esc(o.notes)}</div>`:''}
   <div class="kot-foot">Post to kitchen station</div></div>`;
   openModal('mKOT');
@@ -3166,7 +2855,7 @@ function showBill(id){
   // Per-item GST calculation
   let gstTotal=0,baseTotal=0;
   const rows=o.items.map(i=>{const sub=i.price*i.qty;const rate=i.gst!=null?i.gst:5;const gst=Math.round(sub*rate/(100+rate));const base=sub-gst;gstTotal+=gst;baseTotal+=base;return`<div class="kot-row"><span>${i.qty}× ${esc(i.name)}</span><span>${fmt(sub)}</span></div>`;}).join('');
-  document.getElementById('billContent').innerHTML=`<div class="kot"><div class="kot-brand">${esc(CAFE_NAME||'BrewDesk')}</div><div class="kot-type">GST Tax Invoice</div><hr class="kot-divider"><div class="kot-row"><span>Bill #${o.id}</span><span>${fmtT(o.time)}</span></div><div class="kot-row" style="font-size:12px;color:var(--text-muted);"><span>${esc(o.table)}</span></div><hr class="kot-divider">${rows}<hr class="kot-divider">${o.discount>0?`<div class="kot-row" style="color:var(--green);"><span>Loyalty discount</span><span>−${fmt(o.discount)}</span></div>`:''}
+  document.getElementById('billContent').innerHTML=`<div class="kot"><div class="kot-brand">BrewDesk</div><div class="kot-type">GST Tax Invoice</div><hr class="kot-divider"><div class="kot-row"><span>Bill #${o.id}</span><span>${fmtT(o.time)}</span></div><div class="kot-row" style="font-size:12px;color:var(--text-muted);"><span>${esc(o.table)}</span></div><hr class="kot-divider">${rows}<hr class="kot-divider">${o.discount>0?`<div class="kot-row" style="color:var(--green);"><span>Loyalty discount</span><span>−${fmt(o.discount)}</span></div>`:''}
   <div class="kot-row"><span>Taxable value</span><span>${fmt(baseTotal)}</span></div><div class="kot-row"><span>GST</span><span>${fmt(gstTotal)}</span></div><hr class="kot-divider"><div class="kot-row total-row"><span>Total</span><span>${fmt(o.total)}</span></div><div class="kot-row" style="font-size:12px;color:var(--text-muted);margin-top:6px;"><span>Paid via ${o.payment}</span>${o.mobile?`<span>${o.mobile}</span>`:''}</div>${o.notes?`<div class="kot-foot" style="color:#555;font-style:italic;">Note: ${esc(o.notes)}</div>`:''}
   <div class="kot-foot">Thank you · Please visit again</div></div>`;
   openModal('mBill');
@@ -3667,17 +3356,17 @@ function delUser(id){
 // Try to restore session on page load
 function restoreSession(){
   try{
-    const raw=localStorage.getItem('bd5_saas_session');
+    const raw=localStorage.getItem('bd5_session');
     if(!raw)return false;
-    const {user,cafeId,cafeName,ts}=JSON.parse(raw);
+    const {user,ts}=JSON.parse(raw);
+    // Expire session after 12 hours of inactivity
     if(Date.now()-ts > 12*60*60*1000){clearSession();return false;}
-    if(!user||!user.role||!cafeId)return false;
-    // Restore cafe context
-    CAFE_ID=cafeId;
-    CAFE_NAME=cafeName||'Café';
+    if(!user||!user.role)return false;
+    // For non-admin, verify user still exists
     if(user.role!=='admin'){
       const still=appUsers.find(u=>u.id===user.id);
       if(!still)return false;
+      // Refresh role in case admin changed it
       user.role=still.role;user.name=still.name;
     }
     return user;
@@ -3787,7 +3476,7 @@ function buildExcel(from,to){
     }
 
     // Generate and download
-    const filename=`${(CAFE_NAME||'BrewDesk').replace(/\s+/g,'_')}_Export_${from}_to_${to}.xlsx`;
+    const filename=`BrewDesk_Export_${from}_to_${to}.xlsx`;
     XLSX.writeFile(wb,filename);
     document.getElementById('exportStatus').textContent='✓ Download started';
     setTimeout(()=>closeModal('mExport'),1200);
@@ -3807,27 +3496,30 @@ let lastSyncTs=0;
 
 // Reload data from Supabase and re-render if changed
 async function pollForUpdates(){
-  if(!currentUser||!navigator.onLine||!CAFE_ID)return;
+  if(!currentUser||!navigator.onLine)return;
   try{
-    const r=await fetch(`${SUPA_URL}/rest/v1/bd_store?cafe_id=eq.${CAFE_ID}&select=key,value,updated_at&order=updated_at.desc&limit=1`,{headers:SB.headers});
+    // Check if anything changed since last poll
+    const r=await fetch(`${SUPA_URL}/rest/v1/bd_store?select=key,value,updated_at&order=updated_at.desc&limit=1`,{headers:SB.headers});
     if(!r.ok)return;
     const rows=await r.json();
     if(!rows||!rows.length)return;
     const serverTs=new Date(rows[0].updated_at).getTime();
-    if(serverTs<=lastSyncTs)return;
+    if(serverTs<=lastSyncTs)return;// nothing changed on server
     lastSyncTs=serverTs;
-    const all=await fetch(`${SUPA_URL}/rest/v1/bd_store?cafe_id=eq.${CAFE_ID}&select=key,value`,{headers:SB.headers});
+    // Fetch all rows and compare with local
+    const all=await fetch(`${SUPA_URL}/rest/v1/bd_store?select=key,value`,{headers:SB.headers});
     if(!all.ok)return;
     const allRows=await all.json();
     const changed=[];
     allRows.forEach(row=>{
-      const existing=localStorage.getItem(lsKey(row.key));
+      const existing=localStorage.getItem('bd5_'+row.key);
       if(existing!==row.value){
-        try{localStorage.setItem(lsKey(row.key),row.value);}catch{}
+        try{localStorage.setItem('bd5_'+row.key,row.value);}catch{}
         changed.push(row.key);
       }
     });
     if(!changed.length)return;
+    // Re-render affected pages — SYNC_KEYS uses bare key names (menu, orders, etc.)
     changed.forEach(k=>{
       const h=SYNC_KEYS[k];if(h)h();
     });
@@ -3865,10 +3557,8 @@ function isOnPage(page){
 
 // Keep same-browser tab sync working via storage events
 window.addEventListener('storage',e=>{
-  if(!currentUser||!CAFE_ID)return;
-  const prefix=`bd5_${CAFE_ID}_`;
-  if(!e.key?.startsWith(prefix))return;
-  const key=e.key.replace(prefix,'');
+  if(!currentUser)return;
+  const key=e.key?.replace('bd5_','');
   const h=SYNC_KEYS[key];
   if(h){h();showSyncPulse();}
 });
@@ -3884,53 +3574,58 @@ function showSyncPulse(){
 }
 
 // ══════════════════════════════════════════════
-// INIT
+// INIT — load from Supabase then restore session
 // ══════════════════════════════════════════════
 (async function(){
-  showMobileChrome(false);
+  // Show loading indicator
+  const loginScreen=document.getElementById('loginScreen');
+  const loadMsg=document.createElement('div');
+  loadMsg.style.cssText='position:fixed;bottom:40px;left:50%;transform:translateX(-50%);font-size:12px;color:rgba(253,246,237,.4);font-family:var(--ff-b);letter-spacing:.5px;z-index:60;';
+  loadMsg.textContent='Connecting to cloud…';
+  loginScreen.appendChild(loadMsg);
 
-  // Step 1: Handle Google OAuth redirect (URL has #access_token)
-  const wasOAuth=await handleOAuthCallback();
-  if(wasOAuth)return;
-
-  // Step 2: Restore café from saved session
-  try{
-    const src=localStorage.getItem('bd5_saas_session')||localStorage.getItem('bd5_saas_cafeonly');
-    if(src){
-      const p=JSON.parse(src);
-      if(p.cafeId){CAFE_ID=p.cafeId;CAFE_NAME=p.cafeName||'Café';}
-      if(p.accessToken)SB.headers['Authorization']='Bearer '+p.accessToken;
-    }
-  }catch{}
-
-  // Step 3: Load café data
-  if(CAFE_ID){
-    const loadMsg=document.createElement('div');
-    loadMsg.style.cssText='position:fixed;bottom:40px;left:50%;transform:translateX(-50%);font-size:12px;color:rgba(253,246,237,.4);font-family:var(--ff-b);letter-spacing:.5px;z-index:60;';
-    loadMsg.textContent='Connecting to cloud…';
-    document.getElementById('loginScreen').appendChild(loadMsg);
-    const loaded=await loadFromSupabase();
-    reloadAllVars();
-    if(loaded)showSyncStatus('✓ Synced from cloud','green');
-    else{loadMsg.textContent='Offline — using local data';setTimeout(()=>loadMsg.remove(),2000);}
-    loadMsg.remove();
+  // Try to load fresh data from Supabase
+  const loaded=await loadFromSupabase();
+  if(loaded){
+    // Reload all JS data variables from localStorage (now populated from Supabase)
+    menuItems=L('menu',menuItems);inv=L('inv',inv);staffList=L('staff',[]);
+    attendance=L('att',[]);attAudit=L('attAudit',[]);ptsBatches=L('pts',[]);
+    orders=L('orders',[]);expenses=L('exp',[]);customers=L('cust',[]);
+    appUsers=L('appUsers',[]);notifications=L('notifs',[]);settingsAudit=L('settingsAudit',[]);
+    sharedCats=L('sharedCats',sharedCats);menuCats=L('menuCats',menuCats);
+    menuAudit=L('menuAudit',[]);invAudit=L('invAudit',[]);customTables=L('customTables',customTables);loyAudit=L('loyAudit',[]);
+    adminCreds=L('adminCreds',null);
+    if(!adminCreds){adminCreds={passwordHash:simpleHash('admin123')};S('adminCreds',adminCreds);}
+    onid=L('onid',1);snid=L('snid',1);inid=L('inid',5);
+    showSyncStatus('✓ Synced from cloud','green');
+  } else {
+    loadMsg.textContent='Offline — using local data';
+    setTimeout(()=>loadMsg.remove(),2000);
   }
+  loadMsg.remove();
 
-  // Step 4: Restore user session or show correct phase
+  // Try to restore session from previous visit
+  showMobileChrome(false);// hide until logged in
   const saved=restoreSession();
+  // Always hide mobile nav initially — shown only after login
   if(saved){
     currentUser=saved;
     document.getElementById('loginScreen').style.display='none';
     showMobileChrome(true);
     document.getElementById('app').classList.add('visible');
-    buildSidebar();applyRoleUI();
-    requestAnimationFrame(()=>requestAnimationFrame(()=>{navigateTo(getDefaultPage());updateNotifBadge();}));
-    startIdleTimer();startPolling();
-  } else if(CAFE_ID){
-    showCafeChoice();
+    buildSidebar();
+    applyRoleUI();
+    requestAnimationFrame(()=>{
+      requestAnimationFrame(()=>{
+        navigateTo(getDefaultPage());
+        updateNotifBadge();
+      });
+    });
+    startIdleTimer();
+    startPolling();// start multi-device sync polling
   }
+  // else: login screen stays visible (default)
 })();
-
 </script>
 </body>
 </html>
