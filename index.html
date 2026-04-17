@@ -418,7 +418,7 @@ td.tdc{color:var(--text-primary);font-weight:500;}
 .splash-tagline{
   font-size:10px;letter-spacing:3px;text-transform:uppercase;
   color:var(--text-muted);margin-top:10px;
-  opacity:0;animation:fadeInTag .5s ease 1.8s forwards;
+  opacity:0;animation:fadeInTag .5s ease 1.9s forwards;
 }
 @keyframes fadeInTag{to{opacity:1;}}
 
@@ -652,7 +652,7 @@ td.tdc{color:var(--text-primary);font-weight:500;}
 <!-- ══ SPLASH ═══════════════════════════════════════════ -->
 <div id="splashScreen">
   <div class="splash-logo">
-    <span class="spl" style="animation-delay:0.92s;color:#FFF8F0;">B</span><span class="spl" style="animation-delay:0.86s;color:#FFF8F0;">r</span><span class="spl" style="animation-delay:0.80s;color:#FFF8F0;">e</span><span class="spl" style="animation-delay:0.74s;color:#FFF8F0;">w</span><span class="spl spl-accent" style="animation-delay:0.68s;">D</span><span class="spl spl-accent" style="animation-delay:0.62s;">e</span><span class="spl spl-accent" style="animation-delay:0.56s;">s</span><span class="spl spl-accent" style="animation-delay:0.50s;">k</span>
+    <span class="spl" style="animation-delay:1.02s;color:#FFF8F0;">B</span><span class="spl" style="animation-delay:0.96s;color:#FFF8F0;">r</span><span class="spl" style="animation-delay:0.90s;color:#FFF8F0;">e</span><span class="spl" style="animation-delay:0.84s;color:#FFF8F0;">w</span><span class="spl spl-accent" style="animation-delay:0.78s;">D</span><span class="spl spl-accent" style="animation-delay:0.72s;">e</span><span class="spl spl-accent" style="animation-delay:0.66s;">s</span><span class="spl spl-accent" style="animation-delay:0.60s;">k</span>
   </div>
   <div class="splash-tagline">Cafe Management System</div>
 </div>
@@ -3870,7 +3870,7 @@ function showSyncPulse(){
       splash.classList.add('fade-out');
       setTimeout(()=>{splash.style.display='none';},650);
     }
-  },3200);
+  },3300);
 
   // Try to restore session from previous visit
   showMobileChrome(false);// hide until logged in
