@@ -401,7 +401,39 @@ td.tdc{color:var(--text-primary);font-weight:500;}
 .su-av.staff-av{background:linear-gradient(135deg,rgba(94,203,149,.3),rgba(94,203,149,.1));border-color:rgba(94,203,149,.3);color:var(--green);}
 .su-av.pending-av{background:rgba(255,248,240,.07);border-color:var(--glass-border);color:var(--text-muted);}
 
-/* PROFILE MODAL */
+/* ── SPLASH SCREEN ── */
+#splashScreen{
+  position:fixed;inset:0;z-index:999;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  background:rgba(8,4,1,1);
+  transition:opacity .6s ease;
+}
+#splashScreen.fade-out{opacity:0;pointer-events:none;}
+.splash-logo{
+  font-family:var(--ff-d);font-size:52px;font-weight:300;
+  color:var(--text-primary);letter-spacing:-.5px;
+}
+.splash-logo span{color:var(--accent);}
+.splash-tagline{
+  font-size:10px;letter-spacing:3px;text-transform:uppercase;
+  color:var(--text-muted);margin-top:10px;
+  opacity:0;animation:fadeInTag .6s ease .8s forwards;
+}
+@keyframes fadeInTag{to{opacity:1;}}
+
+/* slide-in-blurred-left — from animista.net */
+.slide-in-blurred-left{
+  -webkit-animation:slide-in-blurred-left 1.5s cubic-bezier(0.230,1.000,0.320,1.000) both;
+  animation:slide-in-blurred-left 1.5s cubic-bezier(0.230,1.000,0.320,1.000) both;
+}
+@-webkit-keyframes slide-in-blurred-left{
+  0%{-webkit-transform:translateX(-1000px) scaleX(2.5) scaleY(0.2);transform:translateX(-1000px) scaleX(2.5) scaleY(0.2);-webkit-transform-origin:100% 50%;transform-origin:100% 50%;-webkit-filter:blur(40px);filter:blur(40px);opacity:0;}
+  100%{-webkit-transform:translateX(0) scaleY(1) scaleX(1);transform:translateX(0) scaleY(1) scaleX(1);-webkit-transform-origin:50% 50%;transform-origin:50% 50%;-webkit-filter:blur(0);filter:blur(0);opacity:1;}
+}
+@keyframes slide-in-blurred-left{
+  0%{-webkit-transform:translateX(-1000px) scaleX(2.5) scaleY(0.2);transform:translateX(-1000px) scaleX(2.5) scaleY(0.2);-webkit-transform-origin:100% 50%;transform-origin:100% 50%;-webkit-filter:blur(40px);filter:blur(40px);opacity:0;}
+  100%{-webkit-transform:translateX(0) scaleY(1) scaleX(1);transform:translateX(0) scaleY(1) scaleX(1);-webkit-transform-origin:50% 50%;transform-origin:50% 50%;-webkit-filter:blur(0);filter:blur(0);opacity:1;}
+}
 .profile-modal-av{width:64px;height:64px;border-radius:50%;background:linear-gradient(135deg,rgba(200,131,74,.4),rgba(200,131,74,.15));border:2px solid rgba(200,131,74,.4);display:flex;align-items:center;justify-content:center;font-family:var(--ff-d);font-size:22px;color:var(--accent);margin:0 auto 18px;}
 
 /* ══════════════════════════════════════════════
@@ -617,6 +649,12 @@ td.tdc{color:var(--text-primary);font-weight:500;}
 <div id="idleBanner">Session expiring in <span id="idleCD">60</span>s &nbsp;<button onclick="resetIdle()" style="background:rgba(255,255,255,.2);border:1px solid rgba(255,255,255,.3);color:#fff;padding:3px 12px;border-radius:6px;cursor:pointer;font-size:12px;">Stay Logged In</button></div>
 
 <!-- ══ LOGIN ══════════════════════════════════════════ -->
+<!-- ══ SPLASH ═══════════════════════════════════════════ -->
+<div id="splashScreen">
+  <div class="splash-logo slide-in-blurred-left">Brew<span>Desk</span></div>
+  <div class="splash-tagline">Cafe Management System</div>
+</div>
+
 <div id="loginScreen">
   <div class="login-logo">Brew<span>Desk</span></div>
   <div class="login-tagline">Cafe Management System</div>
@@ -3821,6 +3859,16 @@ function showSyncPulse(){
     setTimeout(()=>loadMsg.remove(),2000);
   }
   loadMsg.remove();
+
+  // ── Splash screen dismiss ──
+  // Animation is 1.5s + 0.5s tagline hold = dismiss after 2.5s total
+  setTimeout(()=>{
+    const splash=document.getElementById('splashScreen');
+    if(splash){
+      splash.classList.add('fade-out');
+      setTimeout(()=>{splash.style.display='none';},650);
+    }
+  },2500);
 
   // Try to restore session from previous visit
   showMobileChrome(false);// hide until logged in
