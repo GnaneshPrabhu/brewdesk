@@ -656,6 +656,77 @@ td.tdc{color:var(--text-primary);font-weight:500;}
 
   /* ── Stat cards — 2 columns on mobile ── */
   .stat-cols{grid-template-columns:1fr 1fr !important;}
+
+  /* ── Roster card header — wrap into 2 rows on mobile ── */
+  #rosterCard > div:first-child{flex-direction:column;align-items:flex-start;gap:10px;}
+  #rosterCard > div:first-child > div:last-child{
+    width:100%;display:flex;flex-wrap:wrap;gap:6px;align-items:center;
+  }
+  #rosterCard > div:first-child > div:last-child #rosterWeekLabel{
+    flex:1;text-align:center;min-width:80px;
+  }
+  #rosterCard > div:first-child > div:last-child .btn-xs{
+    flex:unset;white-space:nowrap;
+  }
+  /* Auto-generate, clear draft, delete published, publish — full width row */
+  #autoRosterBtn,#clearDraftBtn,#deletePublishedBtn,#publishRosterBtn{
+    flex:1;justify-content:center;
+  }
+
+  /* ── Staff row — wrap buttons to prevent overflow ── */
+  .staff-row{flex-wrap:wrap;gap:8px;padding:12px 0;}
+  .staff-row > div:last-child{flex-wrap:wrap;gap:5px;}
+  .staff-row > div:last-child .btn-xs{flex:unset;}
+
+  /* ── Billing Options modal — stack sections ── */
+  #mBillingExtras .form-row{grid-template-columns:1fr;}
+  /* Discount type toggle buttons — keep side by side */
+  #discTypePct,#discTypeFlat{flex:1;}
+
+  /* ── Tip presets — equal width ── */
+  #tipPresets{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:5px;}
+  #tipPresets .btn-xs{justify-content:center;}
+
+  /* ── Attender dropdown full width ── */
+  #attDropdownWrap{width:100%;}
+
+  /* ── Billing summary box ── */
+  #beSummary{font-size:12px;}
+
+  /* ── Coupon modal form rows ── */
+  #mCoupon .form-row{grid-template-columns:1fr;}
+
+  /* ── Shift Template modal ── */
+  #mShiftTemplate .form-row{grid-template-columns:1fr;}
+  .coverage-row select{flex:1;min-width:0;}
+  .coverage-row input{width:60px !important;}
+
+  /* ── Auto-Roster modal ── */
+  #mAutoRoster .form-row{grid-template-columns:1fr;}
+  #arPreview{font-size:12px;}
+
+  /* ── Tips summary table ── */
+  #tipsSummaryList{overflow-x:auto;-webkit-overflow-scrolling:touch;}
+  #tipsSummaryList table{min-width:420px;}
+
+  /* ── Swap requests table ── */
+  #swapRequestsList .tbl-wrap{overflow-x:auto;}
+  #swapRequestsList .rl-table{min-width:560px;}
+
+  /* ── Salary estimator table ── */
+  #salaryEstimator .tbl-wrap table{min-width:520px;}
+  /* Rate input narrower on mobile */
+  #salaryEstimator input.form-input{width:70px !important;}
+
+  /* ── Shift templates table ── */
+  #shiftTemplatesList .tbl-wrap table{min-width:420px;}
+
+  /* ── Coupon list table ── */
+  #couponList .tbl-wrap table{min-width:500px;}
+
+  /* ── Edit constraints modal off-day chips ── */
+  #ecOffDaysWrap,#sOffDaysWrap{gap:4px;}
+  .off-day-chip{font-size:10px;padding:3px 7px;}
 }
 
 /* Desktop: hide mobile new order btn */
@@ -1046,7 +1117,7 @@ td.tdc{color:var(--text-primary);font-weight:500;}
           </div>
           <div id="rosterStats" style="display:flex;gap:16px;margin-bottom:12px;flex-wrap:wrap;"></div>
           <div id="rosterConflicts" style="margin-bottom:10px;"></div>
-          <div id="rosterEditHint" style="font-size:11.5px;color:var(--text-muted);margin-bottom:10px;">Click any cell to assign or edit a shift for that staff member and day.</div>
+          <div id="rosterEditHint" style="font-size:11.5px;color:var(--text-muted);margin-bottom:10px;"></div>
           <div id="rosterGrid"></div>
           <div class="rl-tabs" style="margin-top:14px;"><div class="rl-tab on" onclick="switchTab('rosterAudit',0,this)">Roster Change History</div></div>
           <div class="rl-panel on" id="rosterAuditPanel"><div id="rosterAuditTable"></div></div>
@@ -3250,6 +3321,9 @@ function renderWeeklyRoster(){
   const gridEl=document.getElementById('rosterGrid');if(!gridEl)return;
   const canEdit=canDo('editRoster');
   const DAYS=['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+  const hintEl=document.getElementById('rosterEditHint');
+  if(hintEl)hintEl.textContent=canEdit?(isMobile?'Tap any cell to assign or edit a shift.':'Click any cell to assign or edit a shift for that staff member and day.'):'';
+
 
   if(isMobile){
     // Mobile: vertical list grouped by day
