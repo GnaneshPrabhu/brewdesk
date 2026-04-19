@@ -8,12 +8,12 @@
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
 :root{
-  --glass-card:rgba(255,248,240,0.08);
-  --glass-card-hover:rgba(255,248,240,0.12);
-  --glass-border:rgba(255,220,180,0.15);
-  --glass-border-strong:rgba(255,220,180,0.28);
-  --glass-sidebar:rgba(12,6,2,0.72);
-  --glass-modal:rgba(22,12,5,0.88);
+  --glass-card:rgba(15,8,3,0.62);
+  --glass-card-hover:rgba(15,8,3,0.72);
+  --glass-border:rgba(255,220,180,0.22);
+  --glass-border-strong:rgba(255,220,180,0.38);
+  --glass-sidebar:rgba(12,6,2,0.82);
+  --glass-modal:rgba(22,12,5,0.92);
   --glass-input:rgba(255,248,240,0.07);
   --glass-input-focus:rgba(255,248,240,0.13);
   --accent:#c8834a;--accent-soft:rgba(200,131,74,0.15);
@@ -156,11 +156,11 @@ html,body{height:100%;overflow:hidden;font-family:var(--ff-b);font-size:14px;col
 /* User login searchable dropdown */
 .uname-dropdown{position:relative;margin-bottom:14px;}
 .uname-input-wrap{position:relative;display:flex;align-items:center;}
-.uname-input-wrap svg{position:absolute;left:12px;color:var(--text-muted);pointer-events:none;flex-shrink:0;}
-.uname-search{display:block;width:100%;background:var(--glass-input);border:1px solid var(--glass-border);border-radius:var(--r);color:var(--text-primary);font-family:var(--ff-b);font-size:13.5px;padding:10px 14px 10px 38px;outline:none;transition:var(--t);cursor:pointer;}
+.uname-input-wrap svg:first-child{position:absolute;left:12px;color:var(--text-muted);pointer-events:none;flex-shrink:0;}
+.uname-search{display:block;width:100%;background:var(--glass-input);border:1px solid var(--glass-border);border-radius:var(--r);color:var(--text-primary);font-family:var(--ff-b);font-size:13.5px;padding:10px 34px 10px 38px;outline:none;transition:var(--t);cursor:pointer;}
 .uname-search:focus{border-color:rgba(200,131,74,.5);background:var(--glass-input-focus);box-shadow:0 0 0 3px rgba(200,131,74,.12);}
 .uname-search::placeholder{color:var(--text-muted);}
-.uname-caret{position:absolute;right:12px;color:var(--text-muted);pointer-events:none;transition:transform .2s;}
+.uname-caret{position:absolute;right:10px;color:var(--text-muted);pointer-events:none;transition:transform .2s;flex-shrink:0;}
 .uname-caret.open{transform:rotate(180deg);}
 .uname-list{position:absolute;top:calc(100% + 6px);left:0;right:0;background:var(--glass-modal);backdrop-filter:var(--blur-heavy);-webkit-backdrop-filter:var(--blur-heavy);border:1px solid var(--glass-border-strong);border-radius:var(--r-lg);box-shadow:var(--shadow);z-index:60;max-height:220px;overflow-y:auto;display:none;}
 .uname-list.open{display:block;}
@@ -319,7 +319,7 @@ td.tdc{color:var(--text-primary);font-weight:500;}
 .notif-dismiss:hover{color:var(--red);}
 
 /* ORDER CARDS */
-.order-card{background:var(--glass-card);backdrop-filter:var(--blur);border:1px solid var(--glass-border);border-radius:var(--r-lg);padding:16px 18px;margin-bottom:10px;transition:var(--t);}
+.order-card{background:var(--glass-card);backdrop-filter:var(--blur);border:1px solid var(--glass-border);border-radius:var(--r-lg);padding:16px 18px;margin-bottom:10px;transition:var(--t);overflow:hidden;}
 .order-card:hover{background:var(--glass-card-hover);border-color:var(--glass-border-strong);}
 .order-num{font-size:13px;font-weight:600;color:var(--accent);}
 .order-meta{font-size:12px;color:var(--text-muted);margin:6px 0;}
@@ -414,24 +414,53 @@ td.tdc{color:var(--text-primary);font-weight:500;}
   color:var(--text-primary);letter-spacing:-.5px;
   display:flex;align-items:baseline;
 }
-.splash-logo span{color:var(--accent);}
+/* Tagline: focus-in-expand (user-provided animation) */
 .splash-tagline{
   font-size:10px;letter-spacing:3px;text-transform:uppercase;
-  color:var(--text-muted);margin-top:10px;
-  opacity:0;animation:fadeInTag .5s ease 1.9s forwards;
+  color:var(--text-muted);margin-top:12px;
+  opacity:0;
+  -webkit-animation:focus-in-expand .8s cubic-bezier(0.250,0.460,0.450,0.940) 1.6s both;
+          animation:focus-in-expand .8s cubic-bezier(0.250,0.460,0.450,0.940) 1.6s both;
 }
-@keyframes fadeInTag{to{opacity:1;}}
+@-webkit-keyframes focus-in-expand{
+  0%{letter-spacing:-0.5em;-webkit-filter:blur(12px);filter:blur(12px);opacity:0;}
+  100%{-webkit-filter:blur(0px);filter:blur(0px);opacity:1;}
+}
+@keyframes focus-in-expand{
+  0%{letter-spacing:-0.5em;-webkit-filter:blur(12px);filter:blur(12px);opacity:0;}
+  100%{-webkit-filter:blur(0px);filter:blur(0px);opacity:1;}
+}
 
-/* Per-letter slide-in — each letter uses slide-in-blurred-left with staggered delay */
-.spl{display:inline-block;opacity:0;-webkit-animation:slide-in-blurred-left .8s cubic-bezier(0.230,1.000,0.320,1.000) both;animation:slide-in-blurred-left .8s cubic-bezier(0.230,1.000,0.320,1.000) both;}
+/* Per-letter classes */
+.spl{display:inline-block;opacity:0;}
 .spl-accent{color:#C8834A !important;}
-@-webkit-keyframes slide-in-blurred-left{
-  0%{-webkit-transform:translateX(-1000px) scaleX(2.5) scaleY(0.2);transform:translateX(-1000px) scaleX(2.5) scaleY(0.2);-webkit-transform-origin:100% 50%;transform-origin:100% 50%;-webkit-filter:blur(40px);filter:blur(40px);opacity:0;}
-  100%{-webkit-transform:translateX(0) scaleY(1) scaleX(1);transform:translateX(0) scaleY(1) scaleX(1);-webkit-transform-origin:50% 50%;transform-origin:50% 50%;-webkit-filter:blur(0);filter:blur(0);opacity:1;}
+
+/* Brew letters — slide in from LEFT */
+.spl-left{
+  -webkit-animation:slide-in-left .7s cubic-bezier(0.230,1.000,0.320,1.000) both;
+          animation:slide-in-left .7s cubic-bezier(0.230,1.000,0.320,1.000) both;
 }
-@keyframes slide-in-blurred-left{
-  0%{-webkit-transform:translateX(-1000px) scaleX(2.5) scaleY(0.2);transform:translateX(-1000px) scaleX(2.5) scaleY(0.2);-webkit-transform-origin:100% 50%;transform-origin:100% 50%;-webkit-filter:blur(40px);filter:blur(40px);opacity:0;}
-  100%{-webkit-transform:translateX(0) scaleY(1) scaleX(1);transform:translateX(0) scaleY(1) scaleX(1);-webkit-transform-origin:50% 50%;transform-origin:50% 50%;-webkit-filter:blur(0);filter:blur(0);opacity:1;}
+@-webkit-keyframes slide-in-left{
+  0%{-webkit-transform:translateX(-600px) scaleX(2) scaleY(0.2);transform:translateX(-600px) scaleX(2) scaleY(0.2);-webkit-filter:blur(36px);filter:blur(36px);opacity:0;}
+  100%{-webkit-transform:translateX(0) scaleX(1) scaleY(1);transform:translateX(0) scaleX(1) scaleY(1);-webkit-filter:blur(0);filter:blur(0);opacity:1;}
+}
+@keyframes slide-in-left{
+  0%{transform:translateX(-600px) scaleX(2) scaleY(0.2);filter:blur(36px);opacity:0;}
+  100%{transform:translateX(0) scaleX(1) scaleY(1);filter:blur(0);opacity:1;}
+}
+
+/* Desk letters — slide in from RIGHT */
+.spl-right{
+  -webkit-animation:slide-in-right .7s cubic-bezier(0.230,1.000,0.320,1.000) both;
+          animation:slide-in-right .7s cubic-bezier(0.230,1.000,0.320,1.000) both;
+}
+@-webkit-keyframes slide-in-right{
+  0%{-webkit-transform:translateX(600px) scaleX(2) scaleY(0.2);transform:translateX(600px) scaleX(2) scaleY(0.2);-webkit-filter:blur(36px);filter:blur(36px);opacity:0;}
+  100%{-webkit-transform:translateX(0) scaleX(1) scaleY(1);transform:translateX(0) scaleX(1) scaleY(1);-webkit-filter:blur(0);filter:blur(0);opacity:1;}
+}
+@keyframes slide-in-right{
+  0%{transform:translateX(600px) scaleX(2) scaleY(0.2);filter:blur(36px);opacity:0;}
+  100%{transform:translateX(0) scaleX(1) scaleY(1);filter:blur(0);opacity:1;}
 }
 
 .profile-modal-av{width:64px;height:64px;border-radius:50%;background:linear-gradient(135deg,rgba(200,131,74,.4),rgba(200,131,74,.15));border:2px solid rgba(200,131,74,.4);display:flex;align-items:center;justify-content:center;font-family:var(--ff-d);font-size:22px;color:var(--accent);margin:0 auto 18px;}
@@ -601,10 +630,13 @@ td.tdc{color:var(--text-primary);font-weight:500;}
   /* ── Notification panel ── */
   .notif-panel{width:100%;}
 
+  /* ── Loyalty customer rows — horizontal scroll ── */
+  #loyList{overflow-x:auto;-webkit-overflow-scrolling:touch;}
+  .cust-row{min-width:480px;}
+  .cust-visits{padding:0 0 10px 46px;}
+
   /* ── Background dots ── */
   .bg-dots{bottom:70px;}
-
-  /* ── Idle banner ── */
   #idleBanner{top:54px;}
 
   /* ── Sync status ── */
@@ -652,7 +684,16 @@ td.tdc{color:var(--text-primary);font-weight:500;}
 <!-- ══ SPLASH ═══════════════════════════════════════════ -->
 <div id="splashScreen">
   <div class="splash-logo">
-    <span class="spl" style="animation-delay:1.02s;color:#FFF8F0;">B</span><span class="spl" style="animation-delay:0.96s;color:#FFF8F0;">r</span><span class="spl" style="animation-delay:0.90s;color:#FFF8F0;">e</span><span class="spl" style="animation-delay:0.84s;color:#FFF8F0;">w</span><span class="spl spl-accent" style="animation-delay:0.78s;">D</span><span class="spl spl-accent" style="animation-delay:0.72s;">e</span><span class="spl spl-accent" style="animation-delay:0.66s;">s</span><span class="spl spl-accent" style="animation-delay:0.60s;">k</span>
+    <!-- Brew: slide from LEFT in reverse order — w fires first (0.06s), B fires last (0.42s) -->
+    <span class="spl spl-left" style="animation-delay:0.42s;color:#FFF8F0;">B</span>
+    <span class="spl spl-left" style="animation-delay:0.30s;color:#FFF8F0;">r</span>
+    <span class="spl spl-left" style="animation-delay:0.18s;color:#FFF8F0;">e</span>
+    <span class="spl spl-left" style="animation-delay:0.06s;color:#FFF8F0;">w</span>
+    <!-- Desk: slide from RIGHT in natural order — D fires first (0.06s), k fires last (0.42s) -->
+    <span class="spl spl-right spl-accent" style="animation-delay:0.06s;">D</span>
+    <span class="spl spl-right spl-accent" style="animation-delay:0.18s;">e</span>
+    <span class="spl spl-right spl-accent" style="animation-delay:0.30s;">s</span>
+    <span class="spl spl-right spl-accent" style="animation-delay:0.42s;">k</span>
   </div>
   <div class="splash-tagline">Cafe Management System</div>
 </div>
@@ -827,6 +868,7 @@ td.tdc{color:var(--text-primary);font-weight:500;}
             <span style="color:var(--text-muted);font-size:12px;">to</span>
             <input class="form-input" type="date" id="ordTo" autocomplete="off" style="width:140px;padding:8px 12px;font-size:12px;" onchange="renderOrders()"/>
             <button class="btn btn-glass btn-xs" onclick="setOrdToday()">Today</button>
+            <button class="btn btn-glass btn-xs" id="eodBtn" onclick="openEOD()" style="display:none;">End of Day</button>
             <!-- On mobile: New Order button sits here in the date row -->
             <button class="btn btn-primary btn-sm ord-new-mobile" id="newOrdBtnMobile" onclick="openNewOrder()" style="display:none;">
               <svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd"/></svg>
@@ -860,15 +902,15 @@ td.tdc{color:var(--text-primary);font-weight:500;}
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
           <input type="text" id="ordSearch" placeholder="Search by order #, table, items…" oninput="renderOrders()"/>
         </div>
-        <div class="g2" style="align-items:start;">
-          <div>
+        <div style="display:flex;flex-direction:column;gap:16px;">
+          <div class="card">
             <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
               <div class="card-title" style="margin:0;">Active — <span id="actCnt">0</span></div>
               <button class="btn btn-glass btn-xs" onclick="toggleOrdSearch()">Search</button>
             </div>
             <div id="activeOrders"></div>
           </div>
-          <div id="doneCol">
+          <div id="doneCol" class="card">
             <div class="card-title">Completed — <span id="doneCnt">0</span></div>
             <div id="doneOrders"></div>
           </div>
@@ -880,6 +922,9 @@ td.tdc{color:var(--text-primary);font-weight:500;}
           </div>
           <div class="rl-panel on" id="ordAuditPanel">
             <div id="ordAuditTable"></div>
+          </div>
+          <div class="rl-panel" id="voidAuditPanel">
+            <div id="voidAuditTable"></div>
           </div>
         </div>
       </section>
@@ -944,6 +989,7 @@ td.tdc{color:var(--text-primary);font-weight:500;}
               <svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd"/></svg>
               Add Staff
             </button>
+            <button class="btn btn-glass btn-sm" id="requestLeaveBtn" onclick="openLeaveRequest()" style="display:none;">Request Leave / Swap</button>
             <button class="btn btn-danger btn-sm" id="clearAttBtn" onclick="openClearAtt()" style="display:none;">Clear Attendance</button>
           </div>
         </div>
@@ -955,6 +1001,52 @@ td.tdc{color:var(--text-primary);font-weight:500;}
         <div class="card" id="staffHoursSec" style="margin-bottom:16px;display:none;">
           <div class="card-title">Weekly Hours Summary</div>
           <div id="staffHours"></div>
+        </div>
+        <!-- Weekly Roster -->
+        <!-- Leave & Swap Requests -->
+        <div class="card" style="margin-bottom:16px;" id="swapRequestsCard">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">
+            <div class="card-title" style="margin:0;">Leave &amp; Swap Requests <span id="swapBadge" style="display:none;background:var(--red);color:#fff;font-size:9px;font-weight:700;padding:1px 6px;border-radius:8px;margin-left:6px;"></span></div>
+            <button class="btn btn-primary btn-sm" id="newLeaveBtn" onclick="openLeaveRequest()">+ Request</button>
+          </div>
+          <div id="swapRequestsList"></div>
+        </div>
+
+        <div class="card" style="margin-bottom:16px;" id="rosterCard">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+            <div class="card-title" style="margin:0;">Weekly Roster</div>
+            <div style="display:flex;gap:6px;align-items:center;">
+              <button class="btn btn-glass btn-xs" onclick="rosterPrevWeek()">‹</button>
+              <span id="rosterWeekLabel" style="font-size:12px;color:var(--text-muted);min-width:120px;text-align:center;"></span>
+              <button class="btn btn-glass btn-xs" onclick="rosterNextWeek()">›</button>
+            </div>
+          </div>
+          <div id="rosterStats" style="display:flex;gap:16px;margin-bottom:12px;flex-wrap:wrap;"></div>
+          <div id="rosterEditHint" style="font-size:11.5px;color:var(--text-muted);margin-bottom:10px;">Click any cell to assign or edit a shift for that staff member and day.</div>
+          <div id="rosterGrid"></div>
+          <div class="rl-tabs" style="margin-top:14px;"><div class="rl-tab on" onclick="switchTab('rosterAudit',0,this)">Roster Change History</div></div>
+          <div class="rl-panel on" id="rosterAuditPanel"><div id="rosterAuditTable"></div></div>
+        </div>
+        <!-- Salary Estimator -->
+        <div class="card" style="margin-bottom:16px;" id="salaryCard">
+          <div class="card-title">Salary Estimator <span style="font-size:10px;font-weight:400;color:var(--amber);letter-spacing:0;text-transform:none;">— Estimated Only</span></div>
+          <div id="salaryEstimator"></div>
+        </div>
+        <!-- Tips Summary -->
+        <div class="card" style="margin-bottom:16px;" id="tipsCard">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+            <div class="card-title" style="margin:0;">Tips Received</div>
+            <div style="display:flex;gap:6px;align-items:center;">
+              <select class="form-input" id="tipsPeriodSel" onchange="renderTipsSummary()" style="font-size:12px;padding:5px 10px;height:auto;">
+                <option value="today">Today</option>
+                <option value="week">This Week</option>
+                <option value="month">This Month</option>
+                <option value="all">All Time</option>
+              </select>
+            </div>
+          </div>
+          <div id="tipsSummaryStats" class="g3 stat-cols" style="margin-bottom:16px;"></div>
+          <div id="tipsSummaryList"></div>
         </div>
         <div class="card">
           <div class="rl-tabs"><div class="rl-tab on" onclick="switchTab('attAudit',0,this)">Attendance Clear History</div></div>
@@ -1001,7 +1093,7 @@ td.tdc{color:var(--text-primary);font-weight:500;}
           </div>
           <div class="card">
             <div class="card-title">Look Up Customer</div>
-            <div style="display:flex;gap:8px;"><input class="form-input" type="tel" id="loySearch" placeholder="Mobile number" maxlength="10" style="flex:1;" onkeydown="if(event.key==='Enter')lookupLoyalty()"/><button class="btn btn-glass" onclick="lookupLoyalty()">Search</button><button class="btn btn-danger" id="loyClearBtn" onclick="clearLoySearch()" style="display:none;">✕</button></div>
+            <div style="display:flex;gap:8px;"><input class="form-input" type="tel" id="loySearch" placeholder="Mobile number" maxlength="10" style="flex:1;" onkeydown="if(event.key==='Enter')lookupLoyalty()"/><button class="btn btn-glass" onclick="lookupLoyalty()">Search</button><button class="btn btn-danger" id="loyClearBtn" onclick="clearLoySearch()" style="display:none;"></button></div>
             <div id="loyResult"></div>
           </div>
         </div>
@@ -1045,6 +1137,48 @@ td.tdc{color:var(--text-primary);font-weight:500;}
           <div class="card"><div class="card-title">Top Selling Items</div><div id="dashTop"></div></div>
           <div class="card"><div class="card-title">Recent Orders</div><div id="dashRecent"></div></div>
         </div>
+        <div class="g2" style="gap:16px;margin-top:18px;align-items:start;" id="dashAdminRow">
+          <!-- GST Summary -->
+          <div class="card" id="gstCard">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+              <div class="card-title" style="margin:0;">GST Summary</div>
+              <button class="btn btn-glass btn-xs" onclick="toggleGST()"></button>
+            </div>
+            <div id="gstBody"></div>
+          </div>
+          <!-- Health Alerts -->
+          <div class="card" id="healthCard">
+            <div class="card-title">Business Health</div>
+            <div id="healthAlerts"></div>
+          </div>
+        </div>
+        <!-- EOD Log -->
+        <div class="card" style="margin-top:18px;" id="eodLogCard">
+          <div class="rl-tabs"><div class="rl-tab on" onclick="switchTab('eodLog',0,this)">End of Day Log (Last 7 Days)</div></div>
+          <div class="rl-panel on" id="eodLogPanel"><div id="eodLogTable"></div></div>
+        </div>
+      </section>
+
+      <!-- STRATEGY -->
+      <section class="page" id="page-strategy">
+        <div class="ph">
+          <div><div class="ph-title">Strategy</div><div class="ph-sub">Owner's command center</div></div>
+        </div>
+        <!-- North Star Metrics -->
+        <div class="card" style="margin-bottom:18px;">
+          <div class="card-title">North Star Metrics</div>
+          <div id="northStarMetrics" class="g3 stat-cols"></div>
+        </div>
+        <!-- Pre-Mortem Trigger Board -->
+        <div class="card" style="margin-bottom:18px;">
+          <div class="card-title">Pre-Mortem Trigger Board</div>
+          <div id="preMortemBoard"></div>
+        </div>
+        <!-- Moat Score -->
+        <div class="card">
+          <div class="card-title">Moat Score</div>
+          <div id="moatScore"></div>
+        </div>
       </section>
 
       <!-- SETTINGS -->
@@ -1082,6 +1216,17 @@ td.tdc{color:var(--text-primary);font-weight:500;}
             <div class="card-title" style="margin:0;">Team Members</div>
           </div>
           <div id="userList"></div>
+        </div>
+        <!-- Coupon Manager -->
+        <div class="card" style="margin-top:20px;" id="couponManagerCard">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;">
+            <div>
+              <div class="card-title" style="margin:0;">Coupon / Promo Codes</div>
+              <div style="font-size:11.5px;color:var(--text-muted);margin-top:3px;">Create discount codes for customers</div>
+            </div>
+            <button class="btn btn-primary btn-sm" onclick="openAddCoupon()">+ Add Coupon</button>
+          </div>
+          <div id="couponList"></div>
         </div>
         <div id="settingsAuditSection" style="margin-top:20px;display:none;">
           <div class="card">
@@ -1156,6 +1301,10 @@ td.tdc{color:var(--text-primary);font-weight:500;}
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
     Dashboard
   </button>
+  <button class="md-item" data-page="strategy" id="moreStrategyBtn" onclick="mobileNav('strategy');closeMoreDrawer()" style="display:none;">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" style="width:18px;height:18px;opacity:.6;flex-shrink:0;"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
+    Strategy
+  </button>
   <button class="md-item" data-page="settings" id="moreSettingsBtn" onclick="mobileNav('settings');closeMoreDrawer()" style="display:none;">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><circle cx="12" cy="12" r="3"/></svg>
     Settings
@@ -1226,7 +1375,7 @@ td.tdc{color:var(--text-primary);font-weight:500;}
 <!-- New Order -->
 <div class="overlay" id="mOrder">
   <div class="modal modal-lg">
-    <div class="modal-header"><div class="modal-title" id="orderModalTitle">New Order</div><button class="modal-close" onclick="closeModal('mOrder')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 6L6 18M6 6l12 12"/></svg></button></div>
+    <div class="modal-header"><div class="modal-title" id="orderModalTitle">New Order</div><button class="modal-close" onclick="closeOrderModal()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 6L6 18M6 6l12 12"/></svg></button></div>
     <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-bottom:14px;">
       <div class="form-group" style="margin:0;"><label class="form-label">Table / Type</label><select class="form-input" id="oTable"></select></div>
       <div class="form-group" style="margin:0;"><label class="form-label">Customer Mobile</label><input class="form-input" type="tel" id="oMobile" placeholder="10-digit" maxlength="10" oninput="onOrderMobileInput()"/></div>
@@ -1245,7 +1394,7 @@ td.tdc{color:var(--text-primary);font-weight:500;}
         <div class="form-group"><label class="form-label">Payment</label><select class="form-input" id="oPayment"><option value="UPI">UPI</option><option value="Cash">Cash</option><option value="Card">Card</option></select></div>
       </div>
     </div>
-    <div class="modal-footer"><button class="btn btn-glass" onclick="closeModal('mOrder')">Cancel</button><button class="btn btn-primary" id="orderSubmitBtn" onclick="placeOrder()">Place Order &amp; Generate KOT</button></div>
+    <div class="modal-footer"><button class="btn btn-glass" onclick="closeOrderModal()">Cancel</button><button class="btn btn-primary" id="orderSubmitBtn" onclick="placeOrder()">Place Order &amp; Generate KOT</button></div>
   </div>
 </div>
 
@@ -1257,7 +1406,7 @@ td.tdc{color:var(--text-primary);font-weight:500;}
     <div class="modal-footer" style="justify-content:center;gap:8px;">
       <button class="btn btn-glass" onclick="printDiv('kotContent')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9V2h12v7M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2M6 14h12v8H6z"/></svg>Print</button>
       <button class="btn btn-glass" onclick="closeModal('mKOT')">Close</button>
-      <button class="btn btn-primary" onclick="closeModal('mKOT')">✓ Sent to Kitchen</button>
+      <button class="btn btn-primary" onclick="closeModal('mKOT')"> Sent to Kitchen</button>
     </div>
   </div>
 </div>
@@ -1270,6 +1419,143 @@ td.tdc{color:var(--text-primary);font-weight:500;}
     <div class="modal-footer" style="justify-content:center;gap:8px;">
       <button class="btn btn-glass" onclick="printDiv('billContent')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9V2h12v7M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2M6 14h12v8H6z"/></svg>Print</button>
       <button class="btn btn-glass" onclick="closeModal('mBill')">Close</button>
+    </div>
+  </div>
+</div>
+
+<!-- Billing Enhancements: Discount / Coupon / Tip -->
+<div class="overlay" id="mBillingExtras">
+  <div class="modal" style="width:420px;">
+    <div class="modal-header">
+      <div class="modal-title">Billing Options</div>
+      <button class="modal-close" onclick="closeModal('mBillingExtras')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 6L6 18M6 6l12 12"/></svg></button>
+    </div>
+    <input type="hidden" id="beOrderId"/>
+    <!-- Order summary line -->
+    <div style="background:rgba(255,248,240,.05);border:1px solid var(--glass-border);border-radius:var(--r);padding:12px 14px;margin-bottom:18px;">
+      <div style="display:flex;justify-content:space-between;font-size:13px;">
+        <span style="color:var(--text-muted);">Order subtotal</span>
+        <span id="beSubtotal" style="font-weight:600;color:var(--text-primary);">₹0</span>
+      </div>
+      <div style="display:flex;justify-content:space-between;font-size:12px;margin-top:4px;" id="beLoyaltyRow" style="display:none;">
+        <span style="color:var(--text-muted);">Loyalty discount</span>
+        <span id="beLoyaltyAmt" style="color:var(--green);">−₹0</span>
+      </div>
+    </div>
+
+    <!-- DISCOUNT SECTION -->
+    <div style="margin-bottom:18px;">
+      <div style="font-size:10px;font-weight:600;letter-spacing:1.6px;text-transform:uppercase;color:var(--text-muted);margin-bottom:10px;">Manual Discount</div>
+      <div style="display:flex;gap:6px;margin-bottom:8px;">
+        <button id="discTypePct" class="btn btn-primary btn-sm" onclick="setDiscType('pct')" style="flex:1;">% Off</button>
+        <button id="discTypeFlat" class="btn btn-glass btn-sm" onclick="setDiscType('flat')" style="flex:1;">₹ Off</button>
+      </div>
+      <div style="display:flex;gap:8px;align-items:center;">
+        <input class="form-input" type="number" id="discValue" placeholder="0" min="0" oninput="beRecalc()" style="flex:1;"/>
+        <span id="discTypeLabel" style="font-size:13px;color:var(--text-muted);white-space:nowrap;min-width:30px;">%</span>
+      </div>
+      <div id="discPreview" style="font-size:12px;color:var(--green);margin-top:6px;height:16px;"></div>
+    </div>
+
+    <!-- COUPON SECTION -->
+    <div style="margin-bottom:18px;">
+      <div style="font-size:10px;font-weight:600;letter-spacing:1.6px;text-transform:uppercase;color:var(--text-muted);margin-bottom:10px;">Coupon Code</div>
+      <div style="display:flex;gap:8px;">
+        <input class="form-input" type="text" id="couponInput" placeholder="Enter promo code" style="flex:1;text-transform:uppercase;" oninput="this.value=this.value.toUpperCase()"/>
+        <button class="btn btn-glass btn-sm" onclick="applyCoupon()" style="white-space:nowrap;">Apply</button>
+        <button class="btn btn-glass btn-sm" id="removeCouponBtn" onclick="removeCoupon()" style="display:none;white-space:nowrap;color:var(--red);">Remove</button>
+      </div>
+      <div id="couponStatus" style="font-size:12px;margin-top:6px;height:16px;"></div>
+    </div>
+
+    <!-- TIP SECTION -->
+    <div style="margin-bottom:18px;">
+      <div style="font-size:10px;font-weight:600;letter-spacing:1.6px;text-transform:uppercase;color:var(--text-muted);margin-bottom:10px;">Tip (Optional)</div>
+      <div style="display:flex;gap:6px;margin-bottom:8px;" id="tipPresets">
+        <button class="btn btn-glass btn-xs tip-preset" onclick="setTipPct(5)" style="flex:1;">5%</button>
+        <button class="btn btn-glass btn-xs tip-preset" onclick="setTipPct(10)" style="flex:1;">10%</button>
+        <button class="btn btn-glass btn-xs tip-preset" onclick="setTipPct(15)" style="flex:1;">15%</button>
+        <button class="btn btn-glass btn-xs tip-preset" onclick="setTipPct(0)" style="flex:1;color:var(--text-muted);">None</button>
+      </div>
+      <div style="display:flex;gap:8px;align-items:center;">
+        <input class="form-input" type="number" id="tipManual" placeholder="Custom ₹ amount" min="0" oninput="beRecalc()" style="flex:1;"/>
+        <span style="font-size:12px;color:var(--text-muted);white-space:nowrap;">₹</span>
+      </div>
+      <div class="form-group" style="margin-top:10px;margin-bottom:0;">
+        <label class="form-label">Served by (Attender)</label>
+        <div class="uname-dropdown" id="attDropdownWrap">
+          <div class="uname-input-wrap">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="opacity:.4;"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            <input class="uname-search" id="attSearch" placeholder="Search staff name..." autocomplete="off"
+              onfocus="openAttList()" oninput="filterAttList(this.value)" style="padding-left:36px;"/>
+            <svg class="uname-caret" id="attCaret" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+          </div>
+          <div class="uname-list" id="attList"></div>
+        </div>
+        <input type="hidden" id="attStaffId"/>
+      </div>
+    </div>
+
+    <!-- TOTAL PREVIEW -->
+    <div style="background:rgba(200,131,74,.06);border:1px solid rgba(200,131,74,.2);border-radius:var(--r);padding:14px;margin-bottom:4px;">
+      <div id="beBreakdown" style="font-size:12.5px;color:var(--text-secondary);margin-bottom:8px;"></div>
+      <div style="display:flex;justify-content:space-between;align-items:baseline;">
+        <span style="font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:var(--text-muted);">Grand Total</span>
+        <span id="beGrandTotal" style="font-family:var(--ff-d);font-size:28px;font-weight:300;color:var(--accent);">₹0</span>
+      </div>
+    </div>
+
+    <div class="modal-footer">
+      <button class="btn btn-glass" onclick="closeModal('mBillingExtras')">Cancel</button>
+      <button class="btn btn-primary" onclick="applyBillingExtras()">Apply &amp; Complete Order</button>
+    </div>
+  </div>
+</div>
+
+<!-- Add / Edit Coupon Modal -->
+<div class="overlay" id="mCoupon">
+  <div class="modal" style="width:440px;">
+    <div class="modal-header">
+      <div class="modal-title" id="couponModalTitle">Add Coupon</div>
+      <button class="modal-close" onclick="closeModal('mCoupon')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 6L6 18M6 6l12 12"/></svg></button>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label class="form-label">Coupon Code <span style="color:var(--red);">*</span></label>
+        <input class="form-input" type="text" id="cpCode" placeholder="e.g. WELCOME10" style="text-transform:uppercase;" oninput="this.value=this.value.toUpperCase()"/>
+      </div>
+      <div class="form-group"><label class="form-label">Type</label>
+        <select class="form-input" id="cpType" onchange="renderCouponTypeHint()">
+          <option value="pct">% Discount</option>
+          <option value="flat">₹ Flat Off</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label class="form-label" id="cpValueLabel">Discount Value (%)</label>
+        <input class="form-input" type="number" id="cpValue" placeholder="0" min="0" oninput="renderCouponTypeHint()"/>
+      </div>
+      <div class="form-group"><label class="form-label">Min Order Amount (₹)</label>
+        <input class="form-input" type="number" id="cpMinOrder" placeholder="0 = no minimum" min="0"/>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label class="form-label">Usage Limit <span style="color:var(--text-muted);font-weight:400;text-transform:none;">(0 = unlimited)</span></label>
+        <input class="form-input" type="number" id="cpLimit" placeholder="0" min="0"/>
+      </div>
+      <div class="form-group"><label class="form-label">Expiry Date <span style="color:var(--text-muted);font-weight:400;text-transform:none;">(optional)</span></label>
+        <input class="form-input" type="date" id="cpExpiry"/>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Description / Note <span style="color:var(--text-muted);font-weight:400;text-transform:none;">(optional)</span></label>
+      <input class="form-input" type="text" id="cpDesc" placeholder="e.g. Welcome discount for new customers"/>
+    </div>
+    <div id="cpPreview" style="padding:10px 14px;background:var(--green-bg);border:1px solid rgba(94,203,149,.2);border-radius:var(--r);font-size:12.5px;color:var(--green);margin-bottom:4px;display:none;"></div>
+    <div id="cpErr" style="font-size:12px;color:var(--red);height:16px;margin-bottom:8px;"></div>
+    <input type="hidden" id="cpEditId"/>
+    <div class="modal-footer">
+      <button class="btn btn-glass" onclick="closeModal('mCoupon')">Cancel</button>
+      <button class="btn btn-primary" onclick="saveCoupon()">Save Coupon</button>
     </div>
   </div>
 </div>
@@ -1425,7 +1711,7 @@ td.tdc{color:var(--text-primary);font-weight:500;}
       <div class="av-ring" id="profileAv" onclick="document.getElementById('avatarInput').click()" title="Click to change photo"></div>
       <input type="file" id="avatarInput" accept="image/*" style="display:none;" onchange="handleAvatarUpload(event)"/>
       <div style="font-size:10.5px;color:var(--text-muted);margin-bottom:6px;">Tap to change photo</div>
-      <button id="removePhotoBtn" onclick="removeAvatar()" style="display:none;background:none;border:none;cursor:pointer;font-size:11px;color:var(--red);font-family:var(--ff-b);padding:2px 8px;border-radius:6px;transition:var(--t);" onmouseover="this.style.background='var(--red-bg)'" onmouseout="this.style.background='none'">✕ Remove photo</button>
+      <button id="removePhotoBtn" onclick="removeAvatar()" style="display:none;background:none;border:none;cursor:pointer;font-size:11px;color:var(--red);font-family:var(--ff-b);padding:2px 8px;border-radius:6px;transition:var(--t);" onmouseover="this.style.background='var(--red-bg)'" onmouseout="this.style.background='none'"> Remove photo</button>
       <div style="margin-bottom:12px;"></div>
       <div style="font-family:var(--ff-d);font-size:20px;color:var(--text-primary);" id="profileName"></div>
       <div style="font-size:11px;color:var(--text-muted);letter-spacing:1px;text-transform:uppercase;margin-top:4px;" id="profileRole"></div>
@@ -1458,6 +1744,123 @@ td.tdc{color:var(--text-primary);font-weight:500;}
   </div>
 </div>
 
+
+<!-- Reject Request Note Modal -->
+<div class="overlay" id="mRejectNote">
+  <div class="modal" style="width:380px;">
+    <div class="modal-header">
+      <div class="modal-title">Reject Request</div>
+      <button class="modal-close" onclick="closeModal('mRejectNote')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 6L6 18M6 6l12 12"/></svg></button>
+    </div>
+    <input type="hidden" id="rejectReqId"/>
+    <div class="form-group">
+      <label class="form-label">Reason for Rejection <span style="color:var(--text-muted);font-weight:400;text-transform:none;">(optional)</span></label>
+      <input class="form-input" id="rejectNote" placeholder="e.g. Short-staffed that day, please reschedule"/>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-glass" onclick="closeModal('mRejectNote')">Cancel</button>
+      <button class="btn btn-danger" onclick="confirmReject()">Confirm Reject</button>
+    </div>
+  </div>
+</div>
+
+<!-- Leave / Swap Request Modal -->
+<div class="overlay" id="mLeaveRequest">
+  <div class="modal" style="width:440px;">
+    <div class="modal-header">
+      <div class="modal-title">Request Leave / Shift Swap</div>
+      <button class="modal-close" onclick="closeModal('mLeaveRequest')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 6L6 18M6 6l12 12"/></svg></button>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Request Type</label>
+      <select class="form-input" id="leaveType" onchange="toggleSwapField()">
+        <option value="leave">Emergency Leave (mark me as Off)</option>
+        <option value="swap">Shift Swap (swap with a colleague)</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Date</label>
+      <input class="form-input" type="date" id="leaveDate"/>
+    </div>
+    <div class="form-group" id="swapWithGroup" style="display:none;">
+      <label class="form-label">Swap With</label>
+      <select class="form-input" id="swapWithSelect"></select>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Reason</label>
+      <input class="form-input" id="leaveReason" placeholder="Brief reason (e.g. medical emergency, family)"/>
+    </div>
+    <div id="leaveErr" style="font-size:12px;color:var(--red);height:16px;margin-bottom:8px;"></div>
+    <div class="modal-footer">
+      <button class="btn btn-glass" onclick="closeModal('mLeaveRequest')">Cancel</button>
+      <button class="btn btn-primary" onclick="submitLeaveRequest()">Submit Request</button>
+    </div>
+  </div>
+</div>
+
+<!-- Void Reason Modal -->
+<div class="overlay" id="mVoidReason">
+  <div class="modal" style="width:420px;">
+    <div class="modal-header"><div class="modal-title">Cancel Order — Select Reason</div><button class="modal-close" onclick="closeModal('mVoidReason')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 6L6 18M6 6l12 12"/></svg></button></div>
+    <input type="hidden" id="voidOrderId"/>
+    <div class="form-group"><label class="form-label">Reason for Cancellation</label>
+      <select class="form-input" id="voidReason" onchange="toggleVoidOther()">
+        <option value="Customer request">Customer request</option>
+        <option value="Wrong order">Wrong order</option>
+        <option value="Item unavailable">Item unavailable</option>
+        <option value="Test order">Test order</option>
+        <option value="Other">Other (type reason)</option>
+      </select>
+    </div>
+    <div class="form-group" id="voidOtherGroup" style="display:none;"><label class="form-label">Specify Reason</label><input class="form-input" id="voidOtherText" placeholder="Describe the reason..."/></div>
+    <div id="voidErr" style="font-size:12px;color:var(--red);height:16px;margin-bottom:8px;"></div>
+    <div class="modal-footer"><button class="btn btn-glass" onclick="closeModal('mVoidReason')">Back</button><button class="btn btn-danger" onclick="confirmVoid()">Confirm Cancel</button></div>
+  </div>
+</div>
+
+<!-- EOD Modal -->
+<div class="overlay" id="mEOD">
+  <div class="modal" style="width:440px;">
+    <div class="modal-header"><div class="modal-title">End of Day Reconciliation</div><button class="modal-close" onclick="closeModal('mEOD')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 6L6 18M6 6l12 12"/></svg></button></div>
+    <div class="g2" style="gap:12px;margin-bottom:16px;">
+      <div class="stat-card sc-green"><div class="stat-label">Expected Cash</div><div class="stat-value" id="eodExpected" style="font-size:22px;">₹0</div><div class="stat-note">From cash orders today</div></div>
+      <div class="stat-card sc-amber"><div class="stat-label">Variance</div><div class="stat-value" id="eodVariance" style="font-size:22px;">—</div><div class="stat-note" id="eodVarianceNote">Enter actual amount</div></div>
+    </div>
+    <div class="form-group"><label class="form-label">Actual Cash in Drawer (₹)</label><input class="form-input" type="number" id="eodActual" placeholder="Enter actual amount" oninput="calcEODVariance()"/></div>
+    <div class="form-group"><label class="form-label">Notes (optional)</label><input class="form-input" id="eodNotes" placeholder="Any discrepancies or remarks..."/></div>
+    <div id="eodErr" style="font-size:12px;color:var(--red);height:16px;margin-bottom:8px;"></div>
+    <div class="modal-footer"><button class="btn btn-glass" onclick="closeModal('mEOD')">Cancel</button><button class="btn btn-primary" onclick="saveEOD()">Save EOD Report</button></div>
+  </div>
+</div>
+
+<!-- Edit Roster Shift Modal -->
+<div class="overlay" id="mRosterShift">
+  <div class="modal" style="width:400px;">
+    <div class="modal-header"><div class="modal-title">Edit Shift</div><button class="modal-close" onclick="closeModal('mRosterShift')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 6L6 18M6 6l12 12"/></svg></button></div>
+    <input type="hidden" id="rShiftStaffId"/><input type="hidden" id="rShiftDate"/>
+    <div class="form-group"><label class="form-label">Staff</label><input class="form-input" id="rShiftStaffName" readonly style="opacity:.7;"/></div>
+    <div class="form-group"><label class="form-label">Date</label><input class="form-input" id="rShiftDateDisplay" readonly style="opacity:.7;"/></div>
+    <div class="form-group"><label class="form-label">Shift Type</label>
+      <select class="form-input" id="rShiftType" onchange="toggleCustomShift()">
+        <option value="Morning">Morning (7am–2pm)</option>
+        <option value="Afternoon">Afternoon (12pm–7pm)</option>
+        <option value="Evening">Evening (4pm–11pm)</option>
+        <option value="Full Day">Full Day (9am–9pm)</option>
+        <option value="Custom">Custom</option>
+        <option value="Off">Off</option>
+      </select>
+    </div>
+    <div id="customShiftGroup" style="display:none;">
+      <div class="form-row"><div class="form-group"><label class="form-label">Start</label><input class="form-input" type="time" id="rShiftStart"/></div><div class="form-group"><label class="form-label">End</label><input class="form-input" type="time" id="rShiftEnd"/></div></div>
+    </div>
+    <div class="form-group"><label class="form-label">Notes (optional)</label><input class="form-input" id="rShiftNotes" placeholder="Any notes..."/></div>
+    <div class="modal-footer">
+      <button class="btn btn-danger btn-sm" id="deleteShiftBtn" onclick="deleteRosterShift()" style="display:none;margin-right:auto;">Delete Shift</button>
+      <button class="btn btn-glass" onclick="closeModal('mRosterShift')">Cancel</button>
+      <button class="btn btn-primary" onclick="saveRosterShift()">Save Shift</button>
+    </div>
+  </div>
+</div>
 <!-- Manage Tables -->
 <div class="overlay" id="mManageTables">
   <div class="modal" style="width:420px;">
@@ -1564,21 +1967,21 @@ td.tdc{color:var(--text-primary);font-weight:500;}
       <button class="modal-close" onclick="closeModal('mClearData')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 6L6 18M6 6l12 12"/></svg></button>
     </div>
     <div style="padding:14px;background:var(--red-bg);border:1px solid rgba(240,112,112,.25);border-radius:var(--r);margin-bottom:20px;">
-      <div style="font-size:13.5px;font-weight:600;color:var(--red);margin-bottom:6px;">⚠ This cannot be undone</div>
+      <div style="font-size:13.5px;font-weight:600;color:var(--red);margin-bottom:6px;"> This cannot be undone</div>
       <div style="font-size:13px;color:var(--red);line-height:1.6;">This will permanently delete all orders, expenses, attendance, loyalty customers and points. Order numbering will restart from #1. User accounts and menu items will be kept.</div>
     </div>
     <div style="font-size:13px;color:var(--text-secondary);margin-bottom:16px;font-weight:500;">The following will be cleared:</div>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:20px;font-size:12.5px;color:var(--text-muted);">
-      <div>✕ &nbsp;All orders &amp; KOT history</div>
-      <div>✕ &nbsp;All expenses</div>
-      <div>✕ &nbsp;All attendance records</div>
-      <div>✕ &nbsp;All loyalty customers</div>
-      <div>✕ &nbsp;All loyalty points</div>
-      <div>✕ &nbsp;All notifications</div>
-      <div>✕ &nbsp;Staff roster</div>
-      <div>✕ &nbsp;User accounts</div>
-      <div style="color:var(--green);">✓ &nbsp;Menu items kept</div>
-      <div style="color:var(--green);">✓ &nbsp;Inventory kept</div>
+      <div> &nbsp;All orders &amp; KOT history</div>
+      <div> &nbsp;All expenses</div>
+      <div> &nbsp;All attendance records</div>
+      <div> &nbsp;All loyalty customers</div>
+      <div> &nbsp;All loyalty points</div>
+      <div> &nbsp;All notifications</div>
+      <div> &nbsp;Staff roster</div>
+      <div> &nbsp;User accounts</div>
+      <div style="color:var(--green);"> &nbsp;Menu items kept</div>
+      <div style="color:var(--green);"> &nbsp;Inventory kept</div>
     </div>
     <div class="form-group">
       <label class="form-label">Type DELETE to confirm <span style="color:var(--red);">*</span></label>
@@ -1695,7 +2098,7 @@ function showSyncStatus(msg,col){
 
 // Online/offline detection
 window.addEventListener('online',()=>{showSyncStatus('↑ Back online — syncing…','blue');flushSyncQueue();});
-window.addEventListener('offline',()=>{showSyncStatus('⚠ Offline — changes saved locally','red');});
+window.addEventListener('offline',()=>{showSyncStatus(' Offline — changes saved locally','red');});
 const fmt=n=>'₹'+Number(n).toLocaleString('en-IN');
 const fmtD=d=>new Date(d).toLocaleDateString('en-IN',{day:'2-digit',month:'short',year:'numeric'});
 const fmtT=ts=>new Date(ts).toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'});
@@ -1716,6 +2119,12 @@ let invAudit=L('invAudit',[]);// {id,ts,by,action,item,change}
 let customTables=L('customTables',['Table 1','Table 2','Table 3','Table 4','Table 5']);// user-managed table list
 let loyAudit=L('loyAudit',[]);// {id,ts,by,action,customer,change}
 let staffList=L('staff',[]);
+let voidAudit=L('voidAudit',[]);// {id,ts,by,reason,orderId,orderSnap}
+let eodLog=L('eodLog',[]);// {id,date,expectedCash,actualCash,variance,notes,by,ts}
+let salaryLog=L('salaryLog',[]);// {id,staffId,staffName,period,hours,rate,amount,by,ts}
+let roster=L('roster',[]);
+let swapRequests=L('swapReqs',[]);// {id,ts,type:'leave'|'swap',requesterId,requesterName,date,swapWithId?,swapWithName?,reason,status:'pending'|'approved'|'rejected',resolvedBy?,resolvedAt?,note?}// {id,staffId,date,shiftStart,shiftEnd,shiftType,notes,createdBy,createdAt}
+let rosterAudit=L('rosterAudit',[]);// {id,ts,by,action,staffName,date,change}
 let attendance=L('att',[]);// {id,sid,date,cin,cout,autoIn,dayOff}
 let attAudit=L('attAudit',[]);// {id,ts,by,reason,count}
 let ptsBatches=L('pts',[]);// {id,custId,pts,remaining,earned,expires}
@@ -1728,6 +2137,7 @@ let settingsAudit=L('settingsAudit',[]);// {id,ts,by,action,detail}
 let sharedCats=L('sharedCats',['Raw Materials','Dairy','Packaging','Cleaning','Salary','Utilities','Rent','Maintenance','Transport','Other']);
 let menuCats=L('menuCats',['Hot Beverages','Cold Beverages','Snacks','Meals','Desserts','Other']);
 let mnid=L('mnid',7),inid=L('inid',5),snid=L('snid',3),onid=L('onid',1);
+let coupons=L('coupons',[]);// {id,code,type:'pct'|'flat',value,minOrder,limit,used,expiry,desc,createdBy,createdAt,active}
 
 // Admin credentials stored separately (only admin account)
 let adminCreds=L('adminCreds',null);// {passwordHash}
@@ -2273,7 +2683,7 @@ function saveCreateOwner(){
   renderOwnerSection();
   renderSettings();
   renderSettingsAuditRL();
-  toast(`Owner account created for ${name} ✓`);
+  toast(`Owner account created for ${name} `);
 }
 function removeOwner(id){
   if(!confirm('Remove the owner account? This cannot be undone.'))return;
@@ -2298,6 +2708,849 @@ function removeCustomer(id){
   renderLoyalty();renderLoyAudit();
   toast(`${c.name} removed`);
 }
+// ══════════════════════════════════════════════
+// VOID / CANCELLATION AUDIT
+// ══════════════════════════════════════════════
+function cancelOrder(id){
+  const o=orders.find(x=>x.id===id);if(!o)return;
+  document.getElementById('voidOrderId').value=id;
+  document.getElementById('voidReason').value='Customer request';
+  document.getElementById('voidOtherGroup').style.display='none';
+  document.getElementById('voidOtherText').value='';
+  document.getElementById('voidErr').textContent='';
+  openModal('mVoidReason');
+}
+function toggleVoidOther(){
+  const v=document.getElementById('voidReason').value;
+  document.getElementById('voidOtherGroup').style.display=v==='Other'?'block':'none';
+}
+function confirmVoid(){
+  const id=parseInt(document.getElementById('voidOrderId').value);
+  const reasonSel=document.getElementById('voidReason').value;
+  const other=document.getElementById('voidOtherText').value.trim();
+  const reason=reasonSel==='Other'?(other||''):reasonSel;
+  if(reasonSel==='Other'&&!other){document.getElementById('voidErr').textContent='Please specify the reason';return;}
+  const o=orders.find(x=>x.id===id);if(!o)return;
+  const snap={id:o.id,table:o.table,total:o.total,items:o.items,payment:o.payment,date:o.date,placedBy:o.placedBy};
+  voidAudit.push({id:uid(),ts:Date.now(),by:currentUser?.name||'—',reason,orderId:id,orderSnap:snap});
+  S('voidAudit',voidAudit);
+  orders=orders.filter(x=>x.id!==id);S('orders',orders);
+  closeModal('mVoidReason');
+  renderOrders();renderTableStatus();renderVoidAudit();
+  toast(`Order #${id} cancelled — ${reason}`);
+}
+function renderVoidAudit(){
+  const all=canDo('seeSettings')?[...voidAudit]:[...voidAudit].filter(v=>v.by===currentUser?.name);
+  const rows=all.reverse().map(v=>[
+    `#${v.orderSnap?.id||'?'}`,esc(v.orderSnap?.table||'—'),fmt(v.orderSnap?.total||0),
+    esc(v.reason),fmtD(new Date(v.ts).toISOString().split('T')[0])+' '+fmtT(v.ts),esc(v.by)
+  ]);
+  renderRL('voidAuditTable',rows,['Order #','Table','Amount','Reason','Cancelled On','By']);
+}
+
+// ══════════════════════════════════════════════
+// GST SUMMARY
+// ══════════════════════════════════════════════
+let gstExpanded=true;
+function toggleGST(){
+  gstExpanded=!gstExpanded;
+  document.getElementById('gstBody').style.display=gstExpanded?'block':'none';
+  document.querySelector('#gstCard button').textContent=gstExpanded?'':'';
+}
+function renderGST(){
+  const el=document.getElementById('gstBody');if(!el)return;
+  const from=document.getElementById('dashFrom')?.value||TODAY;
+  const to=document.getElementById('dashTo')?.value||TODAY;
+  const filtered=orders.filter(o=>o.status==='done'&&o.date>=from&&o.date<=to);
+  const slabs={0:0,5:0,12:0,18:0,28:0};
+  const taxable={0:0,5:0,12:0,18:0,28:0};
+  filtered.forEach(o=>{
+    o.items.forEach(item=>{
+      const mi=menuItems.find(m=>m.id===item.id||m.name===item.name);
+      const gst=mi?.gst||0;
+      const lineTotal=(mi?.price||item.price||0)*item.qty;
+      const tax=lineTotal*gst/100;
+      slabs[gst]=(slabs[gst]||0)+tax;
+      taxable[gst]=(taxable[gst]||0)+lineTotal;
+    });
+  });
+  const totalTax=Object.values(slabs).reduce((a,b)=>a+b,0);
+  const totalTaxable=Object.values(taxable).reduce((a,b)=>a+b,0);
+  let html=`<div style="margin-bottom:12px;padding:10px;background:rgba(200,131,74,.08);border-radius:var(--r);border:1px solid rgba(200,131,74,.2);">
+    <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:4px;"><span style="color:var(--text-muted);">Total Taxable Value</span><span style="font-weight:600;">${fmt(totalTaxable)}</span></div>
+    <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:4px;"><span style="color:var(--text-muted);">CGST (50%)</span><span style="color:var(--accent);font-weight:600;">${fmt(totalTax/2)}</span></div>
+    <div style="display:flex;justify-content:space-between;font-size:13px;"><span style="color:var(--text-muted);">SGST (50%)</span><span style="color:var(--accent);font-weight:600;">${fmt(totalTax/2)}</span></div>
+  </div>
+  <table style="width:100%;border-collapse:collapse;">
+    <thead><tr><th style="font-size:9.5px;text-transform:uppercase;letter-spacing:1px;color:var(--text-muted);padding:0 8px 8px;text-align:left;">Slab</th><th style="font-size:9.5px;text-transform:uppercase;letter-spacing:1px;color:var(--text-muted);padding:0 8px 8px;text-align:right;">Taxable</th><th style="font-size:9.5px;text-transform:uppercase;letter-spacing:1px;color:var(--text-muted);padding:0 8px 8px;text-align:right;">GST</th><th style="font-size:9.5px;text-transform:uppercase;letter-spacing:1px;color:var(--text-muted);padding:0 8px 8px;text-align:right;">CGST</th><th style="font-size:9.5px;text-transform:uppercase;letter-spacing:1px;color:var(--text-muted);padding:0 8px 8px;text-align:right;">SGST</th></tr></thead><tbody>`;
+  [0,5,12,18,28].forEach(rate=>{
+    if(!taxable[rate])return;
+    html+=`<tr style="border-top:1px solid rgba(255,248,240,.06);">
+      <td style="padding:8px;font-size:12.5px;">${rate}%</td>
+      <td style="padding:8px;font-size:12.5px;text-align:right;">${fmt(taxable[rate])}</td>
+      <td style="padding:8px;font-size:12.5px;text-align:right;color:var(--accent);">${fmt(slabs[rate])}</td>
+      <td style="padding:8px;font-size:12.5px;text-align:right;">${fmt(slabs[rate]/2)}</td>
+      <td style="padding:8px;font-size:12.5px;text-align:right;">${fmt(slabs[rate]/2)}</td>
+    </tr>`;
+  });
+  html+='</tbody></table>';
+  if(!Object.values(taxable).some(v=>v>0))html='<div class="rl-empty">No orders in selected range</div>';
+  el.innerHTML=html;
+}
+
+// ══════════════════════════════════════════════
+// BUSINESS HEALTH ALERTS
+// ══════════════════════════════════════════════
+function renderHealthAlerts(){
+  const el=document.getElementById('healthAlerts');if(!el)return;
+  const alerts=[];
+  const now=new Date();
+  const hr=now.getHours();
+  // (a) Revenue 0 after 2PM
+  const todayRevenue=orders.filter(o=>o.status==='done'&&o.date===TODAY).reduce((s,o)=>s+o.total,0);
+  if(hr>=14&&todayRevenue===0)alerts.push({level:'red',msg:"No revenue recorded today after 2 PM"});
+  else if(todayRevenue>0)alerts.push({level:'green',msg:`Today's revenue: ${fmt(todayRevenue)}`});
+  // (b) Expenses exceed revenue 3+ consecutive days
+  let consecDays=0;
+  for(let i=0;i<7;i++){
+    const d=new Date();d.setDate(d.getDate()-i);
+    const ds=d.toISOString().split('T')[0];
+    const rev=orders.filter(o=>o.status==='done'&&o.date===ds).reduce((s,o)=>s+o.total,0);
+    const exp=expenses.filter(e=>e.date===ds).reduce((s,e)=>s+e.amount,0);
+    if(exp>rev)consecDays++;else break;
+  }
+  if(consecDays>=3)alerts.push({level:'red',msg:`Expenses exceed revenue for ${consecDays} consecutive days`});
+  else if(consecDays>0)alerts.push({level:'amber',msg:`Expenses exceeded revenue ${consecDays} day(s) recently`});
+  // (c) Inventory low for 7+ days - approximate check
+  const lowItems=inv.filter(i=>i.stock<=i.min);
+  if(lowItems.length>0)alerts.push({level:lowItems.length>2?'red':'amber',msg:`${lowItems.length} inventory item(s) at low stock: ${lowItems.map(i=>i.name).join(', ')}`});
+  // (d) No staff clocked in today
+  const clockedIn=attendance.filter(a=>a.date===TODAY&&a.cin&&!a.dayOff);
+  if(!clockedIn.length&&staffList.length>0)alerts.push({level:'amber',msg:"No staff clocked in today"});
+  else if(clockedIn.length>0)alerts.push({level:'green',msg:`${clockedIn.length} staff on shift today`});
+  if(!alerts.length)alerts.push({level:'green',msg:'All systems healthy'});
+  const cols={'red':'var(--red)','amber':'var(--amber)','green':'var(--green)'};
+  const bgs={'red':'var(--red-bg)','amber':'var(--amber-bg)','green':'var(--green-bg)'};
+  el.innerHTML=alerts.map(a=>`<div style="display:flex;align-items:flex-start;gap:10px;padding:10px 0;border-bottom:1px solid rgba(255,248,240,.05);">
+    <div style="width:10px;height:10px;border-radius:50%;background:${cols[a.level]};flex-shrink:0;margin-top:3px;"></div>
+    <div style="font-size:13px;color:var(--text-secondary);line-height:1.5;">${esc(a.msg)}</div>
+  </div>`).join('');
+}
+
+// ══════════════════════════════════════════════
+// END OF DAY RECONCILIATION
+// ══════════════════════════════════════════════
+function openEOD(){
+  const cashTotal=orders.filter(o=>o.status==='done'&&o.date===TODAY&&o.payment==='Cash').reduce((s,o)=>s+o.total,0);
+  document.getElementById('eodExpected').textContent=fmt(cashTotal);
+  document.getElementById('eodActual').value='';
+  document.getElementById('eodNotes').value='';
+  document.getElementById('eodVariance').textContent='—';
+  document.getElementById('eodVarianceNote').textContent='Enter actual amount';
+  document.getElementById('eodErr').textContent='';
+  openModal('mEOD');
+}
+function calcEODVariance(){
+  const expected=orders.filter(o=>o.status==='done'&&o.date===TODAY&&o.payment==='Cash').reduce((s,o)=>s+o.total,0);
+  const actual=parseFloat(document.getElementById('eodActual').value)||0;
+  const variance=actual-expected;
+  const el=document.getElementById('eodVariance');
+  const note=document.getElementById('eodVarianceNote');
+  el.textContent=(variance>=0?'+':'')+fmt(variance);
+  el.style.color=variance===0?'var(--green)':variance>0?'var(--blue)':'var(--red)';
+  note.textContent=variance===0?'Balanced':variance>0?'Surplus':'Shortage';
+}
+function saveEOD(){
+  const actual=parseFloat(document.getElementById('eodActual').value);
+  if(isNaN(actual)){document.getElementById('eodErr').textContent='Enter actual cash amount';return;}
+  const expected=orders.filter(o=>o.status==='done'&&o.date===TODAY&&o.payment==='Cash').reduce((s,o)=>s+o.total,0);
+  const variance=actual-expected;
+  const notes=document.getElementById('eodNotes').value.trim();
+  eodLog.push({id:uid(),date:TODAY,expectedCash:expected,actualCash:actual,variance,notes,by:currentUser?.name||'—',ts:Date.now()});
+  S('eodLog',eodLog);
+  closeModal('mEOD');
+  renderEODLog();
+  toast(`EOD saved — variance: ${variance>=0?'+':''}${fmt(variance)}`);
+}
+function renderEODLog(){
+  const el=document.getElementById('eodLogCard');if(el)el.style.display=canDo('seeEOD')?'block':'none';
+  const rows=[...eodLog].sort((a,b)=>b.ts-a.ts).slice(0,7).map(e=>[
+    fmtD(e.date),fmt(e.expectedCash),fmt(e.actualCash),
+    `<span style="color:${e.variance===0?'var(--green)':e.variance>0?'var(--blue)':'var(--red)'}">${e.variance>=0?'+':''}${fmt(e.variance)}</span>`,
+    esc(e.notes||'—'),esc(e.by)
+  ]);
+  renderRL('eodLogTable',rows,['Date','Expected','Actual','Variance','Notes','By']);
+}
+
+// ══════════════════════════════════════════════
+// SALARY ESTIMATOR
+// ══════════════════════════════════════════════
+function renderSalaryEstimator(){
+  const el=document.getElementById('salaryEstimator');
+  const card=document.getElementById('salaryCard');
+  if(!el||!card)return;
+  card.style.display=canDo('seeSalary')?'block':'none';
+  if(!canDo('seeSalary'))return;
+  const from=document.getElementById('staffDate')?.value||TODAY;
+  if(!staffList.length){el.innerHTML='<div class="rl-empty">No staff members yet</div>';return;}
+  let html='<div class="tbl-wrap"><table><thead><tr><th>Staff</th><th>Role</th><th>Hours</th><th>Rate/hr (₹)</th><th>Estimated</th><th>Action</th></tr></thead><tbody>';
+  staffList.forEach(s=>{
+    const weekStart=getWeekStart(from);
+    const weekEnd=getWeekEnd(from);
+    const recs=attendance.filter(a=>a.sid===s.id&&a.date>=weekStart&&a.date<=weekEnd&&a.cin&&a.cout);
+    const totalMs=recs.reduce((sum,a)=>sum+(a.cout-a.cin),0);
+    const hours=(totalMs/(1000*60*60)).toFixed(1);
+    const rate=s.hourlyRate||0;
+    const estimated=parseFloat(hours)*rate;
+    const paid=salaryLog.some(l=>l.staffId===s.id&&l.period===weekStart);
+    html+=`<tr>
+      <td class="tdc">${esc(s.name)}</td><td>${esc(s.role)}</td>
+      <td>${hours}h</td>
+      <td style="white-space:nowrap;">
+        <div style="display:flex;align-items:center;gap:6px;">
+          <input type="number" id="rate_${s.id}" class="form-input" style="width:80px;padding:5px 8px;font-size:12px;" value="${rate}" min="0" placeholder="0"/>
+          <button class="btn btn-glass btn-xs" onclick="saveStaffRate(${s.id})">Save</button>
+        </div>
+      </td>
+      <td style="color:var(--accent);font-weight:600;" id="est_${s.id}">${fmt(estimated)}</td>
+      <td>${paid?`<span class="badge b-green">Paid</span>`:`<button class="btn btn-success btn-xs" onclick="markSalaryPaid(${s.id},'${weekStart}',${parseFloat(hours)},${rate},${estimated},'${esc(s.name)}')">Mark Paid</button>`}</td>
+    </tr>`;
+  });
+  html+='</tbody></table></div>';
+  el.innerHTML=html;
+}
+function saveStaffRate(staffId){
+  const inp=document.getElementById('rate_'+staffId);
+  if(!inp)return;
+  const rate=parseFloat(inp.value)||0;
+  const s=staffList.find(x=>x.id===staffId);if(!s)return;
+  s.hourlyRate=rate;
+  S('staff',staffList);
+  // Update the estimated cell live
+  const from=document.getElementById('staffDate')?.value||TODAY;
+  const weekStart=getWeekStart(from);
+  const weekEnd=getWeekEnd(from);
+  const recs=attendance.filter(a=>a.sid===s.id&&a.date>=weekStart&&a.date<=weekEnd&&a.cin&&a.cout);
+  const totalMs=recs.reduce((sum,a)=>sum+(a.cout-a.cin),0);
+  const hours=(totalMs/(1000*60*60));
+  const estEl=document.getElementById('est_'+staffId);
+  if(estEl)estEl.textContent=fmt(hours*rate);
+  toast(`Rate saved for ${s.name}: ₹${rate}/hr`);
+}
+function markSalaryPaid(staffId,period,hours,rate,amount,name){
+  salaryLog.push({id:uid(),staffId,staffName:name,period,hours,rate,amount,by:currentUser?.name||'—',ts:Date.now()});
+  S('salaryLog',salaryLog);
+  renderSalaryEstimator();
+  toast(`Salary marked as paid for ${name}`);
+}
+function getWeekStart(dateStr){
+  const d=new Date(dateStr);
+  const day=d.getDay();
+  const diff=d.getDate()-(day===0?6:day-1);
+  d.setDate(diff);return d.toISOString().split('T')[0];
+}
+function getWeekEnd(dateStr){
+  const d=new Date(getWeekStart(dateStr));
+  d.setDate(d.getDate()+6);return d.toISOString().split('T')[0];
+}
+
+// ══════════════════════════════════════════════
+// WEEKLY ROSTER
+// ══════════════════════════════════════════════
+let rosterWeekOffset=0;
+const SHIFT_COLORS={Morning:'var(--blue)',Afternoon:'var(--amber)',Evening:'var(--green)','Full Day':'var(--accent)',Off:'var(--text-muted)',Custom:'var(--accent)'};
+const SHIFT_TIMES={Morning:'07:00-14:00',Afternoon:'12:00-19:00',Evening:'16:00-23:00','Full Day':'09:00-21:00'};
+
+function getRosterWeekDays(offset){
+  const now=new Date();now.setDate(now.getDate()+offset*7);
+  const day=now.getDay();const diff=now.getDate()-(day===0?6:day-1);
+  const mon=new Date(now);mon.setDate(diff);
+  return Array.from({length:7},(_,i)=>{const d=new Date(mon);d.setDate(mon.getDate()+i);return d.toISOString().split('T')[0];});
+}
+function rosterPrevWeek(){rosterWeekOffset--;renderWeeklyRoster();}
+function rosterNextWeek(){rosterWeekOffset++;renderWeeklyRoster();}
+
+function renderWeeklyRoster(){
+  const card=document.getElementById('rosterCard');if(!card)return;
+  const days=getRosterWeekDays(rosterWeekOffset);
+  const mon=new Date(days[0]);const sun=new Date(days[6]);
+  const lbl=document.getElementById('rosterWeekLabel');
+  if(lbl)lbl.textContent=`${fmtD(days[0])} – ${fmtD(days[6])}`;
+  const isMobile=window.innerWidth<=768;
+
+  // Stats
+  const shiftsThisWeek=roster.filter(r=>days.includes(r.date)&&r.shiftType!=='Off').length;
+  const staffWithShifts=new Set(roster.filter(r=>days.includes(r.date)&&r.shiftType!=='Off').map(r=>r.staffId));
+  const staffNoShift=staffList.filter(s=>!staffWithShifts.has(s.id)).length;
+  const dayCounts=days.map(d=>({d,n:roster.filter(r=>r.date===d&&r.shiftType!=='Off').length}));
+  const busiest=dayCounts.reduce((a,b)=>b.n>a.n?b:a,{d:'—',n:0});
+  const statsEl=document.getElementById('rosterStats');
+  if(statsEl)statsEl.innerHTML=`
+    <span style="font-size:12px;color:var(--text-muted);">Shifts scheduled: <strong style="color:var(--text-primary);">${shiftsThisWeek}</strong></span>
+    <span style="font-size:12px;color:var(--text-muted);">Staff without shifts: <strong style="color:${staffNoShift>0?'var(--amber)':'var(--green)'};">${staffNoShift}</strong></span>
+    <span style="font-size:12px;color:var(--text-muted);">Busiest day: <strong style="color:var(--text-primary);">${busiest.n>0?['Mon','Tue','Wed','Thu','Fri','Sat','Sun'][days.indexOf(busiest.d)]+' ('+busiest.n+')':'None'}</strong></span>`;
+
+  const gridEl=document.getElementById('rosterGrid');if(!gridEl)return;
+  const canEdit=canDo('editRoster');
+  const DAYS=['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+
+  if(isMobile){
+    // Mobile: vertical list grouped by day
+    let html='';
+    days.forEach((date,di)=>{
+      const dayShifts=staffList.map(s=>{
+        const sh=roster.find(r=>r.staffId===s.id&&r.date===date);
+        return {s,sh};
+      });
+      html+=`<div style="margin-bottom:10px;">
+        <div style="font-size:10px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:var(--text-muted);padding:6px 0;border-bottom:1px solid var(--glass-border);">${DAYS[di]} · ${fmtD(date)}</div>`;
+      dayShifts.forEach(({s,sh})=>{
+        const label=sh?sh.shiftType:'—';
+        const col=sh?SHIFT_COLORS[sh.shiftType]||'var(--accent)':'var(--text-muted)';
+        const mDataAttrs=canEdit?`data-sid="${s.id}" data-date="${date}"`:'';
+        html+=`<div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid rgba(255,248,240,.03);">
+          <span style="font-size:12.5px;color:var(--text-secondary);">${esc(s.name)}</span>
+          <span class="${canEdit?'roster-cell-m':''}" ${mDataAttrs} style="${canEdit?'cursor:pointer;':''}padding:3px 10px;border-radius:20px;font-size:11px;font-weight:500;background:${sh?'rgba(255,248,240,.08)':'transparent'};color:${col};border:1px solid ${sh?col:'transparent'};">${esc(label)||'＋'}</span>
+        </div>`;
+      });
+      html+='</div>';
+    });
+    gridEl.innerHTML=html;
+    // Attach mobile click handlers
+    if(canEdit){
+      gridEl.querySelectorAll('.roster-cell-m').forEach(el=>{
+        el.addEventListener('click',()=>openRosterShift(parseInt(el.dataset.sid),el.dataset.date));
+      });
+    }
+  } else {
+    // Desktop: 2D grid — use data-sid + data-date for click handling
+    let html=`<div style="overflow-x:auto;"><table style="width:100%;border-collapse:collapse;min-width:600px;">
+      <thead><tr><th style="font-size:10px;letter-spacing:1px;text-transform:uppercase;color:var(--text-muted);padding:0 8px 10px;text-align:left;">Staff</th>`;
+    DAYS.forEach((d,i)=>html+=`<th style="font-size:10px;letter-spacing:1px;text-transform:uppercase;color:var(--text-muted);padding:0 6px 10px;text-align:center;">${d}<br><span style="font-weight:400;font-size:9px;">${fmtD(days[i])}</span></th>`);
+    html+='</tr></thead><tbody>';
+    staffList.forEach(s=>{
+      html+=`<tr style="border-top:1px solid rgba(255,248,240,.05);"><td style="padding:8px;font-size:13px;color:var(--text-primary);font-weight:500;">${esc(s.name)}</td>`;
+      days.forEach(date=>{
+        const sh=roster.find(r=>r.staffId===s.id&&r.date===date);
+        const label=sh?sh.shiftType:'';
+        const col=sh?SHIFT_COLORS[sh.shiftType]||'var(--accent)':'var(--glass-border)';
+        const editStyle=canEdit?'cursor:pointer;':'';
+        const dataAttrs=canEdit?`data-sid="${s.id}" data-date="${date}"`:'';
+        html+=`<td style="padding:5px 4px;text-align:center;">
+          <div class="${canEdit?'roster-cell':''}" ${dataAttrs} style="${editStyle}padding:4px 6px;border-radius:var(--r);font-size:10.5px;font-weight:500;background:${sh?'rgba(255,248,240,.08)':'transparent'};color:${col};border:1px solid ${sh?col:'var(--glass-border)'};white-space:nowrap;min-height:26px;display:flex;align-items:center;justify-content:center;">${label||'<span style="opacity:.3;font-size:9px;">＋</span>'}</div>
+        </td>`;
+      });
+      html+='</tr>';
+    });
+    html+='</tbody></table></div>';
+    gridEl.innerHTML=html;
+    // Attach click handlers via event delegation
+    if(canEdit){
+      gridEl.querySelectorAll('.roster-cell').forEach(el=>{
+        el.addEventListener('click',()=>openRosterShift(parseInt(el.dataset.sid),el.dataset.date));
+      });
+    }
+  }
+  renderRosterAudit();
+}
+
+function openRosterShift(staffId,date){
+  if(!canDo('editRoster'))return;
+  const s=staffList.find(x=>x.id===staffId);if(!s)return;
+  const existing=roster.find(r=>r.staffId===staffId&&r.date===date);
+  document.getElementById('rShiftStaffId').value=staffId;
+  document.getElementById('rShiftDate').value=date;
+  document.getElementById('rShiftStaffName').value=s.name;
+  document.getElementById('rShiftDateDisplay').value=fmtD(date);
+  document.getElementById('rShiftType').value=existing?.shiftType||'Morning';
+  document.getElementById('rShiftNotes').value=existing?.notes||'';
+  document.getElementById('rShiftStart').value=existing?.shiftStart||'09:00';
+  document.getElementById('rShiftEnd').value=existing?.shiftEnd||'18:00';
+  document.getElementById('deleteShiftBtn').style.display=existing?'':'none';
+  toggleCustomShift();
+  openModal('mRosterShift');
+}
+function toggleCustomShift(){
+  const v=document.getElementById('rShiftType').value;
+  document.getElementById('customShiftGroup').style.display=v==='Custom'?'block':'none';
+}
+function saveRosterShift(){
+  const staffId=parseInt(document.getElementById('rShiftStaffId').value);
+  const date=document.getElementById('rShiftDate').value;
+  const shiftType=document.getElementById('rShiftType').value;
+  const notes=document.getElementById('rShiftNotes').value.trim();
+  const times=SHIFT_TIMES[shiftType]||'';
+  const shiftStart=shiftType==='Custom'?document.getElementById('rShiftStart').value:(times.split('-')[0]||'09:00');
+  const shiftEnd=shiftType==='Custom'?document.getElementById('rShiftEnd').value:(times.split('-')[1]||'18:00');
+  const s=staffList.find(x=>x.id===staffId);
+  const existing=roster.find(r=>r.staffId===staffId&&r.date===date);
+  const change=existing?`${existing.shiftType}→${shiftType}`:`New: ${shiftType}`;
+  if(existing){existing.shiftType=shiftType;existing.shiftStart=shiftStart;existing.shiftEnd=shiftEnd;existing.notes=notes;}
+  else{roster.push({id:uid(),staffId,date,shiftStart,shiftEnd,shiftType,notes,createdBy:currentUser?.name||'—',createdAt:Date.now()});}
+  S('roster',roster);
+  rosterAudit.push({id:uid(),ts:Date.now(),by:currentUser?.name||'—',action:existing?'Updated':'Created',staffName:s?.name||'—',date,change});
+  S('rosterAudit',rosterAudit);
+  closeModal('mRosterShift');renderWeeklyRoster();toast('Shift saved');
+}
+function deleteRosterShift(){
+  const staffId=parseInt(document.getElementById('rShiftStaffId').value);
+  const date=document.getElementById('rShiftDate').value;
+  const s=staffList.find(x=>x.id===staffId);
+  roster=roster.filter(r=>!(r.staffId===staffId&&r.date===date));
+  S('roster',roster);
+  rosterAudit.push({id:uid(),ts:Date.now(),by:currentUser?.name||'—',action:'Deleted',staffName:s?.name||'—',date,change:'Shift removed'});
+  S('rosterAudit',rosterAudit);
+  closeModal('mRosterShift');renderWeeklyRoster();toast('Shift deleted');
+}
+function renderRosterAudit(){
+  const rows=[...rosterAudit].reverse().slice(0,20).map(a=>[
+    esc(a.action),esc(a.staffName),fmtD(a.date),esc(a.change),
+    fmtD(new Date(a.ts).toISOString().split('T')[0])+' '+fmtT(a.ts),esc(a.by)
+  ]);
+  renderRL('rosterAuditTable',rows,['Action','Staff','Date','Change','Updated On','By']);
+}
+
+// ══════════════════════════════════════════════
+// STRATEGY PAGE
+// ══════════════════════════════════════════════
+function renderStrategy(){
+  if(!canDo('seeStrategy'))return;
+  renderNorthStar();renderPreMortem();renderMoatScore();
+}
+function hBadge(level){
+  const map={green:'<span class="badge b-green"> Good</span>',amber:'<span class="badge b-amber"> Watch</span>',red:'<span class="badge b-red"> Alert</span>'};
+  return map[level]||map.amber;
+}
+function renderNorthStar(){
+  const el=document.getElementById('northStarMetrics');if(!el)return;
+  const today=new Date();
+  const d30=new Date();d30.setDate(today.getDate()-30);
+  const d30s=d30.toISOString().split('T')[0];
+  const doneOrders=orders.filter(o=>o.status==='done');
+  // Repeat visit rate
+  const repeatCusts=customers.filter(c=>c.visits>1).length;
+  const repeatRate=customers.length?Math.round(repeatCusts/customers.length*100):0;
+  const rrLevel=repeatRate>=30?'green':repeatRate>=15?'amber':'red';
+  // Loyalty redemption
+  const issued=ptsBatches.reduce((s,b)=>s+(b.pts||0),0);
+  const redeemed=ptsBatches.reduce((s,b)=>s+((b.pts||0)-(b.remaining||0)),0);
+  const redemRate=issued?Math.round(redeemed/issued*100):0;
+  const rdLevel=redemRate>=30?'green':redemRate>=10?'amber':'red';
+  // Avg revenue per day last 30
+  const rev30=doneOrders.filter(o=>o.date>=d30s).reduce((s,o)=>s+o.total,0);
+  const days30=Math.max(1,Math.min(30,Math.ceil((today-d30)/(1000*60*60*24))));
+  const avgRevDay=Math.round(rev30/days30);
+  const ardLevel=avgRevDay>=3000?'green':avgRevDay>=1000?'amber':'red';
+  // Staff cost ratio
+  const monthStart=TODAY.substring(0,7)+'-01';
+  const monthRevenue=doneOrders.filter(o=>o.date>=monthStart).reduce((s,o)=>s+o.total,0);
+  const staffCost=expenses.filter(e=>e.cat==='Salary'&&e.date>=monthStart).reduce((s,e)=>s+e.amount,0);
+  const scRatio=monthRevenue?Math.round(staffCost/monthRevenue*100):0;
+  const scLevel=scRatio<=30?'green':scRatio<=50?'amber':'red';
+  // Top table
+  const tableCounts={};doneOrders.forEach(o=>{tableCounts[o.table]=(tableCounts[o.table]||0)+1;});
+  const topTable=Object.entries(tableCounts).sort((a,b)=>b[1]-a[1])[0];
+  // AOV trend
+  const d7=new Date();d7.setDate(today.getDate()-7);
+  const d14=new Date();d14.setDate(today.getDate()-14);
+  const thisWeekOrds=doneOrders.filter(o=>o.date>=d7.toISOString().split('T')[0]);
+  const lastWeekOrds=doneOrders.filter(o=>o.date>=d14.toISOString().split('T')[0]&&o.date<d7.toISOString().split('T')[0]);
+  const aovThis=thisWeekOrds.length?Math.round(thisWeekOrds.reduce((s,o)=>s+o.total,0)/thisWeekOrds.length):0;
+  const aovLast=lastWeekOrds.length?Math.round(lastWeekOrds.reduce((s,o)=>s+o.total,0)/lastWeekOrds.length):0;
+  const aovTrend=aovThis>=aovLast?'↑':'↓';
+  const aovLevel=aovThis>=aovLast?'green':'amber';
+  const kpis=[
+    {label:'Repeat Visit Rate',value:`${repeatRate}%`,note:'Customers with >1 visit',level:rrLevel},
+    {label:'Loyalty Redemption',value:`${redemRate}%`,note:'Points redeemed vs issued',level:rdLevel},
+    {label:'Avg Daily Revenue',value:fmt(avgRevDay),note:'Last 30 days',level:ardLevel},
+    {label:'Staff Cost Ratio',value:`${scRatio}%`,note:'Salary / Revenue this month',level:scLevel},
+    {label:'Top Table',value:topTable?topTable[0].replace('Dine-in — ',''):'—',note:topTable?`${topTable[1]} orders`:'No data',level:'green'},
+    {label:'AOV Trend',value:`${fmt(aovThis)} ${aovTrend}`,note:`vs last week: ${fmt(aovLast)}`,level:aovLevel},
+  ];
+  el.innerHTML=kpis.map(k=>`<div class="stat-card"><div class="stat-label">${esc(k.label)}</div><div class="stat-value" style="font-size:22px;margin:6px 0;">${esc(k.value)}</div><div style="margin-bottom:6px;">${hBadge(k.level)}</div><div class="stat-note">${esc(k.note)}</div></div>`).join('');
+}
+
+const PM_PROTOCOLS={
+  'Revenue Drop >20%':['Run a same-day flash promotion','Review menu pricing for high-margin items','Check if any key staff member is absent','Contact top 10 loyalty customers with an offer','Post on social media or WhatsApp groups'],
+  'Inventory Critical':['Place emergency orders for critical items','Temporarily remove unavailable menu items','Identify substitute ingredients','Set lower min-stock thresholds to trigger alerts sooner','Brief staff on item unavailability'],
+  'Staff Absenteeism >30%':['Call absent staff immediately','Check if scheduled shifts were communicated clearly','Cross-train staff for multiple roles','Consider owner or manager covering shifts today','Document pattern for HR review'],
+  'Expense Ratio >70%':['Review all recurring expenses for the month','Defer non-critical purchases','Renegotiate supplier terms','Identify top 3 expense categories and set targets','Cross-check payroll accuracy'],
+  'Zero Loyalty Redemptions':['Remind cashier to ask customers at billing','Run a double-points day promotion','Send WhatsApp broadcast to loyalty customers','Review if redemption process is too complex','Consider lowering the redemption threshold'],
+  'Menu Unavailability >20%':['Do an immediate inventory check','Identify which items are blocked and why','Temporarily hide unavailable items from the active menu','Order ingredients for top-selling blocked items','Check supplier delivery status'],
+  'No New Customers in 7 Days':['Run a referral offer for existing customers','Place a Google Business or Instagram post','Offer a first-visit discount via signage','Review if registration process in the app is being used','Ask staff to actively register walk-ins'],
+  'Orders Declining 3 Days':['Check if there is a known local event or holiday','Review if any menu price was recently raised','Inspect service quality and wait times','Run a social media post or offer','Evaluate if operating hours need adjustment'],
+};
+function renderPreMortem(){
+  const el=document.getElementById('preMortemBoard');if(!el)return;
+  const today=new Date();
+  const d7=new Date();d7.setDate(today.getDate()-7);
+  const d7s=d7.toISOString().split('T')[0];
+  const doneOrders=orders.filter(o=>o.status==='done');
+  const triggers=[];
+  // 1. Revenue drop >20%
+  const d14=new Date();d14.setDate(today.getDate()-14);
+  const thisW=doneOrders.filter(o=>o.date>=d7s).reduce((s,o)=>s+o.total,0);
+  const lastW=doneOrders.filter(o=>o.date>=d14.toISOString().split('T')[0]&&o.date<d7s).reduce((s,o)=>s+o.total,0);
+  const revDrop=lastW>0?Math.round((lastW-thisW)/lastW*100):0;
+  triggers.push({name:'Revenue Drop >20%',status:revDrop>=20?'red':revDrop>=10?'amber':'green',detail:`${revDrop>0?revDrop+'% drop vs last week':'Stable or growing'}`});
+  // 2. Critical inventory
+  const criticalInv=inv.filter(i=>i.stock<=i.min).length;
+  triggers.push({name:'Inventory Critical Items',status:criticalInv>2?'red':criticalInv>0?'amber':'green',detail:`${criticalInv} item(s) at or below minimum`});
+  // 3. Staff absenteeism
+  const totalStaff=staffList.length;
+  const presentToday=attendance.filter(a=>a.date===TODAY&&a.cin&&!a.dayOff).length;
+  const absentRate=totalStaff>0?Math.round((totalStaff-presentToday)/totalStaff*100):0;
+  triggers.push({name:'Staff Absenteeism >30%',status:absentRate>=30?'red':absentRate>=15?'amber':'green',detail:`${absentRate}% absent today (${totalStaff-presentToday}/${totalStaff})`});
+  // 4. Expense ratio
+  const monthStart=TODAY.substring(0,7)+'-01';
+  const mRev=doneOrders.filter(o=>o.date>=monthStart).reduce((s,o)=>s+o.total,0);
+  const mExp=expenses.filter(e=>e.date>=monthStart).reduce((s,e)=>s+e.amount,0);
+  const expRatio=mRev>0?Math.round(mExp/mRev*100):0;
+  triggers.push({name:'Expense Ratio >70%',status:expRatio>=70?'red':expRatio>=50?'amber':'green',detail:`${expRatio}% expenses of revenue this month`});
+  // 5. Zero loyalty redemptions this week
+  const weekRedemptions=ptsBatches.filter(b=>(b.pts-b.remaining)>0).length;
+  triggers.push({name:'Zero Loyalty Redemptions',status:weekRedemptions===0?'amber':'green',detail:weekRedemptions===0?'No redemptions this week':`${weekRedemptions} redemptions active`});
+  // 6. Menu unavailability
+  const totalItems=menuItems.length;
+  const unavail=menuItems.filter(m=>m.avail===0).length;
+  const unavailPct=totalItems>0?Math.round(unavail/totalItems*100):0;
+  triggers.push({name:'Menu Unavailability >20%',status:unavailPct>=20?'red':unavailPct>0?'amber':'green',detail:`${unavailPct}% of menu items unavailable`});
+  // 7. No new customers in 7 days
+  const newCusts7=customers.filter(c=>c.createdAt&&new Date(c.createdAt)>=d7).length;
+  triggers.push({name:'No New Customers in 7 Days',status:newCusts7===0?'amber':'green',detail:`${newCusts7} new customer(s) in last 7 days`});
+  // 8. Orders declining 3 days
+  let declining=0;
+  for(let i=0;i<3;i++){
+    const d1=new Date();d1.setDate(today.getDate()-i);
+    const d2=new Date();d2.setDate(today.getDate()-i-1);
+    const c1=doneOrders.filter(o=>o.date===d1.toISOString().split('T')[0]).length;
+    const c2=doneOrders.filter(o=>o.date===d2.toISOString().split('T')[0]).length;
+    if(c2>0&&c1<c2)declining++;else break;
+  }
+  triggers.push({name:'Orders Declining 3 Days',status:declining>=3?'red':declining>=2?'amber':'green',detail:`${declining} consecutive day(s) of declining orders`});
+
+  const icons={green:'',amber:'',red:''};
+  el.innerHTML=triggers.map((t,i)=>`
+    <div style="border:1px solid var(--glass-border);border-radius:var(--r);margin-bottom:8px;overflow:hidden;">
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:12px 14px;cursor:pointer;background:var(--glass-card);" onclick="togglePMRow('pm-${i}')">
+        <div style="display:flex;align-items:center;gap:10px;">
+          <span style="font-size:14px;">${icons[t.status]}</span>
+          <div>
+            <div style="font-size:13.5px;font-weight:500;color:var(--text-primary);">${esc(t.name)}</div>
+            <div style="font-size:11.5px;color:var(--text-muted);margin-top:2px;">${esc(t.detail)}</div>
+          </div>
+        </div>
+        <svg id="pm-arrow-${i}" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="flex-shrink:0;transition:.2s;"><path d="M6 9l6 6 6-6"/></svg>
+      </div>
+      <div id="pm-${i}" style="display:none;padding:12px 14px;background:rgba(255,248,240,.03);border-top:1px solid var(--glass-border);">
+        <div style="font-size:10px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:var(--text-muted);margin-bottom:8px;">Recovery Protocol</div>
+        ${(PM_PROTOCOLS[t.name]||[]).map((p,j)=>`<div style="display:flex;gap:8px;padding:5px 0;font-size:12.5px;color:var(--text-secondary);"><span style="color:var(--accent);flex-shrink:0;">${j+1}.</span>${esc(p)}</div>`).join('')}
+      </div>
+    </div>`).join('');
+}
+function togglePMRow(id){
+  const el=document.getElementById(id);if(!el)return;
+  const open=el.style.display==='block';
+  el.style.display=open?'none':'block';
+  const idx=id.split('-')[1];
+  const arrow=document.getElementById('pm-arrow-'+idx);
+  if(arrow)arrow.style.transform=open?'':'rotate(180deg)';
+}
+function renderMoatScore(){
+  const el=document.getElementById('moatScore');if(!el)return;
+  const scores=[];
+  // Loyalty depth
+  const deepLoyalty=customers.filter(c=>c.visits>5).length;
+  const loyaltyScore=Math.min(20,Math.round(deepLoyalty/Math.max(customers.length,1)*100*0.2));
+  scores.push({label:'Loyalty Depth',score:loyaltyScore,max:20,note:`${deepLoyalty} customers with 5+ visits`});
+  // Menu uniqueness
+  const defaultCats=['Hot Beverages','Cold Beverages','Snacks','Desserts'];
+  const customCats=[...new Set(menuItems.map(m=>m.cat))].filter(c=>!defaultCats.includes(c)).length;
+  const menuScore=Math.min(15,customCats*5);
+  scores.push({label:'Menu Uniqueness',score:menuScore,max:15,note:`${customCats} custom categories`});
+  // Staff retention proxy
+  const staffScore=staffList.length>=3?15:staffList.length*5;
+  scores.push({label:'Staff Retention',score:staffScore,max:15,note:`${staffList.length} staff members`});
+  // Repeat revenue
+  const linkedOrders=orders.filter(o=>o.status==='done'&&o.mobile).length;
+  const totalOrders=orders.filter(o=>o.status==='done').length;
+  const repeatRevScore=Math.min(25,Math.round(linkedOrders/Math.max(totalOrders,1)*25));
+  scores.push({label:'Repeat Revenue',score:repeatRevScore,max:25,note:`${Math.round(linkedOrders/Math.max(totalOrders,1)*100)}% loyalty-linked orders`});
+  // Inventory discipline
+  const lowItems=inv.filter(i=>i.stock<=i.min).length;
+  const invScore=inv.length>0?Math.round((1-lowItems/inv.length)*15):0;
+  scores.push({label:'Inventory Discipline',score:invScore,max:15,note:`${lowItems} item(s) at low stock`});
+  // Review cadence (manual toggle)
+  const reviewKey='bd5_moat_review';
+  const reviewed=localStorage.getItem(reviewKey)==='1';
+  scores.push({label:'Review Cadence',score:reviewed?10:0,max:10,note:reviewed?'Confirmed active':'<button class="btn btn-glass btn-xs" onclick="setMoatReview()">Confirm Active</button>'});
+  const total=scores.reduce((s,x)=>s+x.score,0);
+  const pct=total;
+  const color=total>=70?'var(--green)':total>=40?'var(--amber)':'var(--red)';
+  const priority=[...scores].sort((a,b)=>(a.score/a.max)-(b.score/b.max)).slice(0,3);
+  el.innerHTML=`
+    <div style="display:flex;flex-direction:column;align-items:center;margin-bottom:20px;">
+      <div style="position:relative;width:140px;height:140px;margin-bottom:12px;">
+        <svg viewBox="0 0 36 36" style="width:140px;height:140px;transform:rotate(-90deg);">
+          <circle cx="18" cy="18" r="15.9" fill="none" stroke="rgba(255,248,240,.08)" stroke-width="3"/>
+          <circle cx="18" cy="18" r="15.9" fill="none" stroke="${color}" stroke-width="3" stroke-dasharray="${pct} ${100-pct}" stroke-linecap="round"/>
+        </svg>
+        <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;">
+          <div style="font-family:var(--ff-d);font-size:32px;font-weight:300;color:${color};">${pct}</div>
+          <div style="font-size:10px;color:var(--text-muted);letter-spacing:1px;">/ 100</div>
+        </div>
+      </div>
+      <div class="g3" style="width:100%;gap:8px;">
+        ${scores.map(s=>`<div style="text-align:center;padding:8px;background:var(--glass-card);border-radius:var(--r);border:1px solid var(--glass-border);">
+          <div style="font-size:11px;color:var(--text-muted);margin-bottom:4px;">${esc(s.label)}</div>
+          <div style="font-size:15px;font-weight:600;color:${s.score/s.max>=0.7?'var(--green)':s.score/s.max>=0.4?'var(--amber)':'var(--red)'};">${s.score}<span style="font-size:9px;color:var(--text-muted);">/${s.max}</span></div>
+        </div>`).join('')}
+      </div>
+    </div>
+    <div style="border-top:1px solid var(--glass-border);padding-top:14px;">
+      <div class="card-title">Priority Actions to Strengthen Moat</div>
+      ${priority.map((s,i)=>`<div style="display:flex;gap:10px;padding:8px 0;border-bottom:1px solid rgba(255,248,240,.04);">
+        <div style="width:24px;height:24px;border-radius:50%;background:var(--red-bg);color:var(--red);font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;">${i+1}</div>
+        <div><div style="font-size:13px;font-weight:500;color:var(--text-primary);">${esc(s.label)}</div><div style="font-size:11.5px;color:var(--text-muted);margin-top:2px;">${s.note}</div></div>
+      </div>`).join('')}
+    </div>`;
+}
+function setMoatReview(){localStorage.setItem('bd5_moat_review','1');renderMoatScore();toast('Review cadence confirmed ');}
+
+
+// ══════════════════════════════════════════════
+// LEAVE & SWAP REQUEST SYSTEM
+// ══════════════════════════════════════════════
+function openLeaveRequest(){
+  document.getElementById('leaveType').value='leave';
+  document.getElementById('leaveDate').value=TODAY;
+  document.getElementById('leaveReason').value='';
+  document.getElementById('leaveErr').textContent='';
+  document.getElementById('swapWithGroup').style.display='none';
+  // Populate swap-with dropdown (all staff except self)
+  const myStaff=staffList.find(s=>s.userId==currentUser.id||s.name===currentUser.name);
+  const others=staffList.filter(s=>s.id!==myStaff?.id);
+  document.getElementById('swapWithSelect').innerHTML=others.length
+    ?others.map(s=>`<option value="${s.id}">${esc(s.name)} (${esc(s.role)})</option>`).join('')
+    :'<option>No other staff</option>';
+  openModal('mLeaveRequest');
+}
+function toggleSwapField(){
+  document.getElementById('swapWithGroup').style.display=
+    document.getElementById('leaveType').value==='swap'?'block':'none';
+}
+function submitLeaveRequest(){
+  const type=document.getElementById('leaveType').value;
+  const date=document.getElementById('leaveDate').value;
+  const reason=document.getElementById('leaveReason').value.trim();
+  const err=s=>{document.getElementById('leaveErr').textContent=s;};
+  if(!date){err('Select a date');return;}
+  if(!reason){err('Please provide a reason');return;}
+  const myStaff=staffList.find(s=>s.userId==currentUser.id||s.name===currentUser.name);
+  if(!myStaff){err('Your staff profile was not found');return;}
+  // Check if a shift exists for this date
+  const myShift=roster.find(r=>r.staffId===myStaff.id&&r.date===date);
+  let swapWithId=null,swapWithName=null;
+  if(type==='swap'){
+    swapWithId=parseInt(document.getElementById('swapWithSelect').value);
+    const swapStaff=staffList.find(s=>s.id===swapWithId);
+    swapWithName=swapStaff?.name||'—';
+    // Check colleague has a shift that day
+    const theirShift=roster.find(r=>r.staffId===swapWithId&&r.date===date);
+    if(!myShift&&!theirShift){err('Neither you nor the colleague have shifts on that date');return;}
+  }
+  // Check no duplicate pending request
+  const existing=swapRequests.find(r=>r.requesterId===currentUser.id&&r.date===date&&r.status==='pending');
+  if(existing){err('You already have a pending request for this date');return;}
+
+  const req={
+    id:uid(),ts:Date.now(),
+    type,
+    requesterId:currentUser.id,
+    requesterName:currentUser.name,
+    staffId:myStaff.id,
+    date,
+    myShift:myShift?.shiftType||'Unscheduled',
+    swapWithId,swapWithName,
+    swapWithShift:swapWithId?roster.find(r=>r.staffId===swapWithId&&r.date===date)?.shiftType||'Unscheduled':null,
+    reason,
+    status:'pending'
+  };
+  swapRequests.push(req);
+  S('swapReqs',swapRequests);
+
+  // Notify admin/owner
+  const adminUserId=appUsers.find(u=>u.role==='owner'||u.role==='admin')?.id||'admin';
+  const typeLabel=type==='leave'?'Emergency Leave':'Shift Swap';
+  pushNotif(`${typeLabel} request from ${currentUser.name} for ${fmtD(date)}${type==='swap'?' (swap with '+swapWithName+')':''}. Reason: ${reason}`,'roster',adminUserId);
+
+  closeModal('mLeaveRequest');
+  renderSwapRequests();
+  toast('Request submitted — awaiting admin approval');
+}
+
+function renderSwapRequests(){
+  const card=document.getElementById('swapRequestsCard');if(!card)return;
+  const list=document.getElementById('swapRequestsList');if(!list)return;
+  const badge=document.getElementById('swapBadge');
+  const isAdmin=canDo('seeSettings');
+  const newLeaveBtn=document.getElementById('newLeaveBtn');
+  const reqLeaveBtn=document.getElementById('requestLeaveBtn');
+
+  // Admin sees all, staff see only their own
+  const visible=isAdmin
+    ?[...swapRequests].reverse()
+    :[...swapRequests].filter(r=>r.requesterId===currentUser.id).reverse();
+
+  // Badge: pending count for admin
+  const pendingCount=swapRequests.filter(r=>r.status==='pending').length;
+  if(badge){badge.textContent=pendingCount;badge.style.display=pendingCount>0?'inline':'none';}
+
+  // Show/hide buttons based on role
+  if(newLeaveBtn)newLeaveBtn.style.display=isAdmin?'none':'';
+  if(reqLeaveBtn)reqLeaveBtn.style.display=!isAdmin?'':'none';
+
+  if(!visible.length){
+    list.innerHTML=`<div class="rl-empty">No requests yet</div>`;
+    return;
+  }
+
+  const statusColors={pending:'b-amber',approved:'b-green',rejected:'b-red'};
+
+  const rows=visible.map(r=>{
+    // Type badge
+    const typeBadge=`<span style="font-size:10px;font-weight:600;letter-spacing:.4px;color:var(--text-muted);background:var(--glass-input);padding:2px 7px;border-radius:5px;border:1px solid var(--glass-border);">${r.type==='leave'?'Leave':'Swap'}</span>`;
+    // Status badge
+    const statusBadge=`<span class="badge ${statusColors[r.status]}" style="font-size:9.5px;">${r.status}</span>`;
+    // Request detail
+    const detail=r.type==='leave'
+      ?`Leave · <span style="color:var(--text-secondary);">${esc(r.myShift)}</span>`
+      :`Swap <span style="color:var(--text-secondary);">${esc(r.myShift)}</span> with <strong>${esc(r.swapWithName||'')}</strong>`;
+    // Resolved info
+    const resolvedInfo=r.status!=='pending'
+      ?`<div style="font-size:10.5px;color:var(--text-muted);margin-top:3px;">By ${esc(r.resolvedBy||'—')} · ${r.resolvedAt?fmtD(new Date(r.resolvedAt).toISOString().split('T')[0]):'—'}${r.note?` · <em>${esc(r.note)}</em>`:''}</div>`
+      :'';
+    // Actions column
+    let actions='—';
+    if(isAdmin&&r.status==='pending'){
+      actions=`<div style="display:flex;gap:5px;">
+        <button class="btn btn-success btn-xs swap-approve-btn" data-rid="${r.id}" style="display:flex;align-items:center;gap:4px;">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>Approve
+        </button>
+        <button class="btn btn-danger btn-xs swap-reject-btn" data-rid="${r.id}" style="display:flex;align-items:center;gap:4px;">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 6L6 18M6 6l12 12"/></svg>Reject
+        </button>
+      </div>`;
+    } else if(!isAdmin&&r.status==='pending'){
+      actions=`<button class="btn btn-glass btn-xs swap-cancel-btn" data-rid="${r.id}" style="display:flex;align-items:center;gap:4px;color:var(--red);border-color:rgba(240,112,112,.3);">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 6L6 18M6 6l12 12"/></svg>Cancel
+      </button>`;
+    } else {
+      actions=statusBadge;
+    }
+
+    return `<tr>
+      <td>${typeBadge}</td>
+      ${isAdmin?`<td style="font-weight:500;color:var(--text-primary);">${esc(r.requesterName)}</td>`:''}
+      <td style="color:var(--accent);">${fmtD(r.date)}</td>
+      <td class="tdc" style="white-space:normal;">${detail}${resolvedInfo}</td>
+      <td class="tdc" style="white-space:normal;max-width:160px;">${esc(r.reason)}</td>
+      <td>${actions}</td>
+    </tr>`;
+  }).join('');
+
+  const adminCols=isAdmin?'<th>Staff</th>':'';
+  list.innerHTML=`<div class="tbl-wrap"><table class="rl-table" style="width:100%;table-layout:auto;">
+    <thead><tr>
+      <th>Type</th>
+      ${adminCols}
+      <th>Date</th>
+      <th>Details</th>
+      <th>Reason</th>
+      <th>Action</th>
+    </tr></thead>
+    <tbody>${rows}</tbody>
+  </table></div>`;
+
+  // Attach event listeners — loose == to handle string/number id mismatch
+  list.querySelectorAll('.swap-approve-btn').forEach(btn=>{
+    btn.addEventListener('click',()=>resolveSwapRequest(btn.dataset.rid,'approved'));
+  });
+  list.querySelectorAll('.swap-reject-btn').forEach(btn=>{
+    btn.addEventListener('click',()=>openRejectRequest(btn.dataset.rid));
+  });
+  list.querySelectorAll('.swap-cancel-btn').forEach(btn=>{
+    btn.addEventListener('click',()=>cancelSwapRequest(btn.dataset.rid));
+  });
+}
+
+function resolveSwapRequest(reqId,status,note=''){
+  const req=swapRequests.find(r=>r.id==reqId);if(!req)return;
+  req.status=status;
+  req.resolvedBy=currentUser.name;
+  req.resolvedAt=Date.now();
+  if(note)req.note=note;
+  S('swapReqs',swapRequests);
+
+  if(status==='approved'){
+    if(req.type==='leave'){
+      // Mark roster as Off for that day
+      const existing=roster.find(r=>r.staffId===req.staffId&&r.date===req.date);
+      if(existing){existing.shiftType='Off';existing.notes=`Emergency leave — ${req.reason}`;}
+      else{roster.push({id:uid(),staffId:req.staffId,date:req.date,shiftType:'Off',shiftStart:'',shiftEnd:'',notes:`Emergency leave — ${req.reason}`,createdBy:currentUser.name,createdAt:Date.now()});}
+      S('roster',roster);
+      rosterAudit.push({id:uid(),ts:Date.now(),by:currentUser.name,action:'Leave Approved',staffName:req.requesterName,date:req.date,change:`Shift changed to Off — ${req.reason}`});
+    } else if(req.type==='swap'){
+      // Swap the two shifts
+      const myShift=roster.find(r=>r.staffId===req.staffId&&r.date===req.date);
+      const theirShift=roster.find(r=>r.staffId===req.swapWithId&&r.date===req.date);
+      const myType=myShift?.shiftType||'Off';
+      const theirType=theirShift?.shiftType||'Off';
+      // Update requester's shift
+      if(myShift){myShift.shiftType=theirType;myShift.notes=`Swapped with ${req.swapWithName}`;}
+      else{roster.push({id:uid(),staffId:req.staffId,date:req.date,shiftType:theirType,shiftStart:'',shiftEnd:'',notes:`Swapped with ${req.swapWithName}`,createdBy:currentUser.name,createdAt:Date.now()});}
+      // Update swap partner's shift
+      if(theirShift){theirShift.shiftType=myType;theirShift.notes=`Swapped with ${req.requesterName}`;}
+      else{roster.push({id:uid(),staffId:req.swapWithId,date:req.date,shiftType:myType,shiftStart:'',shiftEnd:'',notes:`Swapped with ${req.requesterName}`,createdBy:currentUser.name,createdAt:Date.now()});}
+      S('roster',roster);
+      rosterAudit.push({id:uid(),ts:Date.now(),by:currentUser.name,action:'Swap Approved',staffName:req.requesterName,date:req.date,change:`${req.requesterName} (${myType}) ↔ ${req.swapWithName} (${theirType})`});
+    }
+    S('rosterAudit',rosterAudit);
+    // Notify requester
+    pushNotif(`Your ${req.type==='leave'?'leave':'swap'} request for ${fmtD(req.date)} was approved by ${currentUser.name}`,'roster',req.requesterId);
+    if(req.type==='swap'){
+      const swapUser=appUsers.find(u=>u.id===req.swapWithId||staffList.find(s=>s.id===req.swapWithId)?.userId===u.id);
+      if(swapUser)pushNotif(`Your shift on ${fmtD(req.date)} was swapped with ${req.requesterName} — approved by ${currentUser.name}`,'roster',swapUser.id);
+    }
+    renderWeeklyRoster();
+  } else {
+    pushNotif(`Your ${req.type==='leave'?'leave':'swap'} request for ${fmtD(req.date)} was rejected by ${currentUser.name}${note?' — '+note:''}`,'roster',req.requesterId);
+  }
+  renderSwapRequests();
+  toast(`Request ${status}`);
+}
+
+function openRejectRequest(reqId){
+  // Show reject note modal
+  document.getElementById('rejectReqId').value=reqId;
+  document.getElementById('rejectNote').value='';
+  openModal('mRejectNote');
+}
+function confirmReject(){
+  const reqId=document.getElementById('rejectReqId').value;
+  const note=document.getElementById('rejectNote').value.trim();
+  closeModal('mRejectNote');
+  resolveSwapRequest(reqId,'rejected',note);
+}
+
+function cancelSwapRequest(reqId){
+  if(!confirm('Cancel this request?'))return;
+  swapRequests=swapRequests.filter(r=>r.id!=reqId);
+  S('swapReqs',swapRequests);
+  renderSwapRequests();
+  toast('Request cancelled');
+}
+
 function confirmLogout(){openModal('mLogout');}
 function doLogout(){closeModal('mLogout');logout();}
 function logout(){
@@ -2592,7 +3845,7 @@ function checkBirthdayAndMilestones(){
         const exp=new Date(TODAY);exp.setDate(exp.getDate()+30);
         ptsBatches.push({id:uid(),custId:c.id,pts:50,remaining:50,earned:TODAY,expires:exp.toISOString().split('T')[0],isBdayBonus:true});
         S('pts',ptsBatches);c.points=getRedPts(c.id);S('cust',customers);
-        pushNotif(`🎂 Birthday bonus: 50 pts added for ${c.name}!`,'loyalty','admin');
+        pushNotif(` Birthday bonus: 50 pts added for ${c.name}!`,'loyalty','admin');
       }
     }
     // Milestone: every 10 visits
@@ -2600,7 +3853,7 @@ function checkBirthdayAndMilestones(){
       const key=`bd5_milestone_${c.id}_${c.visits}`;
       if(!localStorage.getItem(key)){
         localStorage.setItem(key,'1');
-        pushNotif(`🎉 Milestone! ${c.name} has visited ${c.visits} times.`,'loyalty','admin');
+        pushNotif(` Milestone! ${c.name} has visited ${c.visits} times.`,'loyalty','admin');
       }
     }
   });
@@ -2660,8 +3913,8 @@ function accessLevel(role){
 function canDo(action){
   const r=accessLevel(currentUser?.role||'pending');
   const P={
-    admin:{newOrder:1,billing:1,editMenu:1,removeMenu:1,editInv:1,removeInv:1,addStaff:1,fullStaff:1,editExp:1,removeExp:1,expDependent:1,seeDash:1,seeSettings:1,editLoyalty:1,removeStaff:1,clearAtt:1,removeCust:1},
-    owner:{newOrder:1,billing:1,editMenu:1,removeMenu:1,editInv:1,removeInv:1,addStaff:1,fullStaff:1,editExp:1,removeExp:1,expDependent:1,seeDash:1,seeSettings:1,editLoyalty:1,removeStaff:1,clearAtt:1,removeCust:1},
+    admin:{newOrder:1,billing:1,editMenu:1,removeMenu:1,editInv:1,removeInv:1,addStaff:1,fullStaff:1,editExp:1,removeExp:1,expDependent:1,seeDash:1,seeSettings:1,editLoyalty:1,removeStaff:1,clearAtt:1,removeCust:1,seeStrategy:1,editRoster:1,seeEOD:1,seeSalary:1},
+    owner:{newOrder:1,billing:1,editMenu:1,removeMenu:1,editInv:1,removeInv:1,addStaff:1,fullStaff:1,editExp:1,removeExp:1,expDependent:1,seeDash:1,seeSettings:1,editLoyalty:1,removeStaff:1,clearAtt:1,removeCust:1,seeStrategy:1,editRoster:1,seeEOD:1,seeSalary:1},
     cashier:{newOrder:1,billing:1,editMenu:1,removeMenu:0,editInv:1,removeInv:0,addStaff:0,fullStaff:0,editExp:1,removeExp:0,expDependent:0,seeDash:0,seeSettings:0,editLoyalty:1,removeStaff:0,clearAtt:0},
     staff:{newOrder:1,billing:1,editMenu:1,removeMenu:0,editInv:1,removeInv:0,addStaff:0,fullStaff:0,editExp:0,removeExp:0,expDependent:0,seeDash:0,seeSettings:0,editLoyalty:1,removeStaff:0,clearAtt:0},
     pending:{newOrder:1,billing:0,editMenu:0,removeMenu:0,editInv:0,removeInv:0,addStaff:0,fullStaff:0,editExp:0,removeExp:0,expDependent:0,seeDash:0,seeSettings:0,editLoyalty:0,removeStaff:0,clearAtt:0},
@@ -2680,6 +3933,7 @@ const NAV_DEF=[
   {page:'expenses',label:'Expenses',group:'Operations',icon:'<svg class="ni" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 14l6-6m-5.5.5h.01m4.99 5h.01M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16l3.5-2 3.5 2 3.5-2 3.5 2z"/></svg>',roles:['admin','owner','cashier','staff']},
   {page:'loyalty',label:'Loyalty',group:'Operations',icon:'<svg class="ni" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"/></svg>',roles:['admin','owner','cashier','staff']},
   {page:'dashboard',label:'Dashboard',group:'Analytics',icon:'<svg class="ni" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>',roles:['admin','owner']},
+  {page:'strategy',label:'Strategy',group:'Analytics',icon:'<svg class="ni" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>',roles:['admin','owner']},
   {page:'settings',label:'Settings',group:'System',icon:'<svg class="ni" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><circle cx="12" cy="12" r="3"/></svg>',roles:['admin','owner']},
   {page:'notifications',label:'Notifications',group:'System',icon:'<svg class="ni" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg>',roles:['admin','owner','cashier','staff']},
 ];
@@ -2720,17 +3974,28 @@ function applyRoleUI(){
   document.getElementById('staffSub').textContent=canDo('fullStaff')?'Shifts, clock-in/out and daily log':'Your clock-in / clock-out';
   document.getElementById('addStaffBtn').style.display=canDo('addStaff')?'':'none';
   const cab=document.getElementById('clearAttBtn');if(cab)cab.style.display=canDo('clearAtt')?'':'none';
+  const reqBtn=document.getElementById('requestLeaveBtn');if(reqBtn)reqBtn.style.display=(!canDo('seeSettings')&&canDo('newOrder'))?'':'none';
   document.getElementById('addExpBtn').style.display=canDo('editExp')?'':'none';
   document.getElementById('expActTh').textContent='';
   expFilter='today';
-  // Mobile More drawer — show/hide Dashboard and Settings based on role
+  // Show/hide admin-only cards
+  const dashAdminRow=document.getElementById('dashAdminRow');
+  const eodLogCard=document.getElementById('eodLogCard');
+  const salaryCard=document.getElementById('salaryCard');
+  if(dashAdminRow)dashAdminRow.style.display=canDo('seeDash')?'':'none';
+  if(eodLogCard)eodLogCard.style.display=canDo('seeEOD')?'':'none';
+  if(salaryCard)salaryCard.style.display=canDo('seeSalary')?'':'none';
+  const tipsCard=document.getElementById('tipsCard');
+  if(tipsCard)tipsCard.style.display=canDo('newOrder')?'':'none';// all active roles see tips
   const hasDash=canDo('seeDash');const hasSet=canDo('seeSettings');
   const dashBtn=document.getElementById('moreDashBtn');
   const settBtn=document.getElementById('moreSettingsBtn');
+  const stratBtn=document.getElementById('moreStrategyBtn');
   const sysLbl=document.getElementById('moreSystemLbl');
   if(dashBtn)dashBtn.style.display=hasDash?'':'none';
   if(settBtn)settBtn.style.display=hasSet?'':'none';
-  if(sysLbl)sysLbl.style.display=(hasDash||hasSet)?'':'none';
+  if(stratBtn)stratBtn.style.display=canDo('seeStrategy')?'':'none';
+  if(sysLbl)sysLbl.style.display=(hasDash||hasSet||canDo('seeStrategy'))?'':'none';
   // Force all date pickers to today
   requestAnimationFrame(()=>{
     const of=document.getElementById('ordFrom');if(of)of.value=TODAY;const ot=document.getElementById('ordTo');if(ot)ot.value=TODAY;
@@ -2740,7 +4005,7 @@ function applyRoleUI(){
   });
 }
 
-const APP_PAGES=["orders","menu","inventory","staff","expenses","loyalty","dashboard","settings","notifications"];
+const APP_PAGES=["orders","menu","inventory","staff","expenses","loyalty","dashboard","strategy","settings","notifications"];
 function navigateTo(page){
   document.querySelectorAll("#sbNav .nav-item").forEach(n=>n.classList.remove("active"));
   APP_PAGES.forEach(p=>{const el=document.getElementById("page-"+p);if(el)el.classList.remove("active");});
@@ -2757,17 +4022,33 @@ function navigateTo(page){
   const mdi=document.querySelector(`#moreDrawer .md-item[data-page="${page}"]`);
   if(mdi)mdi.classList.add('active');
   // Force date pickers to today — setTimeout ensures this runs AFTER browser restores cached input values
-  if(page==='orders'){setTimeout(()=>{const f=document.getElementById('ordFrom');const t=document.getElementById('ordTo');if(f&&!f.value)f.value=TODAY;if(t&&!t.value)t.value=TODAY;renderOrders();renderOrderAudit();},0);}
-  else if(page==='staff'){setTimeout(()=>{const el=document.getElementById('staffDate');if(el){el.value=TODAY;renderStaff();}renderAttAudit();},0);}
-  else if(page==='dashboard'){setTimeout(()=>{const f=document.getElementById('dashFrom');const t=document.getElementById('dashTo');if(f)f.value=TODAY;if(t)t.value=TODAY;renderDash();},0);}
+  if(page==='orders'){setTimeout(()=>{
+    const f=document.getElementById('ordFrom');const t=document.getElementById('ordTo');
+    if(f&&!f.value)f.value=TODAY;if(t&&!t.value)t.value=TODAY;
+    renderOrders();renderOrderAudit();renderVoidAudit();
+    // Show EOD button for admin/owner
+    const eodBtn=document.getElementById('eodBtn');
+    if(eodBtn)eodBtn.style.display=canDo('seeEOD')?'':'none';
+  },0);}
+  else if(page==='staff'){setTimeout(()=>{
+    const el=document.getElementById('staffDate');
+    if(el){el.value=TODAY;renderStaff();}
+    renderAttAudit();renderWeeklyRoster();renderSalaryEstimator();renderSwapRequests();renderTipsSummary();
+  },0);}
+  else if(page==='dashboard'){setTimeout(()=>{
+    const f=document.getElementById('dashFrom');const t=document.getElementById('dashTo');
+    if(f)f.value=TODAY;if(t)t.value=TODAY;
+    renderDash();renderGST();renderHealthAlerts();renderEODLog();
+  },0);}
   else if(page==='expenses'){expFilter='today';renderExp();}
   else{
     const renders={
       menu:()=>{renderMenu();renderMenuAudit();},
       inventory:()=>{renderInv();renderInvAudit();},
       loyalty:()=>{renderLoyalty();renderLoyAudit();},
-      settings:()=>{renderSettings();renderSettingsAuditRL();},
-      notifications:renderNotifPage
+      settings:()=>{renderSettings();renderSettingsAuditRL();renderCoupons();},
+      notifications:renderNotifPage,
+      strategy:renderStrategy,
     };
     renders[page]?.();
   }
@@ -2842,7 +4123,7 @@ function renderNotifPanel(){
   document.getElementById('notifPanelList').innerHTML=list.map(n=>{
     const unread=!n.readBy?.includes(currentUser?.id);
     return`<div class="notif-item-card ${unread?'unread':''}">
-      <button class="notif-dismiss" onclick="dismissNotif(${n.id})">✕</button>
+      <button class="notif-dismiss" onclick="dismissNotif(${n.id})"></button>
       <div class="notif-item-msg">${esc(n.msg)}</div>
       <div class="notif-item-meta">${fmtD(new Date(n.ts).toISOString().split('T')[0])} · ${fmtT(n.ts)}</div>
     </div>`;}).join('');
@@ -2853,7 +4134,7 @@ function renderNotifPage(){
   document.getElementById('notifPageList').innerHTML=list.map(n=>{
     const unread=!n.readBy?.includes(currentUser?.id);
     return`<div class="notif-item-card ${unread?'unread':''}" style="margin-bottom:10px;">
-      <button class="notif-dismiss" onclick="dismissNotif(${n.id})">✕</button>
+      <button class="notif-dismiss" onclick="dismissNotif(${n.id})"></button>
       <div class="notif-item-msg">${esc(n.msg)}</div>
       <div class="notif-item-meta">${fmtD(new Date(n.ts).toISOString().split('T')[0])} · ${fmtT(n.ts)} · ${n.source||'system'}</div>
     </div>`;}).join('');
@@ -2951,14 +4232,20 @@ function saveProfilePassword(){
     if(nw.toLowerCase()===u.name?.toLowerCase()){err('Password cannot be the same as your name');return;}
     u.passwordHash=simpleHash(nw);S('appUsers',appUsers);
   }
-  closeModal('mProfile');toast('Password updated successfully ✓');
+  closeModal('mProfile');toast('Password updated successfully ');
 }
 
 // ══════════════════════════════════════════════
 // ORDERS
 // ══════════════════════════════════════════════
 let cart={};
-function openNewOrder(){cart={};renderCartMenu();renderCartSummary();document.getElementById('oMobile').value='';document.getElementById('oCustName').value='';openModal('mOrder');}
+function closeOrderModal(){
+  const sel=document.getElementById('oTable');
+  if(sel)sel.disabled=false;
+  cart={};
+  closeModal('mOrder');
+}
+
 
 // Auto-fill customer name if mobile is already in loyalty
 function onOrderMobileInput(){
@@ -3056,7 +4343,7 @@ function placeOrder(){
   }
   const finalise=(discount)=>{
     const total=Math.max(0,rawTotal-(discount||0));
-    const o={id:onid++,table,payment,mobile,items,rawTotal,discount:discount||0,total,notes,status:'active',date:TODAY,time:Date.now(),placedBy:currentUser?.name||'—'};
+    const o={id:onid++,table,payment,mobile,items,rawTotal,discount:discount||0,loyaltyDiscount:discount||0,total,notes,status:'active',date:TODAY,time:Date.now(),placedBy:currentUser?.name||'—'};
     S('onid',onid);orders.push(o);S('orders',orders);
     if(cust){
       if(discount>0)redeemPts(cust.id,discount);
@@ -3077,18 +4364,506 @@ function showKOT(o){
   <div class="kot-foot">Post to kitchen station</div></div>`;
   openModal('mKOT');
 }
+function completeOrder(id){
+  const o=orders.find(x=>x.id===id);if(!o)return;
+  // Only billing roles get the full extras modal; others just mark prepared
+  if(canDo('billing')){openBillingExtras(id);}
+  else{o.status='done';S('orders',orders);renderOrders();renderTableStatus();toast(`Order #${id} marked as prepared`);}
+}
+
+// ══════════════════════════════════════════════
+// BILLING EXTRAS — Discount, Coupon, Tip
+// ══════════════════════════════════════════════
+let beDiscType='pct';// 'pct' or 'flat'
+let beAppliedCoupon=null;// {code, type, value, discAmt}
+let beTipPct=0;// current tip preset pct (0 if manual)
+
+function openBillingExtras(orderId){
+  const o=orders.find(x=>x.id===orderId);if(!o)return;
+  document.getElementById('beOrderId').value=orderId;
+  // Reset state
+  beDiscType='pct'; beAppliedCoupon=null; beTipPct=0;
+  document.getElementById('discValue').value='';
+  document.getElementById('couponInput').value='';
+  document.getElementById('couponStatus').textContent='';
+  document.getElementById('couponStatus').style.color='';
+  document.getElementById('removeCouponBtn').style.display='none';
+  document.getElementById('tipManual').value='';
+  document.getElementById('attSearch').value='';
+  document.getElementById('attStaffId').value='';
+  document.getElementById('discPreview').textContent='';
+  // Reset tip presets
+  document.querySelectorAll('.tip-preset').forEach(b=>b.classList.remove('btn-primary'));
+  document.querySelectorAll('.tip-preset').forEach(b=>b.classList.add('btn-glass'));
+  // Set discount type buttons
+  setDiscType('pct');
+  // Subtotal
+  const sub=o.rawTotal||o.total;
+  document.getElementById('beSubtotal').textContent=fmt(sub);
+  // Loyalty row
+  const loyD=o.loyaltyDiscount||0;
+  const loyRow=document.getElementById('beLoyaltyRow');
+  if(loyD>0){loyRow.style.display='flex';document.getElementById('beLoyaltyAmt').textContent='−'+fmt(loyD);}
+  else loyRow.style.display='none';
+  beRecalc();
+  openModal('mBillingExtras');
+}
+
+function setDiscType(type){
+  beDiscType=type;
+  document.getElementById('discTypePct').className='btn btn-sm '+(type==='pct'?'btn-primary':'btn-glass');
+  document.getElementById('discTypeFlat').className='btn btn-sm '+(type==='flat'?'btn-primary':'btn-glass');
+  document.getElementById('discTypeLabel').textContent=type==='pct'?'%':'₹';
+  beRecalc();
+}
+
+function setTipPct(pct){
+  beTipPct=pct;
+  // Update preset buttons
+  document.querySelectorAll('.tip-preset').forEach((b,i)=>{
+    const vals=[5,10,15,0];
+    b.className='btn btn-xs tip-preset '+(vals[i]===pct&&pct>0?'btn-primary':'btn-glass');
+  });
+  const id=document.getElementById('beOrderId').value;
+  const o=orders.find(x=>x.id==id);if(!o)return;
+  const sub=o.rawTotal||o.total;
+  const loyD=o.loyaltyDiscount||0;
+  const afterLoy=sub-loyD;
+  const tip=pct>0?Math.round(afterLoy*pct/100):0;
+  document.getElementById('tipManual').value=tip>0?tip:'';
+  beRecalc();
+}
+
+function applyCoupon(){
+  const code=document.getElementById('couponInput').value.trim().toUpperCase();
+  const statusEl=document.getElementById('couponStatus');
+  if(!code){statusEl.textContent='Enter a coupon code';statusEl.style.color='var(--red)';return;}
+  const cp=coupons.find(c=>c.code===code&&c.active);
+  if(!cp){statusEl.textContent='Invalid or inactive coupon code';statusEl.style.color='var(--red)';return;}
+  // Check expiry
+  if(cp.expiry&&cp.expiry<TODAY){statusEl.textContent='This coupon has expired';statusEl.style.color='var(--red)';return;}
+  // Check usage limit
+  if(cp.limit>0&&(cp.used||0)>=cp.limit){statusEl.textContent='This coupon has reached its usage limit';statusEl.style.color='var(--red)';return;}
+  // Check min order
+  const id=document.getElementById('beOrderId').value;
+  const o=orders.find(x=>x.id==id);if(!o)return;
+  const sub=o.rawTotal||o.total;
+  if(cp.minOrder>0&&sub<cp.minOrder){statusEl.textContent=`Minimum order ${fmt(cp.minOrder)} required for this coupon`;statusEl.style.color='var(--red)';return;}
+  // Calculate discount
+  const discAmt=cp.type==='pct'?Math.round(sub*cp.value/100):Math.min(cp.value,sub);
+  beAppliedCoupon={code,type:cp.type,value:cp.value,discAmt,cpId:cp.id};
+  statusEl.textContent=`Applied: ${code} — ${cp.type==='pct'?cp.value+'% off':'Rs.'+cp.value+' off'}${cp.desc?' · '+cp.desc:''}`;
+  statusEl.style.color='var(--green)';
+  document.getElementById('removeCouponBtn').style.display='';
+  beRecalc();
+}
+
+function removeCoupon(){
+  beAppliedCoupon=null;
+  document.getElementById('couponInput').value='';
+  document.getElementById('couponStatus').textContent='';
+  document.getElementById('removeCouponBtn').style.display='none';
+  beRecalc();
+}
+
+function beRecalc(){
+  const id=document.getElementById('beOrderId').value;
+  const o=orders.find(x=>x.id==id);if(!o)return;
+  const sub=o.rawTotal||o.total;
+  const loyD=o.loyaltyDiscount||0;
+  // Manual discount
+  const dv=parseFloat(document.getElementById('discValue').value)||0;
+  let manualDisc=0;
+  if(dv>0){manualDisc=beDiscType==='pct'?Math.round((sub-loyD)*dv/100):Math.min(dv,sub-loyD);}
+  const discPrev=document.getElementById('discPreview');
+  if(manualDisc>0)discPrev.textContent=`Discount: −${fmt(manualDisc)}`;
+  else discPrev.textContent='';
+  // Coupon discount
+  const couponDisc=beAppliedCoupon?beAppliedCoupon.discAmt:0;
+  // Tip
+  const tipAmt=parseFloat(document.getElementById('tipManual').value)||0;
+  // Grand total
+  const grand=Math.max(0,sub-loyD-manualDisc-couponDisc)+tipAmt;
+  // Breakdown
+  const lines=[];
+  if(loyD>0)lines.push(`Loyalty discount: −${fmt(loyD)}`);
+  if(manualDisc>0)lines.push(`Manual discount (${beDiscType==='pct'?(dv+'% off'):(fmt(dv)+' off')}): −${fmt(manualDisc)}`);
+  if(couponDisc>0)lines.push(`Coupon ${beAppliedCoupon.code}: −${fmt(couponDisc)}`);
+  if(tipAmt>0)lines.push(`Tip: +${fmt(tipAmt)}`);
+  document.getElementById('beBreakdown').innerHTML=lines.map(l=>`<div style="margin-bottom:3px;">${esc(l)}</div>`).join('');
+  document.getElementById('beGrandTotal').textContent=fmt(grand);
+}
+
+function applyBillingExtras(){
+  const id=parseInt(document.getElementById('beOrderId').value);
+  const o=orders.find(x=>x.id===id);if(!o)return;
+  const sub=o.rawTotal||o.total;
+  const loyD=o.loyaltyDiscount||0;
+  const dv=parseFloat(document.getElementById('discValue').value)||0;
+  let manualDisc=0;
+  if(dv>0){manualDisc=beDiscType==='pct'?Math.round((sub-loyD)*dv/100):Math.min(dv,sub-loyD);}
+  const couponDisc=beAppliedCoupon?beAppliedCoupon.discAmt:0;
+  const tipAmt=parseFloat(document.getElementById('tipManual').value)||0;
+  const attender=document.getElementById('attSearch').value.trim();
+  const attenderStaffId=document.getElementById('attStaffId').value||null;
+  const grand=Math.max(0,sub-loyD-manualDisc-couponDisc)+tipAmt;
+  // Apply to order
+  o.manualDiscount=manualDisc;
+  o.manualDiscType=beDiscType;
+  o.manualDiscValue=dv;
+  o.couponCode=beAppliedCoupon?beAppliedCoupon.code:'';
+  o.couponDiscount=couponDisc;
+  o.tip=tipAmt;
+  o.attender=attender;
+  o.attenderStaffId=attenderStaffId?parseInt(attenderStaffId):null;
+  o.total=grand;
+  o.status='done';
+  S('orders',orders);
+  // Burn coupon usage
+  if(beAppliedCoupon){
+    const cp=coupons.find(c=>c.id===beAppliedCoupon.cpId);
+    if(cp){cp.used=(cp.used||0)+1;S('coupons',coupons);}
+  }
+  closeModal('mBillingExtras');
+  renderOrders();renderTableStatus();
+  const discTotal=manualDisc+couponDisc;
+  const msg=`Order #${id} completed${discTotal>0?' · −'+fmt(discTotal)+' discount':''}${tipAmt>0?' · +'+fmt(tipAmt)+' tip':''}`;
+  toast(msg);
+  pushNotif(msg,currentUser?.name);
+  beAppliedCoupon=null;
+}
+
+// ── ATTENDER DROPDOWN (Billing Extras modal) ──
+function buildAttList(q){
+  const list=document.getElementById('attList');if(!list)return;
+  const filtered=staffList.filter(s=>!q||s.name.toLowerCase().includes(q.toLowerCase()));
+  if(!filtered.length){list.innerHTML=`<div class="uname-empty">No staff found</div>`;return;}
+  list.innerHTML=filtered.map(s=>`
+    <div class="uname-opt" onclick="selectAttender(${s.id},'${esc(s.name)}')">
+      <div class="uname-opt-av">${esc(s.name.charAt(0).toUpperCase())}</div>
+      <span>${esc(s.name)}</span>
+      <span class="uname-opt-role">${esc(s.role||'')}</span>
+    </div>`).join('');
+}
+function openAttList(){
+  document.getElementById('attList')?.classList.add('open');
+  document.getElementById('attCaret')?.classList.add('open');
+  buildAttList(document.getElementById('attSearch')?.value||'');
+  // Close on outside click
+  setTimeout(()=>{
+    document.addEventListener('click',function closeAtt(e){
+      if(!document.getElementById('attDropdownWrap')?.contains(e.target)){
+        closeAttList();document.removeEventListener('click',closeAtt);
+      }
+    });
+  },0);
+}
+function closeAttList(){
+  document.getElementById('attList')?.classList.remove('open');
+  document.getElementById('attCaret')?.classList.remove('open');
+}
+function filterAttList(q){
+  document.getElementById('attList')?.classList.add('open');
+  document.getElementById('attCaret')?.classList.add('open');
+  buildAttList(q);
+}
+function selectAttender(id,name){
+  document.getElementById('attSearch').value=name;
+  document.getElementById('attStaffId').value=id;
+  closeAttList();
+}
+
+// ══════════════════════════════════════════════
+// TIPS SUMMARY MODULE
+// ══════════════════════════════════════════════
+function getTipDateRange(period){
+  const now=new Date();
+  if(period==='today')return{from:TODAY,to:TODAY};
+  if(period==='week'){
+    const d=new Date(now);d.setDate(d.getDate()-6);
+    return{from:d.toISOString().split('T')[0],to:TODAY};
+  }
+  if(period==='month'){
+    return{from:TODAY.substring(0,7)+'-01',to:TODAY};
+  }
+  return{from:'2000-01-01',to:TODAY};
+}
+
+function renderTipsSummary(){
+  const statsEl=document.getElementById('tipsSummaryStats');
+  const listEl=document.getElementById('tipsSummaryList');
+  if(!statsEl||!listEl)return;
+
+  const period=document.getElementById('tipsPeriodSel')?.value||'today';
+  const{from,to}=getTipDateRange(period);
+  const isAdmin=canDo('fullStaff');
+
+  // Get tipped orders in range
+  const tippedOrders=orders.filter(o=>
+    o.status==='done'&&o.tip>0&&o.date>=from&&o.date<=to
+  );
+
+  // Build per-staff tip totals
+  const tipMap={};// staffId or name → {name,staffId,total,count,orders:[]}
+  tippedOrders.forEach(o=>{
+    const key=o.attenderStaffId??('name:'+o.attender);
+    if(!key)return;
+    if(!tipMap[key]){
+      const s=o.attenderStaffId?staffList.find(x=>x.id===o.attenderStaffId):null;
+      tipMap[key]={name:s?s.name:(o.attender||'Unknown'),staffId:o.attenderStaffId||null,total:0,count:0,orders:[]};
+    }
+    tipMap[key].total+=o.tip;
+    tipMap[key].count++;
+    tipMap[key].orders.push(o);
+  });
+
+  // If staff (non-admin), filter to own tips only
+  const myStaff=!isAdmin?staffList.find(s=>s.name===currentUser.name||s.userId===currentUser.id):null;
+  const entries=Object.values(tipMap).filter(e=>
+    isAdmin||(myStaff&&(e.staffId===myStaff.id||e.name===currentUser.name))
+  ).sort((a,b)=>b.total-a.total);
+
+  const grandTotal=entries.reduce((s,e)=>s+e.total,0);
+  const myEntry=entries.find(e=>myStaff&&(e.staffId===myStaff?.id||e.name===currentUser.name));
+
+  // Stats row
+  if(isAdmin){
+    statsEl.innerHTML=`
+      <div class="stat-card sc-amber"><div class="stat-label">Total Tips</div><div class="stat-value">${fmt(grandTotal)}</div><div class="stat-note">${tippedOrders.length} order${tippedOrders.length!==1?'s':''}</div></div>
+      <div class="stat-card sc-green"><div class="stat-label">Staff Tipped</div><div class="stat-value">${entries.length}</div></div>
+      <div class="stat-card sc-blue"><div class="stat-label">Avg Tip</div><div class="stat-value">${tippedOrders.length?fmt(Math.round(grandTotal/tippedOrders.length)):'—'}</div></div>`;
+  } else {
+    const myTotal=myEntry?.total||0;
+    const myCount=myEntry?.count||0;
+    statsEl.innerHTML=`
+      <div class="stat-card sc-amber"><div class="stat-label">Your Tips</div><div class="stat-value">${fmt(myTotal)}</div><div class="stat-note">${myCount} order${myCount!==1?'s':''}</div></div>
+      <div class="stat-card sc-blue"><div class="stat-label">Avg per Order</div><div class="stat-value">${myCount?fmt(Math.round(myTotal/myCount)):'—'}</div></div>
+      <div class="stat-card sc-green"><div class="stat-label">Period</div><div class="stat-value" style="font-size:14px;margin-top:4px;">${period==='today'?'Today':period==='week'?'7 Days':period==='month'?'Month':'All Time'}</div></div>`;
+  }
+
+  // List
+  if(!entries.length){
+    listEl.innerHTML=`<div class="rl-empty">No tips recorded for this period</div>`;
+    return;
+  }
+
+  if(isAdmin){
+    // Admin: table of all staff
+    listEl.innerHTML=`<div class="tbl-wrap"><table style="width:100%;table-layout:auto;">
+      <thead><tr><th>Staff Member</th><th>Role</th><th>Orders</th><th>Total Tips</th><th>Avg Tip</th><th>Last Tip</th></tr></thead>
+      <tbody>${entries.map(e=>`<tr>
+        <td style="font-weight:500;color:var(--text-primary);">${esc(e.name)}</td>
+        <td style="font-size:12px;color:var(--text-muted);">${esc(staffList.find(s=>s.id===e.staffId)?.role||'—')}</td>
+        <td style="color:var(--text-muted);">${e.count}</td>
+        <td style="font-weight:600;color:var(--accent);">${fmt(e.total)}</td>
+        <td style="color:var(--text-muted);">${fmt(Math.round(e.total/e.count))}</td>
+        <td style="font-size:12px;color:var(--text-muted);">${fmtD(e.orders.sort((a,b)=>b.time-a.time)[0].date)}</td>
+      </tr>`).join('')}</tbody>
+    </table></div>`;
+  } else {
+    // Staff: their own tip history
+    const myOrds=(myEntry?.orders||[]).sort((a,b)=>b.time-a.time);
+    if(!myOrds.length){listEl.innerHTML=`<div class="rl-empty">No tips for this period</div>`;return;}
+    listEl.innerHTML=`<div class="tbl-wrap"><table style="width:100%;table-layout:auto;">
+      <thead><tr><th>Date</th><th>Order #</th><th>Table</th><th>Bill Total</th><th>Tip</th></tr></thead>
+      <tbody>${myOrds.map(o=>`<tr>
+        <td>${fmtD(o.date)}</td>
+        <td style="color:var(--text-muted);">#${o.id}</td>
+        <td style="color:var(--text-muted);">${esc(o.table)}</td>
+        <td>${fmt(o.total)}</td>
+        <td style="font-weight:600;color:var(--accent);">${fmt(o.tip)}</td>
+      </tr>`).join('')}</tbody>
+    </table></div>`;
+  }
+}
+
 function showBill(id){
   const o=orders.find(x=>x.id===id);if(!o)return;
   // Per-item GST calculation
   let gstTotal=0,baseTotal=0;
   const rows=o.items.map(i=>{const sub=i.price*i.qty;const rate=i.gst!=null?i.gst:5;const gst=Math.round(sub*rate/(100+rate));const base=sub-gst;gstTotal+=gst;baseTotal+=base;return`<div class="kot-row"><span>${i.qty}× ${esc(i.name)}</span><span>${fmt(sub)}</span></div>`;}).join('');
-  document.getElementById('billContent').innerHTML=`<div class="kot"><div class="kot-brand">BrewDesk</div><div class="kot-type">GST Tax Invoice</div><hr class="kot-divider"><div class="kot-row"><span>Bill #${o.id}</span><span>${fmtT(o.time)}</span></div><div class="kot-row" style="font-size:12px;color:var(--text-muted);"><span>${esc(o.table)}</span></div><hr class="kot-divider">${rows}<hr class="kot-divider">${o.discount>0?`<div class="kot-row" style="color:var(--green);"><span>Loyalty discount</span><span>−${fmt(o.discount)}</span></div>`:''}
-  <div class="kot-row"><span>Taxable value</span><span>${fmt(baseTotal)}</span></div><div class="kot-row"><span>GST</span><span>${fmt(gstTotal)}</span></div><hr class="kot-divider"><div class="kot-row total-row"><span>Total</span><span>${fmt(o.total)}</span></div><div class="kot-row" style="font-size:12px;color:var(--text-muted);margin-top:6px;"><span>Paid via ${o.payment}</span>${o.mobile?`<span>${o.mobile}</span>`:''}</div>${o.notes?`<div class="kot-foot" style="color:#555;font-style:italic;">Note: ${esc(o.notes)}</div>`:''}
+  const loyD=o.loyaltyDiscount||0;
+  const manD=o.manualDiscount||0;
+  const cpD=o.couponDiscount||0;
+  const tip=o.tip||0;
+  let discLines='';
+  if(loyD>0)discLines+=`<div class="kot-row" style="color:var(--green);"><span>Loyalty discount</span><span>−${fmt(loyD)}</span></div>`;
+  if(manD>0)discLines+=`<div class="kot-row" style="color:var(--green);"><span>Discount (${o.manualDiscType==='pct'?(o.manualDiscValue+'%'):'Flat'})</span><span>−${fmt(manD)}</span></div>`;
+  if(cpD>0)discLines+=`<div class="kot-row" style="color:var(--green);"><span>Coupon ${esc(o.couponCode)}</span><span>−${fmt(cpD)}</span></div>`;
+  const tipLine=tip>0?`<div class="kot-row" style="color:var(--amber);"><span>Tip${o.attender?' ('+esc(o.attender)+')':''}</span><span>+${fmt(tip)}</span></div>`:'';
+  document.getElementById('billContent').innerHTML=`<div class="kot"><div class="kot-brand">BrewDesk</div><div class="kot-type">GST Tax Invoice</div><hr class="kot-divider"><div class="kot-row"><span>Bill #${o.id}</span><span>${fmtT(o.time)}</span></div><div class="kot-row" style="font-size:12px;color:var(--text-muted);"><span>${esc(o.table)}</span></div><hr class="kot-divider">${rows}<hr class="kot-divider"><div class="kot-row"><span>Taxable value</span><span>${fmt(baseTotal)}</span></div><div class="kot-row"><span>GST</span><span>${fmt(gstTotal)}</span></div>${discLines?'<hr class="kot-divider">'+discLines:''}${tipLine?'<hr class="kot-divider">'+tipLine:''}<hr class="kot-divider"><div class="kot-row total-row"><span>Total</span><span>${fmt(o.total)}</span></div><div class="kot-row" style="font-size:12px;color:var(--text-muted);margin-top:6px;"><span>Paid via ${o.payment}</span>${o.mobile?`<span>${o.mobile}</span>`:''}</div>${o.notes?`<div class="kot-foot" style="color:#555;font-style:italic;">Note: ${esc(o.notes)}</div>`:''}
   <div class="kot-foot">Thank you · Please visit again</div></div>`;
   openModal('mBill');
 }
-function completeOrder(id){const o=orders.find(x=>x.id===id);if(!o)return;o.status='done';S('orders',orders);renderOrders();renderTableStatus();toast(`Order #${id} completed`);}
-function openNewOrder(){cart={};renderCartMenu();renderCartSummary();populateTableDropdown('oTable');document.getElementById('oMobile').value='';document.getElementById('oCustName').value='';document.getElementById('oNotes').value='';document.getElementById('orderModalTitle').textContent='New Order';document.getElementById('orderSubmitBtn').onclick=placeOrder;document.getElementById('orderSubmitBtn').textContent='Place Order & Generate KOT';openModal('mOrder');}
+
+// ══════════════════════════════════════════════
+// COUPON MANAGEMENT
+// ══════════════════════════════════════════════
+function openAddCoupon(){
+  document.getElementById('couponModalTitle').textContent='Add Coupon';
+  ['cpCode','cpValue','cpMinOrder','cpLimit','cpExpiry','cpDesc'].forEach(id=>{document.getElementById(id).value='';});
+  document.getElementById('cpType').value='pct';
+  document.getElementById('cpEditId').value='';
+  document.getElementById('cpErr').textContent='';
+  document.getElementById('cpPreview').style.display='none';
+  renderCouponTypeHint();
+  openModal('mCoupon');
+}
+function openEditCoupon(id){
+  const cp=coupons.find(c=>c.id==id);if(!cp)return;
+  document.getElementById('couponModalTitle').textContent='Edit Coupon';
+  document.getElementById('cpCode').value=cp.code;
+  document.getElementById('cpType').value=cp.type;
+  document.getElementById('cpValue').value=cp.value;
+  document.getElementById('cpMinOrder').value=cp.minOrder||0;
+  document.getElementById('cpLimit').value=cp.limit||0;
+  document.getElementById('cpExpiry').value=cp.expiry||'';
+  document.getElementById('cpDesc').value=cp.desc||'';
+  document.getElementById('cpEditId').value=id;
+  document.getElementById('cpErr').textContent='';
+  renderCouponTypeHint();
+  openModal('mCoupon');
+}
+function renderCouponTypeHint(){
+  const type=document.getElementById('cpType').value;
+  const val=parseFloat(document.getElementById('cpValue').value)||0;
+  const lbl=document.getElementById('cpValueLabel');
+  lbl.textContent=type==='pct'?'Discount Value (%)':'Discount Value (₹)';
+  const prev=document.getElementById('cpPreview');
+  if(val>0){
+    prev.style.display='block';
+    prev.textContent=type==='pct'?`${val}% off any qualifying order`:`₹${val} flat off any qualifying order`;
+  } else prev.style.display='none';
+}
+function saveCoupon(){
+  const code=document.getElementById('cpCode').value.trim().toUpperCase();
+  const type=document.getElementById('cpType').value;
+  const value=parseFloat(document.getElementById('cpValue').value)||0;
+  const minOrder=parseFloat(document.getElementById('cpMinOrder').value)||0;
+  const limit=parseInt(document.getElementById('cpLimit').value)||0;
+  const expiry=document.getElementById('cpExpiry').value||null;
+  const desc=document.getElementById('cpDesc').value.trim();
+  const eid=document.getElementById('cpEditId').value;
+  const err=s=>{document.getElementById('cpErr').textContent=s;};
+  if(!code){err('Enter a coupon code');return;}
+  if(!/^[A-Z0-9_-]+$/.test(code)){err('Code can only contain letters, numbers, _ and -');return;}
+  if(value<=0){err('Enter a discount value > 0');return;}
+  if(type==='pct'&&value>100){err('Percentage cannot exceed 100');return;}
+  // Duplicate check
+  const dup=coupons.find(c=>c.code===code&&c.id!=eid);
+  if(dup){err('A coupon with this code already exists');return;}
+  if(eid){
+    const cp=coupons.find(c=>c.id==eid);
+    if(cp){cp.code=code;cp.type=type;cp.value=value;cp.minOrder=minOrder;cp.limit=limit;cp.expiry=expiry;cp.desc=desc;}
+  } else {
+    coupons.push({id:uid(),code,type,value,minOrder,limit,used:0,expiry,desc,createdBy:currentUser?.name||'Admin',createdAt:Date.now(),active:true});
+  }
+  S('coupons',coupons);
+  closeModal('mCoupon');renderCoupons();
+  toast(`Coupon ${code} ${eid?'updated':'created'}`);
+}
+function toggleCoupon(id){
+  const cp=coupons.find(c=>c.id==id);if(!cp)return;
+  cp.active=!cp.active;S('coupons',coupons);renderCoupons();
+  toast(`Coupon ${cp.code} ${cp.active?'activated':'deactivated'}`);
+}
+function deleteCoupon(id){
+  const cp=coupons.find(c=>c.id==id);if(!cp)return;
+  if(!confirm(`Delete coupon "${cp.code}"?`))return;
+  coupons=coupons.filter(c=>c.id!=id);S('coupons',coupons);renderCoupons();toast('Coupon deleted');
+}
+function renderCoupons(){
+  const el=document.getElementById('couponList');if(!el)return;
+  if(!coupons.length){
+    el.innerHTML=`<div class="rl-empty">No coupons yet — add one to get started</div>`;return;
+  }
+  el.innerHTML=`<div class="tbl-wrap"><table style="width:100%;table-layout:auto;"><thead><tr>
+    <th>Code</th><th>Type</th><th>Value</th><th>Min Order</th><th>Used / Limit</th><th>Expiry</th><th>Status</th><th></th>
+  </tr></thead><tbody>
+  ${coupons.map(cp=>{
+    const expired=cp.expiry&&cp.expiry<TODAY;
+    const exhausted=cp.limit>0&&(cp.used||0)>=cp.limit;
+    const statusBadge=!cp.active?`<span class="badge b-ghost">Inactive</span>`:expired?`<span class="badge b-red">Expired</span>`:exhausted?`<span class="badge b-amber">Used up</span>`:`<span class="badge b-green">Active</span>`;
+    return`<tr>
+      <td><span style="font-weight:600;color:var(--accent);letter-spacing:.5px;">${esc(cp.code)}</span>${cp.desc?`<div style="font-size:10.5px;color:var(--text-muted);margin-top:2px;">${esc(cp.desc)}</div>`:''}
+      </td>
+      <td>${cp.type==='pct'?'% Off':'₹ Flat'}</td>
+      <td style="font-weight:600;color:var(--text-primary);">${cp.type==='pct'?cp.value+'%':'₹'+cp.value}</td>
+      <td>${cp.minOrder>0?fmt(cp.minOrder):'—'}</td>
+      <td>${cp.used||0}${cp.limit>0?' / '+cp.limit:' / ∞'}</td>
+      <td style="color:${expired?'var(--red)':'var(--text-muted)'};">${cp.expiry?fmtD(cp.expiry):'No expiry'}</td>
+      <td>${statusBadge}</td>
+      <td><div style="display:flex;gap:5px;">
+        <button class="btn btn-glass btn-xs" onclick="openEditCoupon('${cp.id}')">Edit</button>
+        <button class="btn btn-glass btn-xs" onclick="toggleCoupon('${cp.id}')" style="color:${cp.active?'var(--amber)':'var(--green)'};">${cp.active?'Disable':'Enable'}</button>
+        <button class="btn btn-danger btn-xs" onclick="deleteCoupon('${cp.id}')">Delete</button>
+      </div></td>
+    </tr>`;
+  }).join('')}
+  </tbody></table></div>`;
+}
+
+function openAddItemsToOrder(id){
+  const o=orders.find(x=>x.id===id);if(!o)return;
+  // Pre-load existing items into cart
+  cart={};
+  o.items.forEach(i=>{cart[i.id]=i.qty;});
+  populateTableDropdown('oTable');
+  renderCartMenu();renderCartSummary();
+  // Lock table to existing order's table
+  const sel=document.getElementById('oTable');
+  if(sel)sel.value=o.table;
+  if(sel)sel.disabled=true;
+  document.getElementById('oMobile').value=o.mobile||'';
+  document.getElementById('oCustName').value=o.mobile?customers.find(c=>c.mobile===o.mobile)?.name||'':'';
+  document.getElementById('oNotes').value=o.notes||'';
+  document.getElementById('orderModalTitle').textContent=`Add Items — Order #${o.id}`;
+  document.getElementById('orderSubmitBtn').textContent='Update Order & Print KOT';
+  document.getElementById('orderSubmitBtn').onclick=()=>updateOrder(id);
+  openModal('mOrder');
+}
+function updateOrder(id){
+  if(!Object.keys(cart).length){toast('Cart is empty');return;}
+  const o=orders.find(x=>x.id===id);if(!o)return;
+  // Build merged items — cart has full updated quantities
+  let rawTotal=0;
+  const items=Object.entries(cart).map(([mid,qty])=>{
+    const m=menuItems.find(x=>x.id==mid);if(!m)return null;
+    rawTotal+=m.price*qty;
+    return{id:+mid,name:m.name,price:m.price,qty,gst:m.gst||5};
+  }).filter(Boolean);
+  const total=Math.max(0,rawTotal-(o.discount||0));
+  o.items=items;
+  o.rawTotal=rawTotal;
+  o.total=total;
+  S('orders',orders);
+  // Re-enable table select for next time
+  const sel=document.getElementById('oTable');
+  if(sel)sel.disabled=false;
+  closeModal('mOrder');
+  cart={};
+  showKOT(o);// print updated KOT
+  renderOrders();renderTableStatus();
+  toast(`Order #${id} updated · New total: ${fmt(total)}`);
+}
+function openNewOrder(){
+  cart={};renderCartMenu();renderCartSummary();
+  populateTableDropdown('oTable');
+  // Auto-select first free table (no active order today)
+  const activeTables=new Set(orders.filter(o=>o.status==='active'&&o.date===TODAY).map(o=>o.table));
+  const sel=document.getElementById('oTable');
+  if(sel){
+    const freeOpt=[...sel.options].find(opt=>opt.value.startsWith('Dine-in')&&!activeTables.has(opt.value));
+    if(freeOpt)sel.value=freeOpt.value;
+  }
+  document.getElementById('oMobile').value='';
+  document.getElementById('oCustName').value='';
+  document.getElementById('oNotes').value='';
+  document.getElementById('orderModalTitle').textContent='New Order';
+  document.getElementById('orderSubmitBtn').onclick=placeOrder;
+  document.getElementById('orderSubmitBtn').textContent='Place Order & Generate KOT';
+  openModal('mOrder');
+}
 function renderOrders(){
   renderTableStatus();
   const from=document.getElementById('ordFrom')?.value||TODAY;
@@ -3109,11 +4884,14 @@ function renderOrders(){
         </div>
         <div class="order-meta">${esc(o.table)} · ${fmtT(o.time)}${showBilling?' · '+o.payment:''}</div>
         <div class="order-items-list">${o.items.map(i=>`${i.qty}× ${esc(i.name)}`).join(' · ')}</div>
-        ${o.notes?`<div class="order-note">📝 ${esc(o.notes)}</div>`:''}
-        <div style="display:flex;gap:7px;margin-top:10px;">
+        ${o.notes?`<div class="order-note"> ${esc(o.notes)}</div>`:''}
+        <div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:10px;">
           ${showBilling?`<button class="btn btn-glass btn-sm" onclick="showBill(${o.id})">View Bill</button>`:''}
           <button class="btn btn-glass btn-sm" onclick="openEditOrder(${o.id})">Edit</button>
-          <button class="btn btn-success btn-sm" onclick="completeOrder(${o.id})">${showBilling?'Mark Complete':'Mark as Prepared'}</button>
+          ${canDo('billing')?`<button class="btn btn-glass btn-sm" onclick="openAddItemsToOrder(${o.id})">+ Add Items</button>`:''}
+          ${showBilling
+            ?`<button class="btn btn-primary btn-sm" onclick="completeOrder(${o.id})" style="background:linear-gradient(135deg,rgba(200,131,74,.9),rgba(180,110,55,.9));border-color:rgba(200,131,74,.5);">Bill &amp; Complete</button>`
+            :`<button class="btn btn-success btn-sm" onclick="completeOrder(${o.id})">Mark as Prepared</button>`}
           ${canDo('billing')?`<button class="btn btn-danger btn-sm" onclick="cancelOrder(${o.id})">Cancel</button>`:''}
         </div>
       </div>`).join('');
@@ -3121,7 +4899,7 @@ function renderOrders(){
   document.getElementById('doneOrders').innerHTML=done.length===0
     ?`<div class="empty"><svg class="empty-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div class="empty-txt">No completed orders yet</div></div>`
     :done.map(o=>`<div style="display:flex;justify-content:space-between;align-items:center;padding:11px 0;border-bottom:1px solid rgba(255,248,240,.06);">
-        <div><span style="font-size:13px;font-weight:600;color:var(--text-primary);">#${o.id}</span> <span style="font-size:12px;color:var(--text-muted);">${esc(o.table)}</span>${o.notes?` <span style="font-size:11px;color:var(--amber);">📝</span>`:''}</div>
+        <div><span style="font-size:13px;font-weight:600;color:var(--text-primary);">#${o.id}</span> <span style="font-size:12px;color:var(--text-muted);">${esc(o.table)}</span>${o.notes?` <span style="font-size:11px;color:var(--amber);"></span>`:''}</div>
         <div style="display:flex;align-items:center;gap:8px;"><span class="badge b-blue">${o.payment}</span><span style="font-size:13.5px;font-weight:600;color:var(--green);">${fmt(o.total)}</span><button class="btn btn-glass btn-xs" onclick="showBill(${o.id})">Bill</button></div>
       </div>`).join('');
   renderOrderAudit();
@@ -3197,7 +4975,7 @@ function saveInv(){
   S('inv',inv);closeModal('mInv');renderInv();
   pushNotif(`Inventory updated: "${name}" ${eid?'edited':'added'} by ${currentUser?.name}`,currentUser?.name);
   const saved=inv.find(x=>x.name===name);
-  if(saved&&saved.stock<=saved.min){pushNotif(`⚠ Low stock alert: ${name} is at ${saved.stock} ${saved.unit} (minimum: ${saved.min})`,'inventory');}
+  if(saved&&saved.stock<=saved.min){pushNotif(` Low stock alert: ${name} is at ${saved.stock} ${saved.unit} (minimum: ${saved.min})`,'inventory');}
   toast('Inventory saved');
 }
 function delInv(id){if(!confirm('Remove item?'))return;const i=inv.find(x=>x.id===id);pushInvAudit('Removed',i?.name||'Unknown','Item deleted');inv=inv.filter(x=>x.id!==id);S('inv',inv);renderInv();pushNotif(`Inventory item "${i?.name}" removed by ${currentUser?.name}`,currentUser?.name);toast('Item removed');}
@@ -3209,7 +4987,7 @@ function confirmAdj(){
   pushInvAudit(act==='add'?'Stock Added':'Stock Deducted',i.name,`${before}→${i.stock} ${i.unit}`);
   S('inv',inv);closeModal('mAdj');renderInv();
   pushNotif(`Stock adjusted: ${i.name} → ${i.stock} ${i.unit} by ${currentUser?.name}`,currentUser?.name);
-  if(i.stock<=i.min){pushNotif(`⚠ Low stock alert: ${i.name} is at ${i.stock} ${i.unit} (minimum: ${i.min})`,'inventory');}
+  if(i.stock<=i.min){pushNotif(` Low stock alert: ${i.name} is at ${i.stock} ${i.unit} (minimum: ${i.min})`,'inventory');}
   toast(`${i.name}: ${i.stock} ${i.unit}`);
 }
 
@@ -3263,7 +5041,8 @@ function doClearAtt(){
   const count=attendance.length;
   attAudit.push({id:uid(),ts:Date.now(),by:currentUser?.name||'Admin',reason,count});
   attendance=[];S('att',attendance);S('attAudit',attAudit);
-  closeModal('mClearAtt');renderStaff();
+  closeModal('mClearAtt');
+  renderStaff();renderAttAudit();
   pushNotif(`Attendance data cleared by ${currentUser?.name}. Reason: ${reason}`,'admin');
   toast('Attendance cleared');
 }
@@ -3284,12 +5063,20 @@ function doClearData(){
   notifications=[];S('notifs',notifications);
   staffList=[];S('staff',staffList);
   appUsers=[];S('appUsers',appUsers);
+  roster=[];S('roster',roster);
+  swapRequests=[];S('swapReqs',swapRequests);
+  salaryLog=[];S('salaryLog',salaryLog);
   // Clear ALL audit/history logs
   attAudit=[];S('attAudit',attAudit);
   menuAudit=[];S('menuAudit',menuAudit);
   invAudit=[];S('invAudit',invAudit);
   loyAudit=[];S('loyAudit',loyAudit);
   settingsAudit=[];S('settingsAudit',settingsAudit);
+  voidAudit=[];S('voidAudit',voidAudit);
+  eodLog=[];S('eodLog',eodLog);
+  rosterAudit=[];S('rosterAudit',rosterAudit);
+  // Reset coupon usage counts (keep the coupons themselves, just reset used count)
+  coupons.forEach(c=>{c.used=0;});S('coupons',coupons);
   // Reset admin password back to default
   adminCreds={passwordHash:simpleHash('admin123')};S('adminCreds',adminCreds);
   S('adminPwChanged',false);
@@ -3434,7 +5221,7 @@ function renderLoyalty(){
           <div style="width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,rgba(200,131,74,.3),rgba(200,131,74,.1));border:1px solid rgba(200,131,74,.3);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;color:var(--accent);flex-shrink:0;">${initials(c.name)}</div>
           <div>
             <div class="cust-name" style="font-size:13.5px;font-weight:500;color:var(--text-primary);">${esc(c.name)} ${i===0?`<span class="badge b-accent" style="font-size:9.5px;margin-left:4px;">Top</span>`:''}</div>
-            <div style="font-size:11.5px;color:var(--text-muted);">${c.mobile}${c.bday?' · 🎂 '+fmtD(c.bday):''}</div>
+            <div style="font-size:11.5px;color:var(--text-muted);">${c.mobile}${c.bday?' ·  '+fmtD(c.bday):''}</div>
           </div>
         </div>
         <div style="display:flex;align-items:center;gap:10px;">
@@ -3444,7 +5231,7 @@ function renderLoyalty(){
           </div>
           <button class="btn btn-glass btn-xs" onclick="event.stopPropagation();openEditCustomer('${c.id}')">Edit</button>
           ${canDo('removeCust')?`<button class="btn btn-danger btn-xs" onclick="event.stopPropagation();removeCustomer('${c.id}')">Remove</button>`:''}
-          <span class="cust-expand-icon" id="cico-${c.id}">▼</span>
+          <span class="cust-expand-icon" id="cico-${c.id}"></span>
         </div>
       </div>
       <div class="cust-visits" id="cvr-${c.id}"></div>
@@ -3476,7 +5263,7 @@ function addCustomer(){
   S('cust',customers);
   pushLoyAudit('Registered',name,`Mobile: ${mob}${bday?' · Birthday: '+fmtD(bday):''}`);
   document.getElementById('loyName').value='';document.getElementById('loyMobile').value='';document.getElementById('loyBday').value='';
-  renderLoyalty();renderLoyAudit();toast(`${name} registered${bday?' 🎂':''}`);
+  renderLoyalty();renderLoyAudit();toast(`${name} registered${bday?' ':''}`);
 }
 
 // ══════════════════════════════════════════════
@@ -3510,6 +5297,7 @@ function renderDash(){
   // Hourly chart + comparison (only useful for same-day or short ranges)
   renderHourlyChart(tod);
   renderComparison(from,to,tod,exp);
+  if(canDo('seeDash')){renderGST();renderHealthAlerts();renderEODLog();}
 }
 
 // ══════════════════════════════════════════════
@@ -3736,7 +5524,7 @@ function buildExcel(from,to){
     // Generate and download
     const filename=`BrewDesk_Export_${from}_to_${to}.xlsx`;
     XLSX.writeFile(wb,filename);
-    document.getElementById('exportStatus').textContent='✓ Download started';
+    document.getElementById('exportStatus').textContent=' Download started';
     setTimeout(()=>closeModal('mExport'),1200);
 
   } catch(err){
@@ -3796,7 +5584,7 @@ const SYNC_KEYS={
   inv:       ()=>{inv=L('inv',inv);                        if(isOnPage('inventory')) renderInv();},
   staff:     ()=>{staffList=L('staff',staffList);          if(isOnPage('staff'))     renderStaff();},
   att:       ()=>{attendance=L('att',attendance);          if(isOnPage('staff'))     renderStaff();},
-  orders:    ()=>{orders=L('orders',orders);               if(isOnPage('orders'))    renderOrders(); if(isOnPage('dashboard')) renderDash();},
+  orders:    ()=>{orders=L('orders',orders);               if(isOnPage('orders'))    renderOrders(); if(isOnPage('dashboard')) renderDash();if(isOnPage('staff'))renderTipsSummary();},
   exp:       ()=>{expenses=L('exp',expenses);              if(isOnPage('expenses'))  renderExp();    if(isOnPage('dashboard')) renderDash();},
   cust:      ()=>{customers=L('cust',customers);           if(isOnPage('loyalty'))   renderLoyalty();},
   notifs:    ()=>{notifications=L('notifs',notifications); updateNotifBadge();       if(isOnPage('notifications')) renderNotifPage();},
@@ -3807,6 +5595,13 @@ const SYNC_KEYS={
   invAudit:  ()=>{invAudit=L('invAudit',invAudit);if(isOnPage('inventory'))renderInvAudit();},
   customTables:()=>{customTables=L('customTables',customTables);renderTableStatus();},
   loyAudit:  ()=>{loyAudit=L('loyAudit',loyAudit);if(isOnPage('loyalty'))renderLoyAudit();},
+  voidAudit: ()=>{voidAudit=L('voidAudit',voidAudit);if(isOnPage('orders'))renderVoidAudit();},
+  eodLog:    ()=>{eodLog=L('eodLog',eodLog);if(isOnPage('dashboard'))renderEODLog();},
+  salaryLog: ()=>{salaryLog=L('salaryLog',salaryLog);if(isOnPage('staff'))renderSalaryEstimator();},
+  roster:    ()=>{roster=L('roster',roster);if(isOnPage('staff'))renderWeeklyRoster();},
+  rosterAudit:()=>{rosterAudit=L('rosterAudit',rosterAudit);if(isOnPage('staff'))renderRosterAudit();},
+  swapReqs:  ()=>{swapRequests=L('swapReqs',swapRequests);if(isOnPage('staff'))renderSwapRequests();if(isOnPage('notifications'))renderNotifPage();},
+  coupons:   ()=>{coupons=L('coupons',coupons);if(isOnPage('settings'))renderCoupons();},
 };
 
 function isOnPage(page){
@@ -3853,9 +5648,10 @@ function showSyncPulse(){
     sharedCats=L('sharedCats',sharedCats);menuCats=L('menuCats',menuCats);
     menuAudit=L('menuAudit',[]);invAudit=L('invAudit',[]);customTables=L('customTables',customTables);loyAudit=L('loyAudit',[]);
     adminCreds=L('adminCreds',null);
+    coupons=L('coupons',[]);
     if(!adminCreds){adminCreds={passwordHash:simpleHash('admin123')};S('adminCreds',adminCreds);}
     onid=L('onid',1);snid=L('snid',1);inid=L('inid',5);
-    showSyncStatus('✓ Synced from cloud','green');
+    showSyncStatus(' Synced from cloud','green');
   } else {
     loadMsg.textContent='Offline — using local data';
     setTimeout(()=>loadMsg.remove(),2000);
