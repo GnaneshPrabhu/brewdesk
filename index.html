@@ -4794,7 +4794,29 @@ function applyRoleUI(){
 }
 
 const APP_PAGES=["orders","menu","inventory","staff","expenses","loyalty","dashboard","strategy","settings","notifications"];
+function reloadAllData(){
+  // Re-read all JS variables from localStorage (which was last written by Supabase poll or S())
+  menuItems=L('menu',menuItems);
+  inv=L('inv',inv);
+  staffList=L('staff',staffList);
+  attendance=L('att',attendance);
+  orders=L('orders',orders);
+  expenses=L('exp',expenses);
+  customers=L('cust',customers);
+  notifications=L('notifs',notifications);
+  customTables=L('customTables',customTables);
+  roster=L('roster',roster);
+  swapRequests=L('swapReqs',swapRequests);
+  coupons=L('coupons',coupons);
+  shiftTemplates=L('roster_rules',shiftTemplates);
+  menuCats=L('menuCats',menuCats);
+  sharedCats=L('sharedCats',sharedCats);
+  syncShiftMaps();
+}
+
 function navigateTo(page){
+  // Always reload from localStorage before rendering — ensures latest Supabase-synced data
+  reloadAllData();
   document.querySelectorAll("#sbNav .nav-item").forEach(n=>n.classList.remove("active"));
   APP_PAGES.forEach(p=>{const el=document.getElementById("page-"+p);if(el)el.classList.remove("active");});
   const navEl=document.querySelector(`#sbNav .nav-item[data-page="${page}"]`);
@@ -6363,7 +6385,9 @@ async function pollForUpdates(){
       }
     });
     if(!changed.length)return;
-    // Re-render affected pages — SYNC_KEYS uses bare key names (menu, orders, etc.)
+    // Full data reload first — ensures ALL variables are current, not just detected-changed ones
+    reloadAllData();
+    // Then targeted re-renders for changed keys
     changed.forEach(k=>{
       const h=SYNC_KEYS[k];if(h)h();
     });
@@ -6462,6 +6486,8 @@ function showSyncPulse(){
     if(!adminCreds){adminCreds={passwordHash:simpleHash('admin123')};S('adminCreds',adminCreds);}
     onid=L('onid',1);snid=L('snid',1);inid=L('inid',5);
     showSyncStatus(' Synced from cloud','green');
+    // Set lastSyncTs so the first poll starts from now, not from 0
+    lastSyncTs=Date.now();
   } else {
     loadMsg.textContent='Offline — using local data';
     setTimeout(()=>loadMsg.remove(),2000);
