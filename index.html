@@ -464,6 +464,12 @@ td.tdc{color:var(--text-primary);font-weight:500;}
 }
 
 .profile-modal-av{width:64px;height:64px;border-radius:50%;background:linear-gradient(135deg,rgba(200,131,74,.4),rgba(200,131,74,.15));border:2px solid rgba(200,131,74,.4);display:flex;align-items:center;justify-content:center;font-family:var(--ff-d);font-size:22px;color:var(--accent);margin:0 auto 18px;}
+/* Off-day chip toggle */
+.off-day-chip{display:inline-flex;align-items:center;padding:4px 9px;border-radius:8px;font-size:11px;font-weight:500;font-family:var(--ff-b);cursor:pointer;border:1px solid var(--glass-border);background:var(--glass-input);color:var(--text-muted);transition:var(--t);user-select:none;}
+.off-day-chip input{display:none;}
+.off-day-chip:has(input:checked){background:var(--red-bg);border-color:rgba(240,112,112,.4);color:var(--red);}
+/* Coverage row */
+.coverage-row{display:flex;align-items:center;gap:8px;margin-bottom:8px;}
 
 /* ══════════════════════════════════════════════
    MOBILE RESPONSIVE — max 768px
@@ -1012,16 +1018,34 @@ td.tdc{color:var(--text-primary);font-weight:500;}
           <div id="swapRequestsList"></div>
         </div>
 
+        <!-- Shift Templates (admin only) -->
+        <div class="card" style="margin-bottom:16px;" id="shiftTemplatesCard">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">
+            <div class="card-title" style="margin:0;">Shift Templates</div>
+            <button class="btn btn-primary btn-sm" onclick="openShiftTemplate()">+ Template</button>
+          </div>
+          <div id="shiftTemplatesList"></div>
+        </div>
+
         <div class="card" style="margin-bottom:16px;" id="rosterCard">
           <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
-            <div class="card-title" style="margin:0;">Weekly Roster</div>
+            <div style="display:flex;align-items:center;gap:10px;">
+              <div class="card-title" style="margin:0;">Weekly Roster</div>
+              <span id="rosterDraftBadge" style="display:none;font-size:9.5px;font-weight:600;letter-spacing:.5px;text-transform:uppercase;padding:2px 8px;border-radius:8px;background:var(--amber-bg);color:var(--amber);border:1px solid rgba(240,184,74,.3);">Draft</span>
+              <span id="rosterPublishedBadge" style="display:none;font-size:9.5px;font-weight:600;letter-spacing:.5px;text-transform:uppercase;padding:2px 8px;border-radius:8px;background:var(--green-bg);color:var(--green);border:1px solid rgba(94,203,149,.3);">Published</span>
+            </div>
             <div style="display:flex;gap:6px;align-items:center;">
-              <button class="btn btn-glass btn-xs" onclick="rosterPrevWeek()">‹</button>
+              <button class="btn btn-glass btn-xs" onclick="rosterPrevWeek()">&#8249;</button>
               <span id="rosterWeekLabel" style="font-size:12px;color:var(--text-muted);min-width:120px;text-align:center;"></span>
-              <button class="btn btn-glass btn-xs" onclick="rosterNextWeek()">›</button>
+              <button class="btn btn-glass btn-xs" onclick="rosterNextWeek()">&#8250;</button>
+              <button class="btn btn-glass btn-xs" id="autoRosterBtn" onclick="openAutoRoster()" style="display:none;">Auto-Generate</button>
+              <button class="btn btn-glass btn-xs" id="clearDraftBtn" onclick="clearDraftRoster()" style="display:none;color:var(--red);border-color:rgba(240,112,112,.3);">Clear Draft</button>
+              <button class="btn btn-glass btn-xs" id="deletePublishedBtn" onclick="deletePublishedRoster()" style="display:none;color:var(--red);border-color:rgba(240,112,112,.3);">Delete Published</button>
+              <button class="btn btn-primary btn-xs" id="publishRosterBtn" onclick="publishRoster()" style="display:none;">Publish Roster</button>
             </div>
           </div>
           <div id="rosterStats" style="display:flex;gap:16px;margin-bottom:12px;flex-wrap:wrap;"></div>
+          <div id="rosterConflicts" style="margin-bottom:10px;"></div>
           <div id="rosterEditHint" style="font-size:11.5px;color:var(--text-muted);margin-bottom:10px;">Click any cell to assign or edit a shift for that staff member and day.</div>
           <div id="rosterGrid"></div>
           <div class="rl-tabs" style="margin-top:14px;"><div class="rl-tab on" onclick="switchTab('rosterAudit',0,this)">Roster Change History</div></div>
@@ -1617,12 +1641,33 @@ td.tdc{color:var(--text-primary);font-weight:500;}
 
 <!-- Add Staff -->
 <div class="overlay" id="mStaff">
-  <div class="modal" style="width:420px;">
+  <div class="modal" style="width:460px;">
     <div class="modal-header"><div class="modal-title">Add Staff Member</div><button class="modal-close" onclick="closeModal('mStaff')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 6L6 18M6 6l12 12"/></svg></button></div>
     <div class="form-group"><label class="form-label">Full Name</label><input class="form-input" type="text" id="sName" placeholder="Staff member name"/></div>
     <div class="form-row">
       <div class="form-group"><label class="form-label">Role</label><select class="form-input" id="sRole"><option>Barista</option><option>Cashier</option><option>Waiter</option><option>Chef</option><option>Manager</option><option>Helper</option></select></div>
       <div class="form-group"><label class="form-label">Mobile</label><input class="form-input" type="tel" id="sMob" placeholder="10-digit" maxlength="10"/></div>
+    </div>
+    <div style="border-top:1px solid var(--glass-border);margin:14px 0 14px;padding-top:14px;">
+      <div style="font-size:10px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:var(--text-muted);margin-bottom:12px;">Roster Constraints</div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Max Working Days / Week</label>
+          <input class="form-input" type="number" id="sMaxDays" min="1" max="7" value="5" placeholder="5"/>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Preferred Off Days</label>
+          <div id="sOffDaysWrap" style="display:flex;gap:4px;flex-wrap:wrap;margin-top:2px;">
+            <label class="off-day-chip" data-day="0"><input type="checkbox" value="0"/>Mon</label>
+            <label class="off-day-chip" data-day="1"><input type="checkbox" value="1"/>Tue</label>
+            <label class="off-day-chip" data-day="2"><input type="checkbox" value="2"/>Wed</label>
+            <label class="off-day-chip" data-day="3"><input type="checkbox" value="3"/>Thu</label>
+            <label class="off-day-chip" data-day="4"><input type="checkbox" value="4"/>Fri</label>
+            <label class="off-day-chip" data-day="5"><input type="checkbox" value="5"/>Sat</label>
+            <label class="off-day-chip" data-day="6"><input type="checkbox" value="6"/>Sun</label>
+          </div>
+        </div>
+      </div>
     </div>
     <div class="modal-footer"><button class="btn btn-glass" onclick="closeModal('mStaff')">Cancel</button><button class="btn btn-primary" onclick="saveStaff()">Add Staff</button></div>
   </div>
@@ -1760,6 +1805,142 @@ td.tdc{color:var(--text-primary);font-weight:500;}
     <div class="modal-footer">
       <button class="btn btn-glass" onclick="closeModal('mRejectNote')">Cancel</button>
       <button class="btn btn-danger" onclick="confirmReject()">Confirm Reject</button>
+    </div>
+  </div>
+</div>
+
+<!-- Shift Template Modal -->
+<div class="overlay" id="mShiftTemplate">
+  <div class="modal" style="width:460px;">
+    <div class="modal-header">
+      <div class="modal-title" id="stModalTitle">New Shift Template</div>
+      <button class="modal-close" onclick="closeModal('mShiftTemplate')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 6L6 18M6 6l12 12"/></svg></button>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label class="form-label">Template Name</label><input class="form-input" type="text" id="stName" placeholder="e.g. Morning"/></div>
+      <div class="form-group"><label class="form-label">Label Colour</label>
+        <select class="form-input" id="stColor">
+          <option value="blue">Blue (Morning)</option>
+          <option value="amber">Amber (Afternoon)</option>
+          <option value="green">Green (Evening)</option>
+          <option value="accent">Orange (Full Day)</option>
+          <option value="red">Red (Special)</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label class="form-label">Start Time</label><input class="form-input" type="time" id="stStart" value="09:00"/></div>
+      <div class="form-group"><label class="form-label">End Time</label><input class="form-input" type="time" id="stEnd" value="18:00"/></div>
+    </div>
+    <div style="border-top:1px solid var(--glass-border);margin:14px 0;padding-top:14px;">
+      <div style="font-size:10px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:var(--text-muted);margin-bottom:12px;">Minimum Coverage Per Shift</div>
+      <div id="stCoverageRows"></div>
+      <button class="btn btn-glass btn-xs" onclick="addCoverageRow()" style="margin-top:8px;">+ Add Role Requirement</button>
+    </div>
+    <input type="hidden" id="stEditId"/>
+    <div id="stErr" style="font-size:12px;color:var(--red);min-height:16px;margin-bottom:8px;"></div>
+    <div class="modal-footer">
+      <button class="btn btn-glass" onclick="closeModal('mShiftTemplate')">Cancel</button>
+      <button class="btn btn-primary" onclick="saveShiftTemplate()">Save Template</button>
+    </div>
+  </div>
+</div>
+
+<!-- Auto-Generate Roster Modal -->
+<div class="overlay" id="mAutoRoster">
+  <div class="modal modal-lg" style="max-width:580px;">
+    <div class="modal-header">
+      <div class="modal-title">Auto-Generate Weekly Roster</div>
+      <button class="modal-close" onclick="closeModal('mAutoRoster')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 6L6 18M6 6l12 12"/></svg></button>
+    </div>
+    <div style="padding:12px 14px;background:rgba(122,180,240,.06);border:1px solid rgba(122,180,240,.18);border-radius:var(--r);font-size:12.5px;color:var(--blue);margin-bottom:18px;">
+      Generates a draft roster for the selected week. Approved leaves are excluded automatically. Review and publish when ready.
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">Week Starting (Monday)</label>
+        <input class="form-input" type="date" id="arWeekStart"/>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Days Per Week</label>
+        <select class="form-input" id="arDaysMode">
+          <option value="5">5 days (Mon–Fri)</option>
+          <option value="6">6 days (Mon–Sat)</option>
+          <option value="7">7 days (Mon–Sun)</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Shift to Assign</label>
+      <select class="form-input" id="arShiftTemplate"></select>
+    </div>
+    <div style="border-top:1px solid var(--glass-border);margin:14px 0;padding-top:14px;">
+      <div style="font-size:10px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:var(--text-muted);margin-bottom:10px;">Generation Options</div>
+      <label style="display:flex;align-items:center;gap:10px;font-size:13px;color:var(--text-secondary);margin-bottom:10px;cursor:pointer;">
+        <input type="checkbox" id="arRespectOffDays" checked style="accent-color:var(--accent);width:14px;height:14px;"/>
+        Respect staff preferred off-days
+      </label>
+      <label style="display:flex;align-items:center;gap:10px;font-size:13px;color:var(--text-secondary);margin-bottom:10px;cursor:pointer;">
+        <input type="checkbox" id="arRespectMaxDays" checked style="accent-color:var(--accent);width:14px;height:14px;"/>
+        Respect max working days per week
+      </label>
+      <label style="display:flex;align-items:center;gap:10px;font-size:13px;color:var(--text-secondary);cursor:pointer;">
+        <input type="checkbox" id="arSkipLeaves" checked style="accent-color:var(--accent);width:14px;height:14px;"/>
+        Skip approved leaves automatically
+      </label>
+    </div>
+    <div id="arPreview" style="margin-top:14px;"></div>
+    <div id="arErr" style="font-size:12px;color:var(--red);min-height:16px;margin:8px 0;"></div>
+    <div class="modal-footer">
+      <button class="btn btn-glass" onclick="closeModal('mAutoRoster')">Cancel</button>
+      <button class="btn btn-glass btn-sm" onclick="previewAutoRoster()">Preview</button>
+      <button class="btn btn-primary" onclick="confirmAutoRoster()">Generate Draft</button>
+    </div>
+  </div>
+</div>
+
+<!-- Conflict / Warnings Modal -->
+<div class="overlay" id="mRosterConflict">
+  <div class="modal" style="width:480px;">
+    <div class="modal-header">
+      <div class="modal-title">Roster Warnings</div>
+      <button class="modal-close" onclick="closeModal('mRosterConflict')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 6L6 18M6 6l12 12"/></svg></button>
+    </div>
+    <div id="conflictBody" style="max-height:360px;overflow-y:auto;"></div>
+    <div class="modal-footer">
+      <button class="btn btn-glass" onclick="closeModal('mRosterConflict')">Close</button>
+      <button class="btn btn-primary" id="conflictPublishBtn" onclick="doPublishRoster()">Publish Anyway</button>
+    </div>
+  </div>
+</div>
+
+<!-- Edit Staff Roster Constraints -->
+<div class="overlay" id="mEditConstraints">
+  <div class="modal" style="width:420px;">
+    <div class="modal-header">
+      <div class="modal-title">Roster Constraints — <span id="ecStaffName" style="color:var(--accent);"></span></div>
+      <button class="modal-close" onclick="closeModal('mEditConstraints')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 6L6 18M6 6l12 12"/></svg></button>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Max Working Days / Week</label>
+      <input class="form-input" type="number" id="ecMaxDays" min="1" max="7" value="5"/>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Preferred Off Days <span style="color:var(--text-muted);font-weight:400;text-transform:none;">(auto-generation will skip these)</span></label>
+      <div id="ecOffDaysWrap" style="display:flex;gap:4px;flex-wrap:wrap;margin-top:4px;">
+        <label class="off-day-chip"><input type="checkbox" value="0"/>Mon</label>
+        <label class="off-day-chip"><input type="checkbox" value="1"/>Tue</label>
+        <label class="off-day-chip"><input type="checkbox" value="2"/>Wed</label>
+        <label class="off-day-chip"><input type="checkbox" value="3"/>Thu</label>
+        <label class="off-day-chip"><input type="checkbox" value="4"/>Fri</label>
+        <label class="off-day-chip"><input type="checkbox" value="5"/>Sat</label>
+        <label class="off-day-chip"><input type="checkbox" value="6"/>Sun</label>
+      </div>
+    </div>
+    <input type="hidden" id="ecStaffId"/>
+    <div class="modal-footer">
+      <button class="btn btn-glass" onclick="closeModal('mEditConstraints')">Cancel</button>
+      <button class="btn btn-primary" onclick="saveEditConstraints()">Save</button>
     </div>
   </div>
 </div>
@@ -2418,15 +2599,15 @@ function renderRL(elId,rows,cols){
   el.innerHTML=tableHtml+pagerHtml;
 }
 function rlGoPage(elId,page,cols){
-  // cols comes as string array, rows must be re-fetched from source
   rlPages[elId]=page;
-  // Re-render the correct audit based on elId
   if(elId==='ordAuditTable')renderOrderAudit();
   else if(elId==='menuAuditTable')renderMenuAudit();
   else if(elId==='invAuditTable')renderInvAudit();
   else if(elId==='attAuditTable')renderAttAudit();
   else if(elId==='settingsAuditTable')renderSettingsAuditRL();
   else if(elId==='loyAuditTable')renderLoyAudit();
+  else if(elId==='rosterAuditTable')renderRosterAudit();
+  else if(elId==='voidAuditTable')renderVoidAudit();
 }
 
 // ── TABLE MANAGEMENT ──
@@ -2885,6 +3066,25 @@ function renderEODLog(){
 // ══════════════════════════════════════════════
 // SALARY ESTIMATOR
 // ══════════════════════════════════════════════
+function getStaffWeekHours(staffId, weekStart, weekEnd){
+  // Primary source: actual clock-in/out attendance records
+  const attRecs=attendance.filter(a=>a.sid===staffId&&a.date>=weekStart&&a.date<=weekEnd&&a.cin&&a.cout&&!a.fromRoster);
+  const attMs=attRecs.reduce((sum,a)=>sum+(a.cout-a.cin),0);
+  if(attMs>0)return parseFloat((attMs/(1000*60*60)).toFixed(1));
+  // Fallback: use published roster shift durations when no clock-in/out exists
+  const days=[];const base=new Date(weekStart);
+  for(let i=0;i<7;i++){const d=new Date(base);d.setDate(base.getDate()+i);days.push(d.toISOString().split('T')[0]);}
+  const rosterShifts=roster.filter(r=>r.staffId===staffId&&days.includes(r.date)&&r.shiftType!=='Off'&&r.shiftStart&&r.shiftEnd);
+  let rosterMs=0;
+  rosterShifts.forEach(r=>{
+    const[sh,sm]=r.shiftStart.split(':').map(Number);
+    const[eh,em]=r.shiftEnd.split(':').map(Number);
+    const mins=(eh*60+em)-(sh*60+sm);
+    if(mins>0)rosterMs+=mins*60*1000;
+  });
+  return parseFloat((rosterMs/(1000*60*60)).toFixed(1));
+}
+
 function renderSalaryEstimator(){
   const el=document.getElementById('salaryEstimator');
   const card=document.getElementById('salaryCard');
@@ -2893,32 +3093,39 @@ function renderSalaryEstimator(){
   if(!canDo('seeSalary'))return;
   const from=document.getElementById('staffDate')?.value||TODAY;
   if(!staffList.length){el.innerHTML='<div class="rl-empty">No staff members yet</div>';return;}
-  let html='<div class="tbl-wrap"><table><thead><tr><th>Staff</th><th>Role</th><th>Hours</th><th>Rate/hr (₹)</th><th>Estimated</th><th>Action</th></tr></thead><tbody>';
+  const weekStart=getWeekStart(from);
+  const weekEnd=getWeekEnd(from);
+  let html='<div class="tbl-wrap"><table><thead><tr><th>Staff</th><th>Role</th><th>Hours</th><th>Source</th><th>Rate/hr (₹)</th><th>Estimated</th><th>Action</th></tr></thead><tbody>';
   staffList.forEach(s=>{
-    const weekStart=getWeekStart(from);
-    const weekEnd=getWeekEnd(from);
-    const recs=attendance.filter(a=>a.sid===s.id&&a.date>=weekStart&&a.date<=weekEnd&&a.cin&&a.cout);
-    const totalMs=recs.reduce((sum,a)=>sum+(a.cout-a.cin),0);
-    const hours=(totalMs/(1000*60*60)).toFixed(1);
+    const attRecs=attendance.filter(a=>a.sid===s.id&&a.date>=weekStart&&a.date<=weekEnd&&a.cin&&a.cout&&!a.fromRoster);
+    const hasAtt=attRecs.length>0;
+    const hours=getStaffWeekHours(s.id,weekStart,weekEnd);
     const rate=s.hourlyRate||0;
-    const estimated=parseFloat(hours)*rate;
+    const estimated=hours*rate;
     const paid=salaryLog.some(l=>l.staffId===s.id&&l.period===weekStart);
+    const srcBadge=hasAtt
+      ?`<span style="font-size:10px;color:var(--green);">Clock-in</span>`
+      :hours>0?`<span style="font-size:10px;color:var(--blue);">Roster</span>`
+      :`<span style="font-size:10px;color:var(--text-muted);">—</span>`;
     html+=`<tr>
-      <td class="tdc">${esc(s.name)}</td><td>${esc(s.role)}</td>
-      <td>${hours}h</td>
+      <td class="tdc">${esc(s.name)}</td>
+      <td>${esc(s.role)}</td>
+      <td style="font-weight:${hours>0?'600':'400'};color:${hours>0?'var(--text-primary)':'var(--text-muted)'};">${hours}h</td>
+      <td>${srcBadge}</td>
       <td style="white-space:nowrap;">
         <div style="display:flex;align-items:center;gap:6px;">
-          <input type="number" id="rate_${s.id}" class="form-input" style="width:80px;padding:5px 8px;font-size:12px;" value="${rate}" min="0" placeholder="0"/>
+          <input type="number" id="rate_${s.id}" class="form-input" style="width:80px;padding:5px 8px;font-size:12px;" value="${rate}" min="0" placeholder="0" onkeydown="if(event.key==='Enter')saveStaffRate(${s.id})"/>
           <button class="btn btn-glass btn-xs" onclick="saveStaffRate(${s.id})">Save</button>
         </div>
       </td>
       <td style="color:var(--accent);font-weight:600;" id="est_${s.id}">${fmt(estimated)}</td>
-      <td>${paid?`<span class="badge b-green">Paid</span>`:`<button class="btn btn-success btn-xs" onclick="markSalaryPaid(${s.id},'${weekStart}',${parseFloat(hours)},${rate},${estimated},'${esc(s.name)}')">Mark Paid</button>`}</td>
+      <td>${paid?`<span class="badge b-green">Paid</span>`:`<button class="btn btn-success btn-xs" onclick="markSalaryPaid(${s.id},'${weekStart}',${hours},${rate},${estimated},'${esc(s.name)}')">Mark Paid</button>`}</td>
     </tr>`;
   });
   html+='</tbody></table></div>';
   el.innerHTML=html;
 }
+
 function saveStaffRate(staffId){
   const inp=document.getElementById('rate_'+staffId);
   if(!inp)return;
@@ -2926,15 +3133,8 @@ function saveStaffRate(staffId){
   const s=staffList.find(x=>x.id===staffId);if(!s)return;
   s.hourlyRate=rate;
   S('staff',staffList);
-  // Update the estimated cell live
-  const from=document.getElementById('staffDate')?.value||TODAY;
-  const weekStart=getWeekStart(from);
-  const weekEnd=getWeekEnd(from);
-  const recs=attendance.filter(a=>a.sid===s.id&&a.date>=weekStart&&a.date<=weekEnd&&a.cin&&a.cout);
-  const totalMs=recs.reduce((sum,a)=>sum+(a.cout-a.cin),0);
-  const hours=(totalMs/(1000*60*60));
-  const estEl=document.getElementById('est_'+staffId);
-  if(estEl)estEl.textContent=fmt(hours*rate);
+  // Full re-render so Mark Paid button also picks up new rate/estimated correctly
+  renderSalaryEstimator();
   toast(`Rate saved for ${s.name}: ₹${rate}/hr`);
 }
 function markSalaryPaid(staffId,period,hours,rate,amount,name){
@@ -2958,6 +3158,8 @@ function getWeekEnd(dateStr){
 // WEEKLY ROSTER
 // ══════════════════════════════════════════════
 let rosterWeekOffset=0;
+// Sync template colours into render maps on startup
+setTimeout(()=>syncShiftMaps&&syncShiftMaps(),0);
 const SHIFT_COLORS={Morning:'var(--blue)',Afternoon:'var(--amber)',Evening:'var(--green)','Full Day':'var(--accent)',Off:'var(--text-muted)',Custom:'var(--accent)'};
 const SHIFT_TIMES={Morning:'07:00-14:00',Afternoon:'12:00-19:00',Evening:'16:00-23:00','Full Day':'09:00-21:00'};
 
@@ -2973,12 +3175,67 @@ function rosterNextWeek(){rosterWeekOffset++;renderWeeklyRoster();}
 function renderWeeklyRoster(){
   const card=document.getElementById('rosterCard');if(!card)return;
   const days=getRosterWeekDays(rosterWeekOffset);
-  const mon=new Date(days[0]);const sun=new Date(days[6]);
   const lbl=document.getElementById('rosterWeekLabel');
   if(lbl)lbl.textContent=`${fmtD(days[0])} – ${fmtD(days[6])}`;
   const isMobile=window.innerWidth<=768;
+  const isAdmin=canDo('editRoster');
+  const status=getRosterStatus(days[0]);
 
-  // Stats
+  // ── Staff visibility gate ──
+  // Non-admin can only see published rosters
+  if(!isAdmin){
+    const gridEl=document.getElementById('rosterGrid');if(!gridEl)return;
+    const statsEl=document.getElementById('rosterStats');
+    if(status!=='published'){
+      if(statsEl)statsEl.innerHTML='';
+      gridEl.innerHTML=`<div style="padding:22px 0;text-align:center;">
+        <div style="font-size:13px;color:var(--text-muted);">Roster for this week has not been published yet.</div>
+        <div style="font-size:11.5px;color:var(--text-muted);margin-top:4px;">Check back after your manager finalises the schedule.</div>
+      </div>`;
+      renderRosterAudit();updateRosterBadges();return;
+    }
+    // Published — show only this staff member's own shifts
+    const myStaff=staffList.find(s=>s.name===currentUser.name||s.userId===currentUser.id);
+    if(!myStaff){
+      gridEl.innerHTML=`<div style="padding:16px 0;font-size:13px;color:var(--text-muted);">No staff profile linked to your account.</div>`;
+      renderRosterAudit();updateRosterBadges();return;
+    }
+    const DAYS=['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+    let html='';
+    if(isMobile){
+      days.forEach((date,di)=>{
+        const sh=roster.find(r=>r.staffId===myStaff.id&&r.date===date);
+        const label=sh?sh.shiftType:'Off';
+        const col=sh?SHIFT_COLORS[sh.shiftType]||'var(--accent)':'var(--text-muted)';
+        html+=`<div style="display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:1px solid rgba(255,248,240,.05);">
+          <span style="font-size:12.5px;color:var(--text-muted);">${DAYS[di]} · ${fmtD(date)}</span>
+          <span style="padding:4px 14px;border-radius:20px;font-size:11.5px;font-weight:500;background:${sh?'rgba(255,248,240,.08)':'transparent'};color:${col};border:1px solid ${sh?col:'transparent'};">${label}</span>
+        </div>`;
+      });
+    } else {
+      html=`<div style="overflow-x:auto;"><table style="width:100%;border-collapse:collapse;min-width:600px;">
+        <thead><tr><th style="font-size:10px;letter-spacing:1px;text-transform:uppercase;color:var(--text-muted);padding:0 8px 10px;text-align:left;">My Shifts</th>`;
+      DAYS.forEach((d,i)=>html+=`<th style="font-size:10px;letter-spacing:1px;text-transform:uppercase;color:var(--text-muted);padding:0 6px 10px;text-align:center;">${d}<br><span style="font-weight:400;font-size:9px;">${fmtD(days[i])}</span></th>`);
+      html+='</tr></thead><tbody><tr style="border-top:1px solid rgba(255,248,240,.05);">';
+      html+=`<td style="padding:8px;font-size:13px;color:var(--text-primary);font-weight:500;">${esc(myStaff.name)}</td>`;
+      days.forEach(date=>{
+        const sh=roster.find(r=>r.staffId===myStaff.id&&r.date===date);
+        const label=sh?sh.shiftType:'';
+        const col=sh?SHIFT_COLORS[sh.shiftType]||'var(--accent)':'var(--glass-border)';
+        html+=`<td style="padding:5px 4px;text-align:center;">
+          <div style="padding:4px 6px;border-radius:var(--r);font-size:10.5px;font-weight:500;background:${sh?'rgba(255,248,240,.08)':'transparent'};color:${col};border:1px solid ${sh?col:'var(--glass-border)'};white-space:nowrap;min-height:26px;display:flex;align-items:center;justify-content:center;">${label||'<span style="opacity:.3;font-size:9px;">—</span>'}</div>
+        </td>`;
+      });
+      html+='</tr></tbody></table></div>';
+    }
+    // Stats for self
+    const myShifts=days.filter(d=>roster.find(r=>r.staffId===myStaff.id&&r.date===d&&r.shiftType!=='Off'));
+    if(statsEl)statsEl.innerHTML=`<span style="font-size:12px;color:var(--text-muted);">Your shifts this week: <strong style="color:var(--text-primary);">${myShifts.length}</strong></span><span style="font-size:12px;color:var(--text-muted);">Days off: <strong style="color:var(--amber);">${7-myShifts.length}</strong></span>`;
+    gridEl.innerHTML=html;
+    renderRosterAudit();updateRosterBadges();return;
+  }
+
+  // ── Admin view (full grid, all staff) ──
   const shiftsThisWeek=roster.filter(r=>days.includes(r.date)&&r.shiftType!=='Off').length;
   const staffWithShifts=new Set(roster.filter(r=>days.includes(r.date)&&r.shiftType!=='Off').map(r=>r.staffId));
   const staffNoShift=staffList.filter(s=>!staffWithShifts.has(s.id)).length;
@@ -3052,6 +3309,7 @@ function renderWeeklyRoster(){
     }
   }
   renderRosterAudit();
+  updateRosterBadges();
 }
 
 function openRosterShift(staffId,date){
@@ -3111,8 +3369,462 @@ function renderRosterAudit(){
 }
 
 // ══════════════════════════════════════════════
-// STRATEGY PAGE
+// ROSTER AUTOMATION
 // ══════════════════════════════════════════════
+// Data: shift templates stored as roster_rules
+let shiftTemplates=L('roster_rules',[
+  {id:'tpl_morning', name:'Morning', start:'07:00', end:'15:00', color:'blue',  coverage:[]},
+  {id:'tpl_evening', name:'Evening', start:'15:00', end:'23:00', color:'green', coverage:[]},
+  {id:'tpl_fullday', name:'Full Day',start:'09:00', end:'21:00', color:'accent',coverage:[]},
+]);
+
+// Roster publish status per week key "YYYY-WNN"
+function rosterWeekKey(weekStart){
+  const d=new Date(weekStart);
+  const jan1=new Date(d.getFullYear(),0,1);
+  const wn=Math.ceil(((d-jan1)/86400000+jan1.getDay()+1)/7);
+  return `${d.getFullYear()}-W${String(wn).padStart(2,'0')}`;
+}
+function getRosterStatus(weekStart){
+  return L('roster_status_'+rosterWeekKey(weekStart),null);// null|'draft'|'published'
+}
+function setRosterStatus(weekStart,status){
+  S('roster_status_'+rosterWeekKey(weekStart),status);
+}
+
+// ── Shift Templates UI ──
+function renderShiftTemplates(){
+  const el=document.getElementById('shiftTemplatesList');if(!el)return;
+  const card=document.getElementById('shiftTemplatesCard');
+  if(card)card.style.display=canDo('editRoster')?'block':'none';
+  if(!canDo('editRoster'))return;
+  if(!shiftTemplates.length){el.innerHTML=`<div class="rl-empty">No templates yet — add one to enable auto-generation.</div>`;return;}
+  const colorMap={blue:'var(--blue)',amber:'var(--amber)',green:'var(--green)',accent:'var(--accent)',red:'var(--red)'};
+  el.innerHTML=`<div class="tbl-wrap"><table class="rl-table" style="width:100%;">
+    <thead><tr><th>Name</th><th>Hours</th><th>Min Coverage</th><th></th></tr></thead>
+    <tbody>${shiftTemplates.map(t=>`<tr>
+      <td><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:${colorMap[t.color]||'var(--accent)'};margin-right:6px;"></span><strong>${esc(t.name)}</strong></td>
+      <td style="color:var(--text-muted);">${t.start} – ${t.end}</td>
+      <td style="font-size:12px;color:var(--text-muted);">${t.coverage&&t.coverage.length?t.coverage.map(c=>`${c.count} ${esc(c.role)}`).join(', '):'Any'}</td>
+      <td><div style="display:flex;gap:5px;">
+        <button class="btn btn-glass btn-xs" onclick="openShiftTemplate('${t.id}')">Edit</button>
+        <button class="btn btn-danger btn-xs" onclick="deleteShiftTemplate('${t.id}')">Del</button>
+      </div></td>
+    </tr>`).join('')}</tbody>
+  </table></div>`;
+}
+function openShiftTemplate(id){
+  const tpl=id?shiftTemplates.find(t=>t.id===id):null;
+  document.getElementById('stModalTitle').textContent=tpl?'Edit Shift Template':'New Shift Template';
+  document.getElementById('stName').value=tpl?tpl.name:'';
+  document.getElementById('stStart').value=tpl?tpl.start:'09:00';
+  document.getElementById('stEnd').value=tpl?tpl.end:'18:00';
+  document.getElementById('stColor').value=tpl?tpl.color:'blue';
+  document.getElementById('stEditId').value=tpl?tpl.id:'';
+  document.getElementById('stErr').textContent='';
+  // Render coverage rows
+  const wrap=document.getElementById('stCoverageRows');
+  wrap.innerHTML='';
+  (tpl?.coverage||[]).forEach(c=>addCoverageRow(c.role,c.count));
+  openModal('mShiftTemplate');
+}
+function addCoverageRow(role,count){
+  const wrap=document.getElementById('stCoverageRows');
+  const roles=['Barista','Cashier','Waiter','Chef','Manager','Helper'];
+  const div=document.createElement('div');div.className='coverage-row';
+  div.innerHTML=`<select class="form-input cr-role" style="flex:1;font-size:12px;padding:6px 10px;">${roles.map(r=>`<option${r===(role||'Barista')?' selected':''}>${r}</option>`)}</select>
+    <input class="form-input cr-count" type="number" min="1" max="10" value="${count||1}" style="width:64px;font-size:12px;padding:6px 10px;"/>
+    <button class="btn btn-glass btn-xs" onclick="this.parentElement.remove()" style="flex-shrink:0;">×</button>`;
+  wrap.appendChild(div);
+}
+function saveShiftTemplate(){
+  const name=document.getElementById('stName').value.trim();
+  const start=document.getElementById('stStart').value;
+  const end=document.getElementById('stEnd').value;
+  const color=document.getElementById('stColor').value;
+  const eid=document.getElementById('stEditId').value;
+  const err=s=>{document.getElementById('stErr').textContent=s;};
+  if(!name){err('Enter a template name');return;}
+  if(!start||!end){err('Set start and end times');return;}
+  const coverage=[...document.querySelectorAll('#stCoverageRows .coverage-row')].map(row=>({
+    role:row.querySelector('.cr-role').value,
+    count:parseInt(row.querySelector('.cr-count').value)||1
+  }));
+  if(eid){
+    const t=shiftTemplates.find(x=>x.id===eid);
+    if(t){Object.assign(t,{name,start,end,color,coverage});}
+  } else {
+    shiftTemplates.push({id:'tpl_'+uid(),name,start,end,color,coverage});
+  }
+  S('roster_rules',shiftTemplates);
+  // Also update SHIFT_COLORS and SHIFT_TIMES for the grid renderer
+  syncShiftMaps();
+  closeModal('mShiftTemplate');
+  renderShiftTemplates();
+  toast(`Template "${name}" saved`);
+}
+function deleteShiftTemplate(id){
+  const t=shiftTemplates.find(x=>x.id===id);if(!t)return;
+  if(!confirm(`Delete template "${t.name}"?`))return;
+  shiftTemplates=shiftTemplates.filter(x=>x.id!==id);
+  S('roster_rules',shiftTemplates);
+  syncShiftMaps();
+  renderShiftTemplates();
+  toast('Template deleted');
+}
+function syncShiftMaps(){
+  // Keep SHIFT_COLORS and SHIFT_TIMES in sync with template data so the grid shows correct colours
+  const colorMap={blue:'var(--blue)',amber:'var(--amber)',green:'var(--green)',accent:'var(--accent)',red:'var(--red)'};
+  shiftTemplates.forEach(t=>{
+    SHIFT_COLORS[t.name]=colorMap[t.color]||'var(--accent)';
+    SHIFT_TIMES[t.name]=`${t.start}-${t.end}`;
+  });
+}
+
+// ── Auto-Roster Generation ──
+function openAutoRoster(){
+  if(!canDo('editRoster'))return;
+  // Default to current displayed week start
+  const days=getRosterWeekDays(rosterWeekOffset);
+  document.getElementById('arWeekStart').value=days[0];
+  document.getElementById('arErr').textContent='';
+  document.getElementById('arPreview').innerHTML='';
+  // Populate shift template select
+  const sel=document.getElementById('arShiftTemplate');
+  sel.innerHTML=shiftTemplates.map(t=>`<option value="${esc(t.id)}">${esc(t.name)} (${t.start}–${t.end})</option>`).join('');
+  openModal('mAutoRoster');
+}
+
+function getAutoRosterDays(weekStart, daysMode){
+  const days=[];const base=new Date(weekStart);
+  for(let i=0;i<parseInt(daysMode);i++){const d=new Date(base);d.setDate(base.getDate()+i);days.push(d.toISOString().split('T')[0]);}
+  return days;
+}
+
+function runAutoRosterAlgorithm(weekStart, daysMode, templateId, opts){
+  const tpl=shiftTemplates.find(t=>t.id===templateId);
+  if(!tpl)return{assignments:[],warnings:[]};
+  const days=getAutoRosterDays(weekStart,daysMode);
+  const warnings=[];
+  const assignments=[];// {staffId, date, shiftType, start, end}
+
+  // Build approved-leave set
+  const leaveSet=new Set();
+  if(opts.skipLeaves){
+    swapRequests.filter(r=>r.status==='approved'&&r.type==='leave').forEach(r=>{
+      leaveSet.add(`${r.staffId}_${r.date}`);
+    });
+  }
+
+  // Track working days per staff this week
+  const workCount={};
+  staffList.forEach(s=>{workCount[s.id]=0;});
+
+  // Rotation: sort staff by who worked least recently (use last roster entry date)
+  const lastWorked={};
+  staffList.forEach(s=>{
+    const entries=roster.filter(r=>r.staffId===s.id&&r.shiftType!=='Off').sort((a,b)=>b.date.localeCompare(a.date));
+    lastWorked[s.id]=entries.length?entries[0].date:'2000-01-01';
+  });
+  // Sort: staff who worked least recently go first (fair rotation)
+  const sortedStaff=[...staffList].sort((a,b)=>lastWorked[a.id].localeCompare(lastWorked[b.id]));
+
+  // For each day, assign staff
+  days.forEach((date,di)=>{
+    const dayOfWeek=di;// 0=Mon
+    const assigned=[];
+
+    sortedStaff.forEach(s=>{
+      // Skip: leave approved
+      if(leaveSet.has(`${s.id}_${date}`))return;
+      // Skip: max days reached
+      if(opts.respectMaxDays&&workCount[s.id]>=(s.maxDays||5))return;
+      // Skip: preferred off-day
+      if(opts.respectOffDays&&(s.prefOffDays||[]).includes(dayOfWeek))return;
+      // Assign
+      assignments.push({staffId:s.id,date,shiftType:tpl.name,start:tpl.start,end:tpl.end});
+      assigned.push(s);
+      workCount[s.id]++;
+    });
+
+    // Check minimum coverage
+    if(tpl.coverage&&tpl.coverage.length){
+      tpl.coverage.forEach(req=>{
+        const count=assigned.filter(s=>s.role===req.role).length;
+        if(count<req.count){
+          const DAYS=['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+          warnings.push({type:'under',msg:`${DAYS[di]} ${fmtD(date)}: Need ${req.count} ${req.role}, only ${count} assigned`});
+        }
+      });
+    }
+  });
+
+  // Warn staff with 0 days assigned
+  sortedStaff.forEach(s=>{
+    if(workCount[s.id]===0)warnings.push({type:'info',msg:`${esc(s.name)} has no shifts this week (leave or constraints)`});
+  });
+
+  return{assignments,warnings};
+}
+
+function previewAutoRoster(){
+  const weekStart=document.getElementById('arWeekStart').value;
+  const daysMode=document.getElementById('arDaysMode').value;
+  const templateId=document.getElementById('arShiftTemplate').value;
+  const opts={
+    skipLeaves:document.getElementById('arSkipLeaves').checked,
+    respectOffDays:document.getElementById('arRespectOffDays').checked,
+    respectMaxDays:document.getElementById('arRespectMaxDays').checked
+  };
+  const errEl=document.getElementById('arErr');
+  if(!weekStart){errEl.textContent='Select a week start date';return;}
+  if(!templateId){errEl.textContent='No shift templates found — create one first';return;}
+  errEl.textContent='';
+  const{assignments,warnings}=runAutoRosterAlgorithm(weekStart,daysMode,templateId,opts);
+  const prevEl=document.getElementById('arPreview');
+  let html=`<div style="font-size:11px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:var(--text-muted);margin-bottom:8px;">${assignments.length} shifts across ${new Set(assignments.map(a=>a.staffId)).size} staff</div>`;
+  if(warnings.length){
+    html+=`<div style="background:var(--amber-bg);border:1px solid rgba(240,184,74,.25);border-radius:var(--r);padding:10px 12px;margin-bottom:10px;">`;
+    warnings.forEach(w=>html+=`<div style="font-size:12px;color:var(--amber);margin-bottom:3px;">&#9888; ${w.msg}</div>`);
+    html+=`</div>`;
+  } else {
+    html+=`<div style="font-size:12px;color:var(--green);padding:8px 12px;background:var(--green-bg);border:1px solid rgba(94,203,149,.2);border-radius:var(--r);margin-bottom:10px);">No conflicts detected — ready to generate.</div>`;
+  }
+  prevEl.innerHTML=html;
+}
+
+function confirmAutoRoster(){
+  const weekStart=document.getElementById('arWeekStart').value;
+  const daysMode=document.getElementById('arDaysMode').value;
+  const templateId=document.getElementById('arShiftTemplate').value;
+  const opts={
+    skipLeaves:document.getElementById('arSkipLeaves').checked,
+    respectOffDays:document.getElementById('arRespectOffDays').checked,
+    respectMaxDays:document.getElementById('arRespectMaxDays').checked
+  };
+  const errEl=document.getElementById('arErr');
+  if(!weekStart){errEl.textContent='Select a week start date';return;}
+  if(!templateId){errEl.textContent='No shift templates found';return;}
+  errEl.textContent='';
+  const{assignments,warnings}=runAutoRosterAlgorithm(weekStart,daysMode,templateId,opts);
+  // Apply assignments to roster — overwrite existing entries for this week
+  const days=getAutoRosterDays(weekStart,daysMode);
+  // Remove existing draft entries for this week
+  roster=roster.filter(r=>!days.includes(r.date));
+  assignments.forEach(a=>{
+    roster.push({id:uid(),staffId:a.staffId,date:a.date,shiftType:a.shiftType,shiftStart:a.start,shiftEnd:a.end,notes:'Auto-generated',createdBy:currentUser?.name||'Admin',createdAt:Date.now()});
+  });
+  S('roster',roster);
+  setRosterStatus(weekStart,'draft');
+  // Navigate roster view to this week
+  const now=new Date();const mon=new Date(now);
+  const day=mon.getDay();mon.setDate(mon.getDate()-(day===0?6:day-1));
+  const ms=new Date(weekStart)-mon;
+  rosterWeekOffset=Math.round(ms/(7*86400000));
+  rosterAudit.push({id:uid(),ts:Date.now(),by:currentUser?.name||'Admin',action:'Auto-Generated',staffName:'All',date:weekStart,change:`${assignments.length} shifts drafted (${daysMode} days)`});
+  S('rosterAudit',rosterAudit);
+  closeModal('mAutoRoster');
+  renderWeeklyRoster();
+  renderShiftTemplates();
+  toast(`Draft roster created — ${assignments.length} shifts${warnings.length?' ('+warnings.length+' warnings)':''}`);
+  pushNotif(`Roster auto-generated for week of ${fmtD(weekStart)} — ${assignments.length} shifts in draft by ${currentUser?.name}`,currentUser?.name);
+}
+
+// ── Publish Workflow ──
+function publishRoster(){
+  const days=getRosterWeekDays(rosterWeekOffset);
+  const weekStart=days[0];
+  const status=getRosterStatus(weekStart);
+  // Run conflict checks
+  const{warnings}=detectRosterConflicts(days);
+  if(warnings.length){
+    // Show conflict modal
+    let html='';
+    warnings.forEach(w=>{
+      const col=w.type==='error'?'var(--red)':'var(--amber)';
+      const bg=w.type==='error'?'var(--red-bg)':'var(--amber-bg)';
+      const border=w.type==='error'?'rgba(240,112,112,.25)':'rgba(240,184,74,.25)';
+      html+=`<div style="display:flex;gap:10px;padding:10px 12px;background:${bg};border:1px solid ${border};border-radius:var(--r);margin-bottom:8px;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="${col}" stroke-width="2" style="flex-shrink:0;margin-top:1px;"><path d="M12 9v2m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/></svg>
+        <span style="font-size:12.5px;color:${col};">${w.msg}</span>
+      </div>`;
+    });
+    document.getElementById('conflictBody').innerHTML=html;
+    const hasErrors=warnings.some(w=>w.type==='error');
+    const pubBtn=document.getElementById('conflictPublishBtn');
+    if(pubBtn)pubBtn.style.display=hasErrors?'none':'';
+    openModal('mRosterConflict');
+  } else {
+    doPublishRoster();
+  }
+}
+
+function doPublishRoster(){
+  const days=getRosterWeekDays(rosterWeekOffset);
+  const weekStart=days[0];
+  setRosterStatus(weekStart,'published');
+  closeModal('mRosterConflict');
+  // Feed hours to salary estimator: for each assigned staff, calculate shift hours
+  const weekShifts=roster.filter(r=>days.includes(r.date)&&r.shiftType!=='Off');
+  weekShifts.forEach(r=>{
+    const s=staffList.find(x=>x.id===r.staffId);if(!s)return;
+    // Check if attendance record exists — if not, create synthetic one from shift times for salary
+    const existingAtt=attendance.find(a=>a.sid===r.staffId&&a.date===r.date);
+    if(!existingAtt&&r.shiftStart&&r.shiftEnd){
+      // Parse times to ms for the salary estimator (doesn't create clock-in records)
+      const dateObj=new Date(r.date);
+      const[sh,sm]=r.shiftStart.split(':').map(Number);
+      const[eh,em]=r.shiftEnd.split(':').map(Number);
+      const cin=new Date(dateObj.getFullYear(),dateObj.getMonth(),dateObj.getDate(),sh,sm).getTime();
+      const cout=new Date(dateObj.getFullYear(),dateObj.getMonth(),dateObj.getDate(),eh,em).getTime();
+      if(cout>cin){
+        attendance.push({id:uid(),sid:r.staffId,date:r.date,cin,cout,autoIn:false,fromRoster:true});
+      }
+    }
+  });
+  S('att',attendance);
+  rosterAudit.push({id:uid(),ts:Date.now(),by:currentUser?.name||'Admin',action:'Published',staffName:'All',date:weekStart,change:`Roster published for week of ${fmtD(weekStart)}`});
+  S('rosterAudit',rosterAudit);
+  renderWeeklyRoster();
+  renderSalaryEstimator();
+  toast(`Roster published for week of ${fmtD(weekStart)}`);
+  pushNotif(`Roster published for ${fmtD(weekStart)} — shifts are now visible to staff`,currentUser?.name);
+}
+
+function clearDraftRoster(){
+  if(!confirm('Clear the draft roster for this week? All shifts will be removed.'))return;
+  const days=getRosterWeekDays(rosterWeekOffset);
+  const weekStart=days[0];
+  const count=roster.filter(r=>days.includes(r.date)).length;
+  roster=roster.filter(r=>!days.includes(r.date));
+  S('roster',roster);
+  setRosterStatus(weekStart,null);
+  rosterAudit.push({id:uid(),ts:Date.now(),by:currentUser?.name||'Admin',action:'Draft Cleared',staffName:'All',date:weekStart,change:`${count} shift(s) removed`});
+  S('rosterAudit',rosterAudit);
+  renderWeeklyRoster();
+  toast('Draft roster cleared');
+}
+
+function deletePublishedRoster(){
+  if(!confirm('Delete the published roster for this week?\n\nThis will:\n- Remove all shifts for this week\n- Remove synthetic attendance records created at publish\n- Staff will no longer see this week\'s roster'))return;
+  const days=getRosterWeekDays(rosterWeekOffset);
+  const weekStart=days[0];
+  const shiftCount=roster.filter(r=>days.includes(r.date)).length;
+  // Remove shifts
+  roster=roster.filter(r=>!days.includes(r.date));
+  S('roster',roster);
+  // Remove synthetic attendance records that were created from this roster (fromRoster flag)
+  const attBefore=attendance.length;
+  attendance=attendance.filter(a=>!(days.includes(a.date)&&a.fromRoster));
+  const attRemoved=attBefore-attendance.length;
+  S('att',attendance);
+  // Reset status
+  setRosterStatus(weekStart,null);
+  rosterAudit.push({id:uid(),ts:Date.now(),by:currentUser?.name||'Admin',action:'Published Roster Deleted',staffName:'All',date:weekStart,change:`${shiftCount} shift(s) removed${attRemoved>0?', '+attRemoved+' attendance record(s) cleaned':''}`});
+  S('rosterAudit',rosterAudit);
+  renderWeeklyRoster();
+  renderSalaryEstimator();
+  toast(`Published roster deleted — ${shiftCount} shifts removed`);
+}
+
+// ── Edit Staff Roster Constraints (for existing staff) ──
+function openEditConstraints(staffId){
+  const s=staffList.find(x=>x.id===staffId);if(!s)return;
+  document.getElementById('ecStaffId').value=staffId;
+  document.getElementById('ecStaffName').textContent=s.name;
+  document.getElementById('ecMaxDays').value=s.maxDays||5;
+  const offDays=s.prefOffDays||[];
+  document.querySelectorAll('#ecOffDaysWrap input').forEach(inp=>{inp.checked=offDays.includes(parseInt(inp.value));});
+  openModal('mEditConstraints');
+}
+function saveEditConstraints(){
+  const staffId=parseInt(document.getElementById('ecStaffId').value);
+  const s=staffList.find(x=>x.id===staffId);if(!s)return;
+  s.maxDays=parseInt(document.getElementById('ecMaxDays').value)||5;
+  s.prefOffDays=[...document.querySelectorAll('#ecOffDaysWrap input:checked')].map(i=>parseInt(i.value));
+  S('staff',staffList);
+  closeModal('mEditConstraints');
+  renderStaff();
+  toast(`Constraints updated for ${s.name}`);
+}
+
+function detectRosterConflicts(days){
+  const warnings=[];
+  // 1. Check minimum coverage per template
+  shiftTemplates.forEach(tpl=>{
+    if(!tpl.coverage||!tpl.coverage.length)return;
+    days.forEach(date=>{
+      const dayShifts=roster.filter(r=>r.date===date&&r.shiftType===tpl.name);
+      tpl.coverage.forEach(req=>{
+        const count=dayShifts.filter(r=>{
+          const s=staffList.find(x=>x.id===r.staffId);
+          return s&&s.role===req.role;
+        }).length;
+        if(count<req.count){
+          const DAYS=['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+          const di=days.indexOf(date);
+          warnings.push({type:'warn',msg:`${DAYS[di]} ${fmtD(date)} — ${tpl.name}: needs ${req.count} ${req.role}, only ${count} assigned`});
+        }
+      });
+    });
+  });
+  // 2. Warn staff with no shifts
+  const assignedIds=new Set(roster.filter(r=>days.includes(r.date)&&r.shiftType!=='Off').map(r=>r.staffId));
+  staffList.forEach(s=>{
+    if(!assignedIds.has(s.id))warnings.push({type:'warn',msg:`${esc(s.name)} has no shifts this week`});
+  });
+  return{warnings};
+}
+
+function updateRosterBadges(){
+  const days=getRosterWeekDays(rosterWeekOffset);
+  const weekStart=days[0];
+  const status=getRosterStatus(weekStart);
+  const draftBadge=document.getElementById('rosterDraftBadge');
+  const pubBadge=document.getElementById('rosterPublishedBadge');
+  const autoBtn=document.getElementById('autoRosterBtn');
+  const clearBtn=document.getElementById('clearDraftBtn');
+  const delPubBtn=document.getElementById('deletePublishedBtn');
+  const pubBtn=document.getElementById('publishRosterBtn');
+  const isAdmin=canDo('editRoster');
+  if(draftBadge)draftBadge.style.display=status==='draft'?'inline':'none';
+  if(pubBadge)pubBadge.style.display=status==='published'?'inline':'none';
+  if(autoBtn)autoBtn.style.display=isAdmin?'inline-flex':'none';
+  if(clearBtn)clearBtn.style.display=(isAdmin&&status==='draft')?'inline-flex':'none';
+  if(delPubBtn)delPubBtn.style.display=(isAdmin&&status==='published')?'inline-flex':'none';
+  if(pubBtn)pubBtn.style.display=(isAdmin&&status==='draft')?'inline-flex':'none';
+  // Hide conflict flags and history for non-admin
+  const conflictsEl=document.getElementById('rosterConflicts');
+  const auditTabs=document.querySelector('#rosterCard .rl-tabs');
+  const auditPanel=document.getElementById('rosterAuditPanel');
+  if(conflictsEl)conflictsEl.style.display=isAdmin?'':'none';
+  if(auditTabs)auditTabs.style.display=isAdmin?'':'none';
+  if(auditPanel)auditPanel.style.display=isAdmin?'':'none';
+  // Conflict highlights only for admin
+  if(isAdmin)renderRosterConflictFlags(days);
+}
+
+function renderRosterConflictFlags(days){
+  const el=document.getElementById('rosterConflicts');if(!el)return;
+  const{warnings}=detectRosterConflicts(days);
+  if(!warnings.length){el.innerHTML='';return;}
+  const errors=warnings.filter(w=>w.type==='error');
+  const warns=warnings.filter(w=>w.type!=='error');
+  let html='';
+  if(errors.length)html+=`<div style="padding:9px 12px;background:var(--red-bg);border:1px solid rgba(240,112,112,.22);border-radius:var(--r);font-size:12px;color:var(--red);margin-bottom:6px;">${errors.map(w=>w.msg).join(' &nbsp;·&nbsp; ')}</div>`;
+  if(warns.length)html+=`<div style="padding:9px 12px;background:var(--amber-bg);border:1px solid rgba(240,184,74,.22);border-radius:var(--r);font-size:12px;color:var(--amber);margin-bottom:6px;">${warns.map(w=>w.msg).join(' &nbsp;·&nbsp; ')}</div>`;
+  el.innerHTML=html;
+}
+
+// Patch saveStaff to read new constraint fields
+function saveStaffConstraints(staffId){
+  const s=staffList.find(x=>x.id===staffId);if(!s)return;
+  const maxDaysEl=document.getElementById('sMaxDays');
+  const offDayInputs=document.querySelectorAll('#sOffDaysWrap input:checked');
+  if(maxDaysEl)s.maxDays=parseInt(maxDaysEl.value)||5;
+  s.prefOffDays=[...offDayInputs].map(i=>parseInt(i.value));
+  S('staff',staffList);
+}
 function renderStrategy(){
   if(!canDo('seeStrategy'))return;
   renderNorthStar();renderPreMortem();renderMoatScore();
@@ -3986,7 +4698,9 @@ function applyRoleUI(){
   if(eodLogCard)eodLogCard.style.display=canDo('seeEOD')?'':'none';
   if(salaryCard)salaryCard.style.display=canDo('seeSalary')?'':'none';
   const tipsCard=document.getElementById('tipsCard');
-  if(tipsCard)tipsCard.style.display=canDo('newOrder')?'':'none';// all active roles see tips
+  if(tipsCard)tipsCard.style.display=canDo('newOrder')?'':'none';
+  const stCard=document.getElementById('shiftTemplatesCard');
+  if(stCard)stCard.style.display=canDo('editRoster')?'':'none';
   const hasDash=canDo('seeDash');const hasSet=canDo('seeSettings');
   const dashBtn=document.getElementById('moreDashBtn');
   const settBtn=document.getElementById('moreSettingsBtn');
@@ -4033,7 +4747,7 @@ function navigateTo(page){
   else if(page==='staff'){setTimeout(()=>{
     const el=document.getElementById('staffDate');
     if(el){el.value=TODAY;renderStaff();}
-    renderAttAudit();renderWeeklyRoster();renderSalaryEstimator();renderSwapRequests();renderTipsSummary();
+    renderAttAudit();renderWeeklyRoster();renderSalaryEstimator();renderSwapRequests();renderTipsSummary();renderShiftTemplates();
   },0);}
   else if(page==='dashboard'){setTimeout(()=>{
     const f=document.getElementById('dashFrom');const t=document.getElementById('dashTo');
@@ -5013,6 +5727,7 @@ function renderStaff(){
           ${!isIn&&!isDone&&!isDayOff?`<button class="btn btn-success btn-xs" onclick="clockIn(${s.id})">Clock In</button>`:''}
           ${isIn?`<button class="btn btn-glass btn-xs" onclick="clockOut(${s.id})">Clock Out</button>`:''}
           ${full&&!isDayOff&&!isIn&&selDate===TODAY?`<button class="btn btn-glass btn-xs" onclick="markDayOff(${s.id})" style="color:var(--amber);border-color:rgba(240,184,74,.3);">Day Off</button>`:''}
+          ${canDo('editRoster')?`<button class="btn btn-glass btn-xs" onclick="openEditConstraints(${s.id})" title="Roster constraints">Constraints</button>`:''}
           ${canDo('removeStaff')?`<button class="btn btn-danger btn-xs" onclick="delStaff(${s.id})">Remove</button>`:''}
         </div>
       </div>`;}).join('');
@@ -5088,12 +5803,21 @@ function doClearData(){
   toast('All data cleared. Logging out...');
   setTimeout(()=>logout(),1500);
 }
-function openAddStaff(){document.getElementById('sName').value='';document.getElementById('sMob').value='';openModal('mStaff');}
+function openAddStaff(){
+  document.getElementById('sName').value='';
+  document.getElementById('sMob').value='';
+  const maxD=document.getElementById('sMaxDays');if(maxD)maxD.value='5';
+  document.querySelectorAll('#sOffDaysWrap input').forEach(i=>i.checked=false);
+  openModal('mStaff');
+}
 function saveStaff(){
   const name=document.getElementById('sName').value.trim();const role=document.getElementById('sRole').value;const mobile=document.getElementById('sMob').value.trim();
   if(!name){toast('Enter a name');return;}
+  const maxDays=parseInt(document.getElementById('sMaxDays')?.value)||5;
+  const offDayInputs=document.querySelectorAll('#sOffDaysWrap input:checked');
+  const prefOffDays=[...offDayInputs].map(i=>parseInt(i.value));
   const newStaffId=snid++;
-  staffList.push({id:newStaffId,name,role,mobile});S('snid',snid);S('staff',staffList);
+  staffList.push({id:newStaffId,name,role,mobile,maxDays,prefOffDays});S('snid',snid);S('staff',staffList);
   // Also create appUsers entry with the actual role (not pending — role is already set in Staff module)
   if(!appUsers.find(u=>u.name===name||u.username===name.toLowerCase().replace(/\s+/g,'.'))){
     const su={id:uid(),name,username:name.toLowerCase().replace(/\s+/g,'.'),passwordHash:simpleHash('staff123'),role,mobile,createdAt:Date.now(),staffId:newStaffId};
@@ -5602,6 +6326,7 @@ const SYNC_KEYS={
   rosterAudit:()=>{rosterAudit=L('rosterAudit',rosterAudit);if(isOnPage('staff'))renderRosterAudit();},
   swapReqs:  ()=>{swapRequests=L('swapReqs',swapRequests);if(isOnPage('staff'))renderSwapRequests();if(isOnPage('notifications'))renderNotifPage();},
   coupons:   ()=>{coupons=L('coupons',coupons);if(isOnPage('settings'))renderCoupons();},
+  roster_rules:()=>{shiftTemplates=L('roster_rules',shiftTemplates);syncShiftMaps();if(isOnPage('staff'))renderShiftTemplates();},
 };
 
 function isOnPage(page){
@@ -5649,6 +6374,8 @@ function showSyncPulse(){
     menuAudit=L('menuAudit',[]);invAudit=L('invAudit',[]);customTables=L('customTables',customTables);loyAudit=L('loyAudit',[]);
     adminCreds=L('adminCreds',null);
     coupons=L('coupons',[]);
+    shiftTemplates=L('roster_rules',shiftTemplates);
+    syncShiftMaps();
     if(!adminCreds){adminCreds={passwordHash:simpleHash('admin123')};S('adminCreds',adminCreds);}
     onid=L('onid',1);snid=L('snid',1);inid=L('inid',5);
     showSyncStatus(' Synced from cloud','green');
