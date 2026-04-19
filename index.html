@@ -6378,29 +6378,32 @@ function stopPolling(){clearInterval(pollInterval);}
 
 // Data keys that should trigger a re-render when changed from another device
 const SYNC_KEYS={
-  menu:      ()=>{menuItems=L('menu',menuItems);           if(isOnPage('menu'))      renderMenu();},
+  menu:      ()=>{menuItems=L('menu',menuItems);           if(isOnPage('menu'))      renderMenu();if(isOnPage('orders'))renderOrders();},
   inv:       ()=>{inv=L('inv',inv);                        if(isOnPage('inventory')) renderInv();},
-  staff:     ()=>{staffList=L('staff',staffList);          if(isOnPage('staff'))     renderStaff();},
-  att:       ()=>{attendance=L('att',attendance);          if(isOnPage('staff'))     renderStaff();},
-  orders:    ()=>{orders=L('orders',orders);               if(isOnPage('orders'))    renderOrders(); if(isOnPage('dashboard')) renderDash();if(isOnPage('staff'))renderTipsSummary();},
+  staff:     ()=>{staffList=L('staff',staffList);          if(isOnPage('staff')){renderStaff();renderSalaryEstimator();renderShiftTemplates();renderWeeklyRoster();}},
+  att:       ()=>{attendance=L('att',attendance);          if(isOnPage('staff')){renderStaff();renderSalaryEstimator();renderWeeklyRoster();}},
+  orders:    ()=>{orders=L('orders',orders);               if(isOnPage('orders'))    renderOrders(); if(isOnPage('dashboard')) renderDash();if(isOnPage('staff'))renderTipsSummary();if(isOnPage('loyalty'))renderLoyalty();},
   exp:       ()=>{expenses=L('exp',expenses);              if(isOnPage('expenses'))  renderExp();    if(isOnPage('dashboard')) renderDash();},
   cust:      ()=>{customers=L('cust',customers);           if(isOnPage('loyalty'))   renderLoyalty();},
   notifs:    ()=>{notifications=L('notifs',notifications); updateNotifBadge();       if(isOnPage('notifications')) renderNotifPage();},
   appUsers:  ()=>{appUsers=L('appUsers',appUsers);         if(isOnPage('settings'))  renderSettings();},
-  sharedCats:()=>{sharedCats=L('sharedCats',sharedCats);},
-  menuCats:  ()=>{menuCats=L('menuCats',menuCats);},
-  menuAudit: ()=>{menuAudit=L('menuAudit',menuAudit);if(isOnPage('menu'))renderMenuAudit();},
-  invAudit:  ()=>{invAudit=L('invAudit',invAudit);if(isOnPage('inventory'))renderInvAudit();},
-  customTables:()=>{customTables=L('customTables',customTables);renderTableStatus();},
-  loyAudit:  ()=>{loyAudit=L('loyAudit',loyAudit);if(isOnPage('loyalty'))renderLoyAudit();},
-  voidAudit: ()=>{voidAudit=L('voidAudit',voidAudit);if(isOnPage('orders'))renderVoidAudit();},
-  eodLog:    ()=>{eodLog=L('eodLog',eodLog);if(isOnPage('dashboard'))renderEODLog();},
-  salaryLog: ()=>{salaryLog=L('salaryLog',salaryLog);if(isOnPage('staff'))renderSalaryEstimator();},
-  roster:    ()=>{roster=L('roster',roster);if(isOnPage('staff'))renderWeeklyRoster();},
-  rosterAudit:()=>{rosterAudit=L('rosterAudit',rosterAudit);if(isOnPage('staff'))renderRosterAudit();},
-  swapReqs:  ()=>{swapRequests=L('swapReqs',swapRequests);if(isOnPage('staff'))renderSwapRequests();if(isOnPage('notifications'))renderNotifPage();},
-  coupons:   ()=>{coupons=L('coupons',coupons);if(isOnPage('settings'))renderCoupons();},
-  roster_rules:()=>{shiftTemplates=L('roster_rules',shiftTemplates);syncShiftMaps();if(isOnPage('staff'))renderShiftTemplates();},
+  sharedCats:()=>{sharedCats=L('sharedCats',sharedCats);  if(isOnPage('expenses'))  renderExp();if(isOnPage('menu'))renderMenu();},
+  menuCats:  ()=>{menuCats=L('menuCats',menuCats);         if(isOnPage('menu'))      renderMenu();},
+  menuAudit: ()=>{menuAudit=L('menuAudit',menuAudit);      if(isOnPage('menu'))      renderMenuAudit();},
+  invAudit:  ()=>{invAudit=L('invAudit',invAudit);         if(isOnPage('inventory')) renderInvAudit();},
+  customTables:()=>{customTables=L('customTables',customTables);renderTableStatus();if(isOnPage('orders'))renderOrders();},
+  loyAudit:  ()=>{loyAudit=L('loyAudit',loyAudit);         if(isOnPage('loyalty'))   renderLoyAudit();},
+  voidAudit: ()=>{voidAudit=L('voidAudit',voidAudit);      if(isOnPage('orders'))    renderVoidAudit();},
+  eodLog:    ()=>{eodLog=L('eodLog',eodLog);                if(isOnPage('dashboard')) renderEODLog();},
+  salaryLog: ()=>{salaryLog=L('salaryLog',salaryLog);       if(isOnPage('staff'))     renderSalaryEstimator();},
+  roster:    ()=>{roster=L('roster',roster);                if(isOnPage('staff'))     renderWeeklyRoster();},
+  rosterAudit:()=>{rosterAudit=L('rosterAudit',rosterAudit);if(isOnPage('staff'))    renderRosterAudit();},
+  swapReqs:  ()=>{swapRequests=L('swapReqs',swapRequests);  if(isOnPage('staff'))     renderSwapRequests();if(isOnPage('notifications'))renderNotifPage();},
+  coupons:   ()=>{coupons=L('coupons',coupons);             if(isOnPage('settings'))  renderCoupons();},
+  roster_rules:()=>{shiftTemplates=L('roster_rules',shiftTemplates);syncShiftMaps();if(isOnPage('staff')){renderShiftTemplates();renderWeeklyRoster();}},
+  attAudit:  ()=>{attAudit=L('attAudit',attAudit);          if(isOnPage('staff'))     renderAttAudit();},
+  pts:       ()=>{ptsBatches=L('pts',ptsBatches);           if(isOnPage('loyalty'))   renderLoyalty();},
+  adminCreds:()=>{adminCreds=L('adminCreds',null);},
 };
 
 function isOnPage(page){
@@ -6449,6 +6452,12 @@ function showSyncPulse(){
     adminCreds=L('adminCreds',null);
     coupons=L('coupons',[]);
     shiftTemplates=L('roster_rules',shiftTemplates);
+    voidAudit=L('voidAudit',[]);
+    eodLog=L('eodLog',[]);
+    salaryLog=L('salaryLog',[]);
+    roster=L('roster',[]);
+    swapRequests=L('swapReqs',[]);
+    rosterAudit=L('rosterAudit',[]);
     syncShiftMaps();
     if(!adminCreds){adminCreds={passwordHash:simpleHash('admin123')};S('adminCreds',adminCreds);}
     onid=L('onid',1);snid=L('snid',1);inid=L('inid',5);
